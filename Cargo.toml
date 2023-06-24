@@ -1,0 +1,9 @@
+[workspace]
+members = ["packages/xxim_sdk/native"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+#opt-level = "z"
