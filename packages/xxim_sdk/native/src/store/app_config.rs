@@ -47,7 +47,7 @@ impl Store {
         let result = conn.execute(&sql, params![]);
         match result {
             Ok(_) => {
-                tool::log::info("create table app_config success");
+                tool::log::info("table app_config exists already");
             }
             Err(err) => {
                 tool::log::error(err.to_string().as_str());

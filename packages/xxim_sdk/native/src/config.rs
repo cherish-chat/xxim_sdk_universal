@@ -6,14 +6,14 @@ use crate::store;
 use crate::tool;
 
 //Encoding 数据序列化方式
-#[derive(PartialEq, Serialize, Deserialize)]
+#[derive(PartialEq, Serialize, Deserialize, Debug)]
 pub enum Encoding {
     Json,
     Protobuf,
 }
 
 //Config 配置
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
     // host 服务器IP或域名，必填
     pub host: String,

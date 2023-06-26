@@ -3,8 +3,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 
 typedef ExternalLibrary = WasmModule;
 
-XximSdk createWrapperImpl(ExternalLibrary module) =>
-    XximSdkImpl.wasm(module);
+XximSdk createWrapperImpl(ExternalLibrary module) => XximSdkImpl.wasm(module);
 
 WasmModule createLibraryImpl() {
   // TODO add web support. See:

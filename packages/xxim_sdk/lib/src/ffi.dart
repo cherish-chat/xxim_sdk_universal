@@ -10,5 +10,4 @@ XximSdk createWrapper(ExternalLibrary lib) {
   return _wrapper!;
 }
 
-XximSdk createLib() =>
-    createWrapper(createLibraryImpl());
+XximSdk createLib() => createWrapper(createLibraryImpl());

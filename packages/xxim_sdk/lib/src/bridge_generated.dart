@@ -11,39 +11,60 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
-import 'bridge_generated.io.dart' if (dart.library.html) 'bridge_generated.web.dart';
+import 'bridge_generated.io.dart'
+    if (dart.library.html) 'bridge_generated.web.dart';
 
 abstract class XximSdk {
-  Future<void> initStaticMethodXximSdk({required String configStr, dynamic hint});
+  Future<void> init({required String configStr, dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kInitStaticMethodXximSdkConstMeta;
+  FlutterRustBridgeTaskConstMeta get kInitConstMeta;
+
+  Future<void> setUserToken({required String token, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSetUserTokenConstMeta;
 }
 
 class XximSdkImpl implements XximSdk {
   final XximSdkPlatform _platform;
-  factory XximSdkImpl(ExternalLibrary dylib) => XximSdkImpl.raw(XximSdkPlatform(dylib));
+  factory XximSdkImpl(ExternalLibrary dylib) =>
+      XximSdkImpl.raw(XximSdkPlatform(dylib));
 
   /// Only valid on web/WASM platforms.
-  factory XximSdkImpl.wasm(FutureOr<WasmModule> module) => XximSdkImpl(module as ExternalLibrary);
+  factory XximSdkImpl.wasm(FutureOr<WasmModule> module) =>
+      XximSdkImpl(module as ExternalLibrary);
   XximSdkImpl.raw(this._platform);
-  Future<void> initStaticMethodXximSdk({required String configStr, dynamic hint}) {
+  Future<void> init({required String configStr, dynamic hint}) {
     var arg0 = _platform.api2wire_String(configStr);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_init__static_method__XximSdk(port_, arg0),
+      callFfi: (port_) => _platform.inner.wire_init(port_, arg0),
       parseSuccessData: _wire2api_unit,
-      constMeta: kInitStaticMethodXximSdkConstMeta,
-      argValues: [
-        configStr
-      ],
+      constMeta: kInitConstMeta,
+      argValues: [configStr],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kInitStaticMethodXximSdkConstMeta => const FlutterRustBridgeTaskConstMeta(
-        debugName: "init__static_method__XximSdk",
-        argNames: [
-          "configStr"
-        ],
+  FlutterRustBridgeTaskConstMeta get kInitConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "init",
+        argNames: ["configStr"],
+      );
+
+  Future<void> setUserToken({required String token, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(token);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_set_user_token(port_, arg0),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSetUserTokenConstMeta,
+      argValues: [token],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSetUserTokenConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "set_user_token",
+        argNames: ["token"],
       );
 
   void dispose() {

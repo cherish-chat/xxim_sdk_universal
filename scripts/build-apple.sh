@@ -35,4 +35,4 @@ zip -r $FRAMEWORK.zip $FRAMEWORK
 
 # Cleanup
 rm -rf ios-sim-lipo mac-lipo $FRAMEWORK
-mv ../../target/aarch64-apple-darwin/release/$LIBNAME ../../packages/xxim_sdk
+mv ../../target/aarch64-apple-darwin/release/libxxim_sdk.dylib ../../packages/xxim_sdk/
