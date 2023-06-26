@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter_xxim_sdk/flutter_xxim_sdk.dart' as flutter_xxim_sdk;
+import 'package:xxim_sdk/xxim_sdk.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +20,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late int sumResult;
   late Future<int> sumAsyncResult;
+  final sdk = createLib();
 
   @override
   void initState() {
@@ -45,6 +49,7 @@ class _MyAppState extends State<MyApp> {
                   style: textStyle,
                   textAlign: TextAlign.center,
                 ),
+                TextButton(onPressed: onPressedInit, child: const Text('init')),
                 spacerSmall,
                 Text(
                   'sum(1, 2) = $sumResult',
@@ -70,5 +75,25 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  void onPressedInit() {
+    sdk.init(configStr: jsonEncode({
+      'host': '127.0.0.1',
+      'port': 34500,
+      'ssl': false,
+      'encoding': 'Json',
+      'app_id': '',
+      'install_id': '',
+      'platform': 0,
+      'device_model': 'MacOS',
+      'os_version': '10.15.7',
+      'language': 0,
+      'request_timeout_millisecond': 10,
+      'user_token': '',
+      'custom_header': '',
+      'keep_alive_second': 30,
+      'log_level': 'Debug',
+    }));
   }
 }

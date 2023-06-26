@@ -11,8 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
-  xxim_sdk: ^1.0.0
-
+#  xxim_sdk: ^1.0.0
+  xxim_sdk:
+    git:
+      url: https://github.com/cherish-chat/xxim_sdk_universal
+      path: packages/xxim_sdk
+      ref: master
+      
 dev_dependencies:
   ffi: ^2.0.1
   ffigen: ^6.1.2
