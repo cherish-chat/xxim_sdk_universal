@@ -1,6 +1,6 @@
 name: flutter_xxim_sdk
 description: A new Flutter FFI plugin project.
-version: 0.0.1
+version: 0.0.2
 homepage:
 
 environment:
@@ -17,7 +17,7 @@ dependencies:
       url: https://github.com/cherish-chat/xxim_sdk_universal
       path: packages/xxim_sdk
       ref: master
-      
+
 dev_dependencies:
   ffi: ^2.0.1
   ffigen: ^6.1.2

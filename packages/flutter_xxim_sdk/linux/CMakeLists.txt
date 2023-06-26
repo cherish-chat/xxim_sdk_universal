@@ -1,4 +1,4 @@
-set(LibraryVersion "xxim_sdk-v1.0.0") # generated; do not edit
+set(LibraryVersion "xxim_sdk-v1.1.0") # generated; do not edit
 
 # The Flutter tooling requires that developers have CMake 3.10 or later
 # installed. You should not increase this version, as doing so will cause

@@ -1,4 +1,4 @@
-release_tag_name = 'xxim_sdk-v1.0.0' # generated; do not edit
+release_tag_name = 'xxim_sdk-v1.1.0' # generated; do not edit
 
 # We cannot distribute the XCFramework alongside the library directly,
 # so we have to fetch the correct version here.
