@@ -45,6 +45,8 @@ class _MyAppState extends State<MyApp> {
               children: [
                 TextButton(onPressed: onPressedInit, child: const Text('init')),
                 spacerSmall,
+                TextButton(onPressed: onPressedSetUserToken, child: const Text('set_user_token')),
+                spacerSmall,
               ],
             ),
           ),
@@ -71,5 +73,9 @@ class _MyAppState extends State<MyApp> {
       'keep_alive_second': 30,
       'log_level': 'Debug',
     }));
+  }
+
+  void onPressedSetUserToken() {
+    sdk.setUserToken(token: "j.w.t");
   }
 }
