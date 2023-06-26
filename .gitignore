@@ -41,3 +41,4 @@ platform-build
 *.so
 *.dll
 *.db
+*.zip

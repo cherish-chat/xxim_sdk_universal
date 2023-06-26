@@ -9,8 +9,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'bridge_generated.dart';
 export 'bridge_generated.dart';
 
-class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire>
-    with FlutterRustBridgeSetupMixin {
+class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> with FlutterRustBridgeSetupMixin {
   XximSdkPlatform(FutureOr<WasmModule> dylib) : super(XximSdkWire(dylib)) {
     setupMixinConstructor();
   }
@@ -41,22 +40,17 @@ external XximSdkWasmModule get wasmModule;
 class XximSdkWasmModule implements WasmModule {
   external Object /* Promise */ call([String? moduleName]);
   external XximSdkWasmModule bind(dynamic thisArg, String moduleName);
-  external dynamic /* void */ wire_init(
-      NativePortType port_, String config_str);
+  external dynamic /* void */ wire_init(NativePortType port_, String config_str);
 
-  external dynamic /* void */ wire_set_user_token(
-      NativePortType port_, String token);
+  external dynamic /* void */ wire_set_user_token(NativePortType port_, String token);
 }
 
 // Section: WASM wire connector
 
 class XximSdkWire extends FlutterRustBridgeWasmWireBase<XximSdkWasmModule> {
-  XximSdkWire(FutureOr<WasmModule> module)
-      : super(WasmModule.cast<XximSdkWasmModule>(module));
+  XximSdkWire(FutureOr<WasmModule> module) : super(WasmModule.cast<XximSdkWasmModule>(module));
 
-  void wire_init(NativePortType port_, String config_str) =>
-      wasmModule.wire_init(port_, config_str);
+  void wire_init(NativePortType port_, String config_str) => wasmModule.wire_init(port_, config_str);
 
-  void wire_set_user_token(NativePortType port_, String token) =>
-      wasmModule.wire_set_user_token(port_, token);
+  void wire_set_user_token(NativePortType port_, String token) => wasmModule.wire_set_user_token(port_, token);
 }

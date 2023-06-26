@@ -2,10 +2,11 @@ release_tag_name = 'xxim_sdk-v1.1.0' # generated; do not edit
 
 # We cannot distribute the XCFramework alongside the library directly,
 # so we have to fetch the correct version here.
-framework_name = 'LibraryName.xcframework'
+framework_name = 'XximSdk.xcframework'
 remote_zip_name = "#{framework_name}.zip"
 url = "https://github.com/cherish-chat/xxim_sdk_universal/releases/download/#{release_tag_name}/#{remote_zip_name}"
 local_zip_name = "#{release_tag_name}.zip"
+# 正式环境使用该方法
 `
 cd Frameworks
 rm -rf #{framework_name}
@@ -20,7 +21,7 @@ cd -
 `
 
 Pod::Spec.new do |spec|
-  spec.name          = 'xxim_sdk'
+  spec.name          = 'flutter_xxim_sdk'
   spec.version       = '0.0.1'
   spec.license       = { :file => '../LICENSE' }
   spec.homepage      = 'https://github.com/cherish-chat/xxim_sdk_universal'

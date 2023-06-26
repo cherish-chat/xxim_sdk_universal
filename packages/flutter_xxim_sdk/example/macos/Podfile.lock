@@ -1,0 +1,21 @@
+PODS:
+  - flutter_xxim_sdk (0.0.1)
+  - FlutterMacOS (1.0.0)
+
+DEPENDENCIES:
+  - flutter_xxim_sdk (from `Flutter/ephemeral/.symlinks/plugins/flutter_xxim_sdk/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+EXTERNAL SOURCES:
+  flutter_xxim_sdk:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_xxim_sdk/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+SPEC CHECKSUMS:
+  flutter_xxim_sdk: 8ef90b5cd8634c779b92882e4b1c0968a1588792
+  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+
+PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
+
+COCOAPODS: 1.12.1

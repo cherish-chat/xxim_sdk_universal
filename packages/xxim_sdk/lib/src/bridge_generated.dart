@@ -11,8 +11,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
-import 'bridge_generated.io.dart'
-    if (dart.library.html) 'bridge_generated.web.dart';
+import 'bridge_generated.io.dart' if (dart.library.html) 'bridge_generated.web.dart';
 
 abstract class XximSdk {
   Future<void> init({required String configStr, dynamic hint});
@@ -26,12 +25,10 @@ abstract class XximSdk {
 
 class XximSdkImpl implements XximSdk {
   final XximSdkPlatform _platform;
-  factory XximSdkImpl(ExternalLibrary dylib) =>
-      XximSdkImpl.raw(XximSdkPlatform(dylib));
+  factory XximSdkImpl(ExternalLibrary dylib) => XximSdkImpl.raw(XximSdkPlatform(dylib));
 
   /// Only valid on web/WASM platforms.
-  factory XximSdkImpl.wasm(FutureOr<WasmModule> module) =>
-      XximSdkImpl(module as ExternalLibrary);
+  factory XximSdkImpl.wasm(FutureOr<WasmModule> module) => XximSdkImpl(module as ExternalLibrary);
   XximSdkImpl.raw(this._platform);
   Future<void> init({required String configStr, dynamic hint}) {
     var arg0 = _platform.api2wire_String(configStr);
@@ -39,15 +36,18 @@ class XximSdkImpl implements XximSdk {
       callFfi: (port_) => _platform.inner.wire_init(port_, arg0),
       parseSuccessData: _wire2api_unit,
       constMeta: kInitConstMeta,
-      argValues: [configStr],
+      argValues: [
+        configStr
+      ],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kInitConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
+  FlutterRustBridgeTaskConstMeta get kInitConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "init",
-        argNames: ["configStr"],
+        argNames: [
+          "configStr"
+        ],
       );
 
   Future<void> setUserToken({required String token, dynamic hint}) {
@@ -56,15 +56,18 @@ class XximSdkImpl implements XximSdk {
       callFfi: (port_) => _platform.inner.wire_set_user_token(port_, arg0),
       parseSuccessData: _wire2api_unit,
       constMeta: kSetUserTokenConstMeta,
-      argValues: [token],
+      argValues: [
+        token
+      ],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kSetUserTokenConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
+  FlutterRustBridgeTaskConstMeta get kSetUserTokenConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "set_user_token",
-        argNames: ["token"],
+        argNames: [
+          "token"
+        ],
       );
 
   void dispose() {

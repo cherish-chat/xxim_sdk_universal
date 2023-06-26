@@ -36,3 +36,6 @@ zip -r $FRAMEWORK.zip $FRAMEWORK
 # Cleanup
 rm -rf ios-sim-lipo mac-lipo
 mv ../../target/aarch64-apple-darwin/release/libxxim_sdk.dylib ../../packages/xxim_sdk/
+mv $FRAMEWORK.zip ../../packages/flutter_xxim_sdk/macos/Frameworks/xxim_sdk-v1.1.0.zip
+cd ../../packages/flutter_xxim_sdk/macos/Frameworks/
+unzip xxim_sdk-v1.1.0.zip

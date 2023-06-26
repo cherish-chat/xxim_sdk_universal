@@ -24,6 +24,7 @@ mod tests {
     #[test]
     fn xxim_sdk_set_user_token() {
         xxim_sdk_init();
+        xxim_sdk_init();
         set_user_token("token".to_string());
     }
 

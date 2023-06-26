@@ -12,20 +12,24 @@ pub struct SdkImp {
 
 impl SdkApi for SdkImp {
     fn init(&mut self, config_str: String) {
-        let config_string = config_str.as_str();
-        log::info(format!("init: {}", config_string).as_str());
-        let mut config: Config = json::unmarshal(config_string).unwrap_or_else(|e| {
-            log::error("config unmarshal error");
-            log::error(e.to_string().as_str());
-            panic!();
+        // ONCE
+        static ONCE: std::sync::Once = std::sync::Once::new();
+        ONCE.call_once(|| {
+            let config_string = config_str.as_str();
+            log::info(format!("init: {}", config_string).as_str());
+            let mut config: Config = json::unmarshal(config_string).unwrap_or_else(|e| {
+                log::error("config unmarshal error");
+                log::error(e.to_string().as_str());
+                panic!();
+            });
+            config.validate().unwrap_or_else(|e| {
+                log::error("config validate error");
+                log::error(e.to_string().as_str());
+                panic!();
+            });
+            log::debug(format!("config: {:?}", config).as_str());
+            self.config = Some(config);
         });
-        config.validate().unwrap_or_else(|e| {
-            log::error("config validate error");
-            log::error(e.to_string().as_str());
-            panic!();
-        });
-        log::debug(format!("config: {:?}", config).as_str());
-        self.config = Some(config);
     }
 
     fn set_user_token(&mut self, token: String) {
