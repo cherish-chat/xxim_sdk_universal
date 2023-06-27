@@ -107,31 +107,42 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
   late final _init_frb_dart_api_dlPtr = _lookup<ffi.NativeFunction<ffi.IntPtr Function(ffi.Pointer<ffi.Void>)>>('init_frb_dart_api_dl');
   late final _init_frb_dart_api_dl = _init_frb_dart_api_dlPtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
 
+  void wire_new_instance(
+    int port_,
+  ) {
+    return _wire_new_instance(
+      port_,
+    );
+  }
+
+  late final _wire_new_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_new_instance');
+  late final _wire_new_instance = _wire_new_instancePtr.asFunction<void Function(int)>();
+
   void wire_init(
     int port_,
-    ffi.Pointer<wire_uint_8_list> config_str,
+    ffi.Pointer<wire_uint_8_list> param,
   ) {
     return _wire_init(
       port_,
-      config_str,
+      param,
     );
   }
 
   late final _wire_initPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_init');
   late final _wire_init = _wire_initPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
-  void wire_set_user_token(
+  void wire_set_login_info(
     int port_,
-    ffi.Pointer<wire_uint_8_list> token,
+    ffi.Pointer<wire_uint_8_list> param,
   ) {
-    return _wire_set_user_token(
+    return _wire_set_login_info(
       port_,
-      token,
+      param,
     );
   }
 
-  late final _wire_set_user_tokenPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_set_user_token');
-  late final _wire_set_user_token = _wire_set_user_tokenPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+  late final _wire_set_login_infoPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_set_login_info');
+  late final _wire_set_login_info = _wire_set_login_infoPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,

@@ -14,13 +14,17 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'bridge_generated.io.dart' if (dart.library.html) 'bridge_generated.web.dart';
 
 abstract class XximSdk {
-  Future<void> init({required String configStr, dynamic hint});
+  Future<String> newInstance({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kNewInstanceConstMeta;
+
+  Future<String> init({required String param, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kInitConstMeta;
 
-  Future<void> setUserToken({required String token, dynamic hint});
+  Future<String> setLoginInfo({required String param, dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kSetUserTokenConstMeta;
+  FlutterRustBridgeTaskConstMeta get kSetLoginInfoConstMeta;
 }
 
 class XximSdkImpl implements XximSdk {
@@ -30,14 +34,29 @@ class XximSdkImpl implements XximSdk {
   /// Only valid on web/WASM platforms.
   factory XximSdkImpl.wasm(FutureOr<WasmModule> module) => XximSdkImpl(module as ExternalLibrary);
   XximSdkImpl.raw(this._platform);
-  Future<void> init({required String configStr, dynamic hint}) {
-    var arg0 = _platform.api2wire_String(configStr);
+  Future<String> newInstance({dynamic hint}) {
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_new_instance(port_),
+      parseSuccessData: _wire2api_String,
+      constMeta: kNewInstanceConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kNewInstanceConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "new_instance",
+        argNames: [],
+      );
+
+  Future<String> init({required String param, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(param);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_init(port_, arg0),
-      parseSuccessData: _wire2api_unit,
+      parseSuccessData: _wire2api_String,
       constMeta: kInitConstMeta,
       argValues: [
-        configStr
+        param
       ],
       hint: hint,
     ));
@@ -46,27 +65,27 @@ class XximSdkImpl implements XximSdk {
   FlutterRustBridgeTaskConstMeta get kInitConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "init",
         argNames: [
-          "configStr"
+          "param"
         ],
       );
 
-  Future<void> setUserToken({required String token, dynamic hint}) {
-    var arg0 = _platform.api2wire_String(token);
+  Future<String> setLoginInfo({required String param, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(param);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_set_user_token(port_, arg0),
-      parseSuccessData: _wire2api_unit,
-      constMeta: kSetUserTokenConstMeta,
+      callFfi: (port_) => _platform.inner.wire_set_login_info(port_, arg0),
+      parseSuccessData: _wire2api_String,
+      constMeta: kSetLoginInfoConstMeta,
       argValues: [
-        token
+        param
       ],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kSetUserTokenConstMeta => const FlutterRustBridgeTaskConstMeta(
-        debugName: "set_user_token",
+  FlutterRustBridgeTaskConstMeta get kSetLoginInfoConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "set_login_info",
         argNames: [
-          "token"
+          "param"
         ],
       );
 
@@ -75,8 +94,16 @@ class XximSdkImpl implements XximSdk {
   }
 // Section: wire2api
 
-  void _wire2api_unit(dynamic raw) {
-    return;
+  String _wire2api_String(dynamic raw) {
+    return raw as String;
+  }
+
+  int _wire2api_u8(dynamic raw) {
+    return raw as int;
+  }
+
+  Uint8List _wire2api_uint_8_list(dynamic raw) {
+    return raw as Uint8List;
   }
 }
 

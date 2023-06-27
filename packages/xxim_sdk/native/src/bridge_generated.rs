@@ -21,7 +21,17 @@ use std::sync::Arc;
 
 // Section: wire functions
 
-fn wire_init_impl(port_: MessagePort, config_str: impl Wire2Api<String> + UnwindSafe) {
+fn wire_new_instance_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "new_instance",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || move |task_callback| Ok(new_instance()),
+    )
+}
+fn wire_init_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
             debug_name: "init",
@@ -29,21 +39,21 @@ fn wire_init_impl(port_: MessagePort, config_str: impl Wire2Api<String> + Unwind
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_config_str = config_str.wire2api();
-            move |task_callback| Ok(init(api_config_str))
+            let api_param = param.wire2api();
+            move |task_callback| Ok(init(api_param))
         },
     )
 }
-fn wire_set_user_token_impl(port_: MessagePort, token: impl Wire2Api<String> + UnwindSafe) {
+fn wire_set_login_info_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
-            debug_name: "set_user_token",
+            debug_name: "set_login_info",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_token = token.wire2api();
-            move |task_callback| Ok(set_user_token(api_token))
+            let api_param = param.wire2api();
+            move |task_callback| Ok(set_login_info(api_param))
         },
     )
 }
@@ -91,13 +101,18 @@ mod web {
     // Section: wire functions
 
     #[wasm_bindgen]
-    pub fn wire_init(port_: MessagePort, config_str: String) {
-        wire_init_impl(port_, config_str)
+    pub fn wire_new_instance(port_: MessagePort) {
+        wire_new_instance_impl(port_)
     }
 
     #[wasm_bindgen]
-    pub fn wire_set_user_token(port_: MessagePort, token: String) {
-        wire_set_user_token_impl(port_, token)
+    pub fn wire_init(port_: MessagePort, param: String) {
+        wire_init_impl(port_, param)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_set_login_info(port_: MessagePort, param: String) {
+        wire_set_login_info_impl(port_, param)
     }
 
     // Section: allocate functions
@@ -144,13 +159,18 @@ mod io {
     // Section: wire functions
 
     #[no_mangle]
-    pub extern "C" fn wire_init(port_: i64, config_str: *mut wire_uint_8_list) {
-        wire_init_impl(port_, config_str)
+    pub extern "C" fn wire_new_instance(port_: i64) {
+        wire_new_instance_impl(port_)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_set_user_token(port_: i64, token: *mut wire_uint_8_list) {
-        wire_set_user_token_impl(port_, token)
+    pub extern "C" fn wire_init(port_: i64, param: *mut wire_uint_8_list) {
+        wire_init_impl(port_, param)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_set_login_info(port_: i64, param: *mut wire_uint_8_list) {
+        wire_set_login_info_impl(port_, param)
     }
 
     // Section: allocate functions

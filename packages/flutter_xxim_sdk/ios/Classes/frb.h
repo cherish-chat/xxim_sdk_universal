@@ -26,9 +26,11 @@ uintptr_t new_dart_opaque(Dart_Handle handle);
 
 intptr_t init_frb_dart_api_dl(void *obj);
 
-void wire_init(int64_t port_, struct wire_uint_8_list *config_str);
+void wire_new_instance(int64_t port_);
 
-void wire_set_user_token(int64_t port_, struct wire_uint_8_list *token);
+void wire_init(int64_t port_, struct wire_uint_8_list *param);
+
+void wire_set_login_info(int64_t port_, struct wire_uint_8_list *param);
 
 struct wire_uint_8_list *new_uint_8_list_0(int32_t len);
 
@@ -36,8 +38,9 @@ void free_WireSyncReturn(WireSyncReturn ptr);
 
 static int64_t dummy_method_to_enforce_bundling(void) {
     int64_t dummy_var = 0;
+    dummy_var ^= ((int64_t) (void*) wire_new_instance);
     dummy_var ^= ((int64_t) (void*) wire_init);
-    dummy_var ^= ((int64_t) (void*) wire_set_user_token);
+    dummy_var ^= ((int64_t) (void*) wire_set_login_info);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
     dummy_var ^= ((int64_t) (void*) free_WireSyncReturn);
     dummy_var ^= ((int64_t) (void*) store_dart_post_cobject);

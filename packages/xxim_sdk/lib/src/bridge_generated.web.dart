@@ -40,9 +40,11 @@ external XximSdkWasmModule get wasmModule;
 class XximSdkWasmModule implements WasmModule {
   external Object /* Promise */ call([String? moduleName]);
   external XximSdkWasmModule bind(dynamic thisArg, String moduleName);
-  external dynamic /* void */ wire_init(NativePortType port_, String config_str);
+  external dynamic /* void */ wire_new_instance(NativePortType port_);
 
-  external dynamic /* void */ wire_set_user_token(NativePortType port_, String token);
+  external dynamic /* void */ wire_init(NativePortType port_, String param);
+
+  external dynamic /* void */ wire_set_login_info(NativePortType port_, String param);
 }
 
 // Section: WASM wire connector
@@ -50,7 +52,9 @@ class XximSdkWasmModule implements WasmModule {
 class XximSdkWire extends FlutterRustBridgeWasmWireBase<XximSdkWasmModule> {
   XximSdkWire(FutureOr<WasmModule> module) : super(WasmModule.cast<XximSdkWasmModule>(module));
 
-  void wire_init(NativePortType port_, String config_str) => wasmModule.wire_init(port_, config_str);
+  void wire_new_instance(NativePortType port_) => wasmModule.wire_new_instance(port_);
 
-  void wire_set_user_token(NativePortType port_, String token) => wasmModule.wire_set_user_token(port_, token);
+  void wire_init(NativePortType port_, String param) => wasmModule.wire_init(port_, param);
+
+  void wire_set_login_info(NativePortType port_, String param) => wasmModule.wire_set_login_info(port_, param);
 }
