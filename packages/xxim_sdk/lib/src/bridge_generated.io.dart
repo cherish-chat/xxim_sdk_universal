@@ -118,6 +118,19 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
   late final _wire_new_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_new_instance');
   late final _wire_new_instance = _wire_new_instancePtr.asFunction<void Function(int)>();
 
+  void wire_destroy_instance(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> param,
+  ) {
+    return _wire_destroy_instance(
+      port_,
+      param,
+    );
+  }
+
+  late final _wire_destroy_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_destroy_instance');
+  late final _wire_destroy_instance = _wire_destroy_instancePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
   void wire_init(
     int port_,
     ffi.Pointer<wire_uint_8_list> param,
@@ -143,6 +156,19 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
 
   late final _wire_set_login_infoPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_set_login_info');
   late final _wire_set_login_info = _wire_set_login_infoPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_unset_login_info(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> param,
+  ) {
+    return _wire_unset_login_info(
+      port_,
+      param,
+    );
+  }
+
+  late final _wire_unset_login_infoPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_unset_login_info');
+  late final _wire_unset_login_info = _wire_unset_login_infoPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,

@@ -18,6 +18,10 @@ abstract class XximSdk {
 
   FlutterRustBridgeTaskConstMeta get kNewInstanceConstMeta;
 
+  Future<String> destroyInstance({required String param, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDestroyInstanceConstMeta;
+
   Future<String> init({required String param, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kInitConstMeta;
@@ -25,6 +29,10 @@ abstract class XximSdk {
   Future<String> setLoginInfo({required String param, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kSetLoginInfoConstMeta;
+
+  Future<String> unsetLoginInfo({required String param, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUnsetLoginInfoConstMeta;
 }
 
 class XximSdkImpl implements XximSdk {
@@ -47,6 +55,26 @@ class XximSdkImpl implements XximSdk {
   FlutterRustBridgeTaskConstMeta get kNewInstanceConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "new_instance",
         argNames: [],
+      );
+
+  Future<String> destroyInstance({required String param, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(param);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_destroy_instance(port_, arg0),
+      parseSuccessData: _wire2api_String,
+      constMeta: kDestroyInstanceConstMeta,
+      argValues: [
+        param
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kDestroyInstanceConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "destroy_instance",
+        argNames: [
+          "param"
+        ],
       );
 
   Future<String> init({required String param, dynamic hint}) {
@@ -84,6 +112,26 @@ class XximSdkImpl implements XximSdk {
 
   FlutterRustBridgeTaskConstMeta get kSetLoginInfoConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "set_login_info",
+        argNames: [
+          "param"
+        ],
+      );
+
+  Future<String> unsetLoginInfo({required String param, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(param);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_unset_login_info(port_, arg0),
+      parseSuccessData: _wire2api_String,
+      constMeta: kUnsetLoginInfoConstMeta,
+      argValues: [
+        param
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kUnsetLoginInfoConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "unset_login_info",
         argNames: [
           "param"
         ],

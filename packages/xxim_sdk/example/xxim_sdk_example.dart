@@ -88,4 +88,43 @@ Future<void> main() async {
     "user_id": "user_id",
   }).toJsonString()));
   print("setLoginInfoResult: ${setLoginInfoResult.toString()}");
+
+  var unsetLoginInfoResult = ApiResult.fromString(await lib.unsetLoginInfo(
+      param:
+          ApiParam.build(instance_id: instance_id, data: {}).toJsonString()));
+  print("unsetLoginInfoResult: ${unsetLoginInfoResult.toString()}");
+
+  var destroy_instanceResult = ApiResult.fromString(await lib.destroyInstance(
+      param:
+          ApiParam.build(instance_id: instance_id, data: {}).toJsonString()));
+  print("destroy_instanceResult: ${destroy_instanceResult.toString()}");
+
+
+  {
+    var initResult = ApiResult.fromString(await lib.init(
+        param: ApiParam.build(instance_id: instance_id, data: {
+      'host': '127.0.0.1',
+      'port': 34500,
+      'ssl': false,
+      'encoding': 'Json',
+      'app_id': 'appid',
+      'install_id': '',
+      'platform': 0,
+      'device_model': 'MacOS',
+      'os_version': '10.15.7',
+      'language': 0,
+      'request_timeout_millisecond': 10,
+      'user_token': '',
+      'custom_header': '',
+      'keep_alive_second': 30,
+      'log_level': 'Debug',
+      'db_dir': './db/',
+    }).toJsonString()));
+
+    print("initResult: ${initResult.toString()}");
+
+    if (initResult.data != 'true') {
+      return;
+    }
+  }
 }

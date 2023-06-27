@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use crate::config::Config;
 use lazy_static::lazy_static;
-use crate::store::sqlite::sqlite_connection;
+use crate::store::sqlite::{sqlite_connection, sqlite_close, sqlite_destroy, sqlite_all_debug, Sqlite};
 use crate::tool::{json, log, uuid};
 
 pub struct SdkApi {
@@ -55,8 +55,36 @@ impl SdkApi {
         config.user_id = Some(user_id);
         log::debug(format!("config: {:?}", config).as_str());
         // 初始化数据库
+        self.sqlite_connection();
+        sqlite_all_debug();
+    }
+
+    fn sqlite_connection(&mut self) -> Arc<Mutex<Sqlite>> {
+        sqlite_connection(self.db_path(), USER_INIT_SQL)
+    }
+
+    fn db_path(&mut self) -> String {
+        let config = self.config.as_mut().unwrap_or_else(|| {
+            log::error("config is None, please init first");
+            panic!();
+        });
         let db_path = format!("{}{}-{}.db", config.db_dir, config.user_id.as_ref().unwrap(), config.app_id);
-        sqlite_connection(db_path, USER_INIT_SQL);
+        db_path
+    }
+
+    pub fn unset_login_info(&mut self) {
+        log::info("unset_user_token");
+        let db_path = self.db_path();
+        let mut config = self.config.as_mut().unwrap_or_else(|| {
+            log::error("config is None, please init first");
+            panic!();
+        });
+        config.user_token = None;
+        config.user_id = None;
+        log::debug(format!("config: {:?}", config).as_str());
+        sqlite_close(db_path.clone());
+        sqlite_destroy(db_path);
+        sqlite_all_debug();
     }
 }
 
@@ -91,5 +119,10 @@ impl SdkApi {
         };
         map.insert(id_copy1, Arc::new(Mutex::new(sdk_api)));
         id_copy2
+    }
+
+    pub fn destroy_instance(instance_id: String) {
+        let mut map = SDK_INSTANCE_MAP.lock().unwrap();
+        map.remove(&instance_id);
     }
 }

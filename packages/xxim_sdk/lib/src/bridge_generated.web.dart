@@ -42,9 +42,13 @@ class XximSdkWasmModule implements WasmModule {
   external XximSdkWasmModule bind(dynamic thisArg, String moduleName);
   external dynamic /* void */ wire_new_instance(NativePortType port_);
 
+  external dynamic /* void */ wire_destroy_instance(NativePortType port_, String param);
+
   external dynamic /* void */ wire_init(NativePortType port_, String param);
 
   external dynamic /* void */ wire_set_login_info(NativePortType port_, String param);
+
+  external dynamic /* void */ wire_unset_login_info(NativePortType port_, String param);
 }
 
 // Section: WASM wire connector
@@ -54,7 +58,11 @@ class XximSdkWire extends FlutterRustBridgeWasmWireBase<XximSdkWasmModule> {
 
   void wire_new_instance(NativePortType port_) => wasmModule.wire_new_instance(port_);
 
+  void wire_destroy_instance(NativePortType port_, String param) => wasmModule.wire_destroy_instance(port_, param);
+
   void wire_init(NativePortType port_, String param) => wasmModule.wire_init(port_, param);
 
   void wire_set_login_info(NativePortType port_, String param) => wasmModule.wire_set_login_info(port_, param);
+
+  void wire_unset_login_info(NativePortType port_, String param) => wasmModule.wire_unset_login_info(port_, param);
 }

@@ -31,6 +31,19 @@ fn wire_new_instance_impl(port_: MessagePort) {
         move || move |task_callback| Ok(new_instance()),
     )
 }
+fn wire_destroy_instance_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "destroy_instance",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_param = param.wire2api();
+            move |task_callback| Ok(destroy_instance(api_param))
+        },
+    )
+}
 fn wire_init_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
@@ -54,6 +67,19 @@ fn wire_set_login_info_impl(port_: MessagePort, param: impl Wire2Api<String> + U
         move || {
             let api_param = param.wire2api();
             move |task_callback| Ok(set_login_info(api_param))
+        },
+    )
+}
+fn wire_unset_login_info_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "unset_login_info",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_param = param.wire2api();
+            move |task_callback| Ok(unset_login_info(api_param))
         },
     )
 }
@@ -106,6 +132,11 @@ mod web {
     }
 
     #[wasm_bindgen]
+    pub fn wire_destroy_instance(port_: MessagePort, param: String) {
+        wire_destroy_instance_impl(port_, param)
+    }
+
+    #[wasm_bindgen]
     pub fn wire_init(port_: MessagePort, param: String) {
         wire_init_impl(port_, param)
     }
@@ -113,6 +144,11 @@ mod web {
     #[wasm_bindgen]
     pub fn wire_set_login_info(port_: MessagePort, param: String) {
         wire_set_login_info_impl(port_, param)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_unset_login_info(port_: MessagePort, param: String) {
+        wire_unset_login_info_impl(port_, param)
     }
 
     // Section: allocate functions
@@ -164,6 +200,11 @@ mod io {
     }
 
     #[no_mangle]
+    pub extern "C" fn wire_destroy_instance(port_: i64, param: *mut wire_uint_8_list) {
+        wire_destroy_instance_impl(port_, param)
+    }
+
+    #[no_mangle]
     pub extern "C" fn wire_init(port_: i64, param: *mut wire_uint_8_list) {
         wire_init_impl(port_, param)
     }
@@ -171,6 +212,11 @@ mod io {
     #[no_mangle]
     pub extern "C" fn wire_set_login_info(port_: i64, param: *mut wire_uint_8_list) {
         wire_set_login_info_impl(port_, param)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_unset_login_info(port_: i64, param: *mut wire_uint_8_list) {
+        wire_unset_login_info_impl(port_, param)
     }
 
     // Section: allocate functions

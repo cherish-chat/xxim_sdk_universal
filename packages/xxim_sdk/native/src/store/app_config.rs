@@ -23,8 +23,8 @@ impl AppConfig {
         let connection = sqlite_connection(self.db_path, INIT_SQL);
         let sql = format!("SELECT v FROM {} WHERE k = ?", TABLE_NAME);
         tool::log::debug(sql.as_str());
-        let guard = connection.lock().unwrap();
-        let mut stmt = guard.prepare(sql.as_str())?;
+        let conn = connection.lock().unwrap();
+        let mut stmt = conn.prepare(sql.as_str())?;
         let mut rows = stmt.query(params![k])?;
         let result = rows.next()?;
         if result.is_none() {
