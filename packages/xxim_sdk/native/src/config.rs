@@ -5,15 +5,8 @@ use serde::{Deserialize, Serialize};
 use crate::store;
 use crate::tool;
 
-//Encoding 数据序列化方式
-#[derive(PartialEq, Serialize, Deserialize, Debug)]
-pub enum Encoding {
-    Json,
-    Protobuf,
-}
-
 //Config 配置
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Config {
     // host 服务器IP或域名，必填
     pub host: String,
@@ -21,8 +14,6 @@ pub struct Config {
     pub port: u16,
     // ssl 是否使用SSL，选填，默认为false
     pub ssl: bool,
-    // encoding 数据序列化方式，选填，默认为json，可选json、protobuf
-    pub encoding: Encoding,
     // appId 应用ID，选填，默认为空
     pub app_id: String,
     // installId 安装ID，选填，默认会生成一个随机id

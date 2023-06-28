@@ -1,9 +1,9 @@
 mod bridge_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be accurate, and you can change it according to your needs. */
-mod api;
+pub mod api;
 mod sdk;
-mod tool;
+pub mod pb;
+pub mod tool;
 mod client;
-mod pb;
 mod store;
-mod config;
-mod param;
+pub mod config;
+pub mod param;

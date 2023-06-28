@@ -35,4 +35,20 @@ fn main() {
         .arg("format")
         .arg("..")
         .spawn();
+    // 打印工作目录
+    let now_dir = std::env::current_dir().unwrap();
+    println!("now_dir: {:?}", now_dir);
+    // tonic_build::compile_protos("pb/common.rs").expect("Failed to compile common proto");
+    // 遍历pb目录，把除了mod.rs的文件都调用tonic_build::compile_protos()
+
+    //
+    // tonic_build::configure().build_client(true).build_server(true).build_transport(true).out_dir("src/pb").type_attribute(".", "#[derive(serde::Serialize,serde::Deserialize)]").compile(&[
+    //     "src/pb/common.proto",
+    //     "src/pb/conversation.proto",
+    //     "src/pb/gateway.proto",
+    //     "src/pb/message.proto",
+    //     "src/pb/third.proto",
+    //     "src/pb/user.proto",
+    //     "src/pb/world.proto",
+    // ], &["src/pb"]).unwrap();
 }
