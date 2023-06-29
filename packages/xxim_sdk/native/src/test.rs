@@ -16,45 +16,45 @@ mod tests {
             tokio_test::block_on($e)
         }
     }
-
-    #[test]
-    fn test_1() {
-        let result = new_instance();
-        println!("{}", result);
-        let resp: ApiResult = json::unmarshal(result.as_str()).unwrap();
-        let instance_id = resp.data;
-        let result = init(instance_id.clone(), "{\"host\":\"127.0.0.1\",\"port\":34500,\"ssl\":false,\"encoding\":\"Json\",\"app_id\":\"app_id\",\"install_id\":\"\",\"platform\":0,\"device_model\":\"MacOS\",\"os_version\":\"10.15.7\",\"language\":0,\"request_timeout_millisecond\":60000,\"user_token\":\"\",\"custom_header\":\"\",\"keep_alive_second\":30,\"log_level\":\"Debug\", \"db_dir\": \".\"}".to_string());
-        println!("{}", result);
-        let result = set_login_info(instance_id.clone(),"{\"token\":\"xxx\",\"user_id\":\"user_id\"}".to_string());
-        println!("{}", result);
-
-        let result = unset_login_info(instance_id.clone());
-        println!("{}", result);
-        {
-            let accountMap: HashMap<String, String> = HashMap::new();
-            let profileMap: HashMap<String, String> = HashMap::new();
-            let extraMap: HashMap<String, String> = HashMap::new();
-            let verifyMap: HashMap<String, String> = HashMap::new();
-            // aw! (SdkApi::instance(instance_id.clone()).lock().unwrap().test_client());
-            let ctx = context_with_timeout(instance_id.clone(), 1);
-            let req = user::UserRegisterReq {
-                header: protobuf::MessageField::none(),
-                userId: "rust1".to_string(),
-                avatar: Some("avatar".to_string()),
-                nickname: Some("rust1".to_string()),
-                registerTime: None,
-                accountMap,
-                profileMap,
-                extraMap,
-                verifyMap,
-                special_fields: protobuf::SpecialFields::default(),
-            };
-            user_register_api(instance_id.clone(), ctx, proto::marshal(&req));
-        }
-
-        // sleep 3s
-        thread::sleep(Duration::from_secs(3));
-    }
+    //
+    // #[test]
+    // fn test_1() {
+    //     let result = new_instance();
+    //     println!("{}", result);
+    //     let resp: ApiResult = json::unmarshal(result.as_str()).unwrap();
+    //     let instance_id = resp.data;
+    //     let result = init(instance_id.clone(), "{\"host\":\"127.0.0.1\",\"port\":34500,\"ssl\":false,\"encoding\":\"Json\",\"app_id\":\"app_id\",\"install_id\":\"\",\"platform\":0,\"device_model\":\"MacOS\",\"os_version\":\"10.15.7\",\"language\":0,\"request_timeout_millisecond\":60000,\"user_token\":\"\",\"custom_header\":\"\",\"keep_alive_second\":30,\"log_level\":\"Debug\", \"db_dir\": \".\"}".to_string());
+    //     println!("{}", result);
+    //     let result = set_login_info(instance_id.clone(),"{\"token\":\"xxx\",\"user_id\":\"user_id\"}".to_string());
+    //     println!("{}", result);
+    //
+    //     let result = unset_login_info(instance_id.clone());
+    //     println!("{}", result);
+    //     {
+    //         let accountMap: HashMap<String, String> = HashMap::new();
+    //         let profileMap: HashMap<String, String> = HashMap::new();
+    //         let extraMap: HashMap<String, String> = HashMap::new();
+    //         let verifyMap: HashMap<String, String> = HashMap::new();
+    //         // aw! (SdkApi::instance(instance_id.clone()).lock().unwrap().test_client());
+    //         let ctx = context_with_timeout(instance_id.clone(), 1);
+    //         let req = user::UserRegisterReq {
+    //             header: protobuf::MessageField::none(),
+    //             userId: "rust1".to_string(),
+    //             avatar: Some("avatar".to_string()),
+    //             nickname: Some("rust1".to_string()),
+    //             registerTime: None,
+    //             accountMap,
+    //             profileMap,
+    //             extraMap,
+    //             verifyMap,
+    //             special_fields: protobuf::SpecialFields::default(),
+    //         };
+    //         user_register_api(instance_id.clone(), ctx, proto::marshal(&req));
+    //     }
+    //
+    //     // sleep 3s
+    //     thread::sleep(Duration::from_secs(3));
+    // }
     //
     // #[test]
     // fn xxim_sdk_new_instance() {

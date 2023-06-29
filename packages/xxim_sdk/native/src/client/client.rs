@@ -1,7 +1,7 @@
 use protobuf::MessageField;
 use tokio::select;
 use tokio_util::sync::CancellationToken;
-use reqwest::{Client as HttpClient, Response};
+use reqwest::blocking::{Client as HttpClient};
 use reqwest::header::HeaderMap;
 use crate::config::{Config};
 use crate::pb::{common, gateway};
@@ -44,7 +44,7 @@ impl Client {
     pub fn new(config: Config) -> Self {
         Client {
             config,
-            http_client: HttpClient::new(),
+            http_client: reqwest::blocking::Client::new(),
             rt: tokio::runtime::Runtime::new().unwrap(),
         }
     }
@@ -65,8 +65,25 @@ pub struct Error {
     message: String,
 }
 
+impl Error {
+    pub fn code_i32(&self) -> i32 {
+        match self.code {
+            ErrorCode::NoError => 0,
+            ErrorCode::Timeout => 1,
+            ErrorCode::Cancelled => 2,
+            ErrorCode::HttpError => 3,
+            ErrorCode::RequestError => 4,
+        }
+    }
+
+    pub fn message_str(&self) -> &str {
+        self.message.as_str()
+    }
+}
+
 pub type OnSuccess<P: protobuf::Message> = fn(resp: Box<P>);
 pub type OnError = fn(err: Error);
+
 impl Client {
     pub fn block_on<F: Future>(&self, future: F) -> F::Output {
         self.rt.block_on(future)
@@ -165,12 +182,19 @@ impl Client {
         let cancel_token = Arc::new(Mutex::new(cancel_token));
         CONTEXT_INSTANCE_MAP.lock().unwrap().insert(trace_id.clone(), cancel_token.clone());
         // 启动一个定时器，到期后取消
-        let cancel_function = Client::auto_cancel( trace_id.clone(), deadline_timestamp);
+        let cancel_function = Client::auto_cancel(trace_id.clone(), deadline_timestamp);
         self.rt.spawn(cancel_function);
         Context {
             trace_id,
             deadline_timestamp,
         }
+    }
+
+    pub fn context_cancel(&self, trace_id: String) {
+        self.rt.block_on(async {
+            Client::cancel(trace_id);
+        });
+        // Client::cancel(trace_id);
     }
 
     pub fn new_cancel_token(&self) -> (CancellationToken, CancellationToken) {
@@ -179,16 +203,29 @@ impl Client {
         (token, token_clone)
     }
 
-    pub async fn request_async_cancelable<Q: protobuf::Message, P: protobuf::Message>(
+    /*
+    pub fn request_sync_cancelable<Q: protobuf::Message, P: protobuf::Message>(
+            &self,
+            path: String,
+            req: Box<Q>,
+            trace_id: String,
+        ) -> Result<(Box<P>), Error> {
+            let cancel_token = Client::get_cancel_token(trace_id);
+            log::debug(format!("cancel_token: {:?}", cancel_token).as_str());
+            if !cancel_token.is_none() && cancel_token.unwrap().clone().is_cancelled() {
+                Err(Error {
+                    code: ErrorCode::Cancelled,
+                    message: format!("request canceled: {}", path),
+                })
+            }
+        }
+    */
+
+    pub fn request_sync<Q: protobuf::Message, P: protobuf::Message>(
         &self,
         path: String,
         req: Box<Q>,
-        on_success: OnSuccess<P>,
-        on_error: OnError,
-        trace_id: String,
-    ) {
-        let cancel_token = Client::get_cancel_token(trace_id);
-        log::debug(format!("cancel_token: {:?}", cancel_token).as_str());
+    ) -> Result<(Box<P>), Error> {
         let builder = self.http_client.post(self.build_http_url(path.clone()));
         let builder = builder.headers(self.build_header());
         let builder = builder.body(self.build_body(req, path.clone().to_string()));
@@ -196,58 +233,30 @@ impl Client {
         let timeout = std::time::Duration::from_millis(self.config.request_timeout_millisecond as u64);
         let builder = builder.timeout(timeout);
 
-        let run = async move {
-            let x = builder.send().await;
-            match x {
-                Ok(resp) => {
-                    let status = resp.status();
-                    log::debug(format!("status: {:?}", status).as_str());
-                    if status.is_success() {
-                        let bytes = resp.bytes().await.unwrap();
-                        log::debug(format!("bytes: {:?}", String::from_utf8(bytes.clone().to_vec()).unwrap()).as_str());
-                        let resp: P = proto::unmarshal::<P>(bytes);
-                        on_success(Box::new(resp));
-                    } else {
-                        on_error(Error {
-                            code: ErrorCode::HttpError,
-                            message: format!("status: {:?}", status),
-                        });
-                    }
-                }
-                Err(err) => {
-                    on_error(Error {
-                        code: ErrorCode::RequestError,
-                        message: format!("{:?}", err),
-                    });
+        let response_result = builder.send();
+        return match response_result {
+            Err(err) => {
+                Err(Error {
+                    code: ErrorCode::HttpError,
+                    message: err.to_string(),
+                })
+            }
+            Ok(response) => {
+                let status = response.status();
+                log::debug(format!("status: {:?}", status).as_str());
+                if status.is_success() {
+                    let bytes = response.bytes().unwrap();
+                    log::debug(format!("bytes: {:?}", String::from_utf8(bytes.clone().to_vec()).unwrap()).as_str());
+                    let resp = proto::unmarshal::<P>(bytes);
+                    Ok(Box::new(resp))
+                } else {
+                    Err(Error {
+                        code: ErrorCode::HttpError,
+                        message: format!("status: {:?}", status),
+                    })
                 }
             }
         };
-        if cancel_token.is_none() {
-            // run
-            run.await;
-            return;
-        }
-        // cancelable
-        let cancel_token = cancel_token.unwrap();
-        select! {
-            _ = cancel_token.cancelled() => {
-                on_error(Error {
-                    code: ErrorCode::Cancelled,
-                    message: format!("request canceled: {}", path),
-                });
-            }
-            _ = run => {}
-        }
-    }
-
-    pub async fn request_async<Q: protobuf::Message, P: protobuf::Message>(
-        &self,
-        path: String,
-        req: Box<Q>,
-        on_success: OnSuccess<P>,
-        on_error: OnError,
-    ) {
-        self.request_async_cancelable(path, req, on_success, on_error, "".to_string()).await;
     }
 
     fn build_http_url(&self, path: String) -> String {

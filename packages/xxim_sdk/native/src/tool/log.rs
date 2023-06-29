@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use chrono::{Local};
+
 // 日志级别
 #[derive(Debug, PartialEq, Clone, Copy, Serialize, Deserialize)]
 pub enum Level {
@@ -7,6 +8,18 @@ pub enum Level {
     Info,
     Warn,
     Error,
+}
+
+impl Level {
+    pub fn from_i32(v: i32) -> Level {
+        match v {
+            0 => Level::Debug,
+            1 => Level::Info,
+            2 => Level::Warn,
+            3 => Level::Error,
+            _ => Level::Info,
+        }
+    }
 }
 
 // 设置日志级别

@@ -5,14 +5,14 @@ use crate::config::Config;
 use lazy_static::lazy_static;
 use tokio::time;
 use tokio_util::sync::CancellationToken;
-use crate::client::client::{Client, Context};
+use crate::client::client::{Client, Context, Error};
 use crate::pb::{common, user};
 use crate::store::sqlite::{sqlite_connection, sqlite_close, sqlite_destroy, sqlite_all_debug, Sqlite};
-use crate::tool::{json, log, uuid};
+use crate::tool::{json, log, proto, uuid};
 
 pub struct SdkApi {
-    config: Option<Config>,
-    client: Option<Client>,
+    pub config: Option<Config>,
+    pub client: Option<Client>,
     instance_id: String,
 }
 
@@ -37,6 +37,58 @@ impl SdkApi {
             }
         }
         let mut config: Config = config_result.unwrap();
+        let validate_result = config.validate();
+        match validate_result {
+            Ok(_) => {}
+            Err(e) => {
+                log::error("config validate error");
+                log::error(e.to_string().as_str());
+                return false;
+            }
+        }
+        log::debug(format!("config: {:?}", config).as_str());
+        self.config = Some(config);
+        self.client = Some(Client::new(
+            self.config.as_ref().unwrap().clone(),
+        ));
+        return true;
+    }
+
+    pub fn new(
+        &mut self,
+        host: String,
+        port: u16,
+        ssl: bool,
+        app_id: Option<String>,
+        install_id: Option<String>,
+        platform: i32,
+        device_model: String,
+        os_version: String,
+        language: i32,
+        request_timeout_millisecond: i32,
+        db_dir: String,
+        custom_header: Option<String>,
+        keep_alive_second: i32,
+        log_level: i32,
+    ) -> bool {
+        let mut config: Config = Config {
+            host,
+            port,
+            ssl,
+            app_id: app_id.unwrap_or_default(),
+            install_id: install_id.unwrap_or_default(),
+            platform,
+            device_model,
+            os_version,
+            language,
+            request_timeout_millisecond,
+            user_token: None,
+            user_id: None,
+            db_dir,
+            custom_header: custom_header.unwrap_or_default(),
+            keep_alive_second,
+            log_level: log::Level::from_i32(log_level),
+        };
         let validate_result = config.validate();
         match validate_result {
             Ok(_) => {}
@@ -141,64 +193,7 @@ impl SdkApi {
     pub fn context_with_timeout(&self, timeout: i64) -> Context {
         self.client.as_ref().unwrap().context_with_timeout(timeout)
     }
-}
-
-impl SdkApi {
-    pub async fn test_client(&self) {
-        let req = common::RequestHeader {
-            appId: "".to_string(),
-            userId: "".to_string(),
-            userToken: "".to_string(),
-            clientIp: "".to_string(),
-            installId: "".to_string(),
-            platform: Default::default(),
-            gatewayPodIp: "".to_string(),
-            deviceModel: "".to_string(),
-            osVersion: "".to_string(),
-            appVersion: "".to_string(),
-            language: Default::default(),
-            connectTime: 0,
-            encoding: Default::default(),
-            extra: "".to_string(),
-            special_fields: Default::default(),
-        };
-        let box_req = Box::new(req);
-        let result = self.client.as_ref().unwrap().request_async(
-            "/test".to_string(),
-            box_req,
-            |resp: Box<common::ResponseHeader>| {
-                log::debug(format!("resp: {:?}", resp).as_str());
-            },
-            |err| {
-                log::error(format!("err: {:?}", err).as_str());
-            },
-        ).await;
-    }
-
-    async fn mock_cancel(cancel_token: CancellationToken) {
-        log::warn("cancel_token.cancel()");
-        time::sleep(Duration::from_millis(1)).await;
-        cancel_token.cancel();
-    }
-
-    pub fn user_register(&self, trace_id: String, req: user::UserRegisterReq) {
-        let box_req = Box::new(req);
-        // let (cancel_token, cancel_token_clone) = self.client.as_ref().unwrap().new_cancel_token();
-        // 模拟 1ms 后取消了请求，此时会on_error: canceled
-        // let cancel = SdkApi::mock_cancel(cancel_token);
-        // tokio::spawn(cancel);
-        self.client.as_ref().unwrap().block_on(async move {
-            self.client.as_ref().unwrap().request_async_cancelable(
-                "/v1/user/white/userRegister".to_string(),
-                box_req,
-                |resp: Box<user::UserRegisterResp>| {
-                    log::debug(format!("resp: {:?}", resp).as_str());
-                },
-                |err| {
-                    log::error(format!("err: {:?}", err).as_str());
-                },
-                trace_id,
-            ).await;
-        });
+    pub fn context_cancel(&self, trace_id: String) {
+        self.client.as_ref().unwrap().context_cancel(trace_id)
     }
 }

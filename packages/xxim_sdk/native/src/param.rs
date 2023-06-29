@@ -1,17 +1,12 @@
 use serde::{Deserialize, Serialize};
+use crate::client::client::Error;
+use crate::tool::b64;
 
 //ApiResult sdk暴露的方法的调用结果
 #[derive(Serialize, Deserialize)]
 pub struct ApiResult {
     pub code: i32,
     pub message: String,
-    pub data: String,
-}
-
-//ApiParam sdk暴露的方法的调用参数
-#[derive(Serialize, Deserialize)]
-pub struct ApiParam {
-    pub instance_id: String,
     pub data: String,
 }
 
@@ -31,18 +26,17 @@ impl ApiResult {
             data: "".to_string(),
         };
     }
+
+    pub fn from_api_result(result: Result<Vec<u8>, Error>) -> Self {
+        return match result {
+            Ok(data) => {
+                //base64编码
+                let data = b64::StdEncoding::encode_to_string(data);
+                ApiResult::success(data.as_str())
+            }
+            Err(err) => {
+                ApiResult::error(err.code_i32(), err.message_str())
+            }
+        };
+    }
 }
-
-#[derive(Serialize, Deserialize)]
-pub struct SetLoginInfoParam {
-    pub token: String,
-    pub user_id: String,
-}
-
-
-#[derive(Serialize, Deserialize)]
-pub struct UserRegisterParam {
-    pub trace_id: String,
-    pub protobuf: Vec<u8>,
-}
-
