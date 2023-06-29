@@ -10,8 +10,8 @@ DynamicLibrary createLibraryImpl() {
   const base = 'xxim_sdk';
 
   if (Platform.isIOS || Platform.isMacOS) {
-    return DynamicLibrary.open('lib$base.dylib');
-    // return DynamicLibrary.executable();
+    // return DynamicLibrary.open('lib$base.dylib');
+    return DynamicLibrary.executable();
   } else if (Platform.isWindows) {
     return DynamicLibrary.open('$base.dll');
   } else {
