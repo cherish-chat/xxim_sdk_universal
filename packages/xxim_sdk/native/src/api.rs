@@ -1,9 +1,9 @@
 use prost::bytes::Bytes;
-use crate::client::client::Error;
 use crate::sdk::api::SdkApi;
-use crate::tool::{json, log, proto};
+use crate::tool::{json, proto};
 use crate::param::*;
 use crate::pb::{user, conversation as friend, conversation as group, message as message, message as notice};
+
 
 /// sdk暴露的方法的调用结果
 

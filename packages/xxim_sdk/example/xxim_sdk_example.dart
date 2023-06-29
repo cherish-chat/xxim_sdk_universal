@@ -28,29 +28,6 @@ class ApiResult {
   }
 }
 
-class ApiParam {
-  String instance_id = '';
-  String data = '';
-
-  ApiParam.build({required this.instance_id, required dynamic data}) {
-    this.data = jsonEncode(data);
-  }
-
-  String toJsonString() {
-    return jsonEncode({
-      'instance_id': instance_id,
-      'data': data,
-    });
-  }
-
-  String toString() {
-    return jsonEncode({
-      'instance_id': instance_id,
-      'data': data,
-    });
-  }
-}
-
 Future<void> main1() async {
   var b = "AQIDBAU=";
   //base64解码

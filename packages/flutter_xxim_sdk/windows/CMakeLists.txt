@@ -1,4 +1,4 @@
-set(LibraryVersion "xxim_sdk-v1.1.0") # generated; do not edit
+set(LibraryVersion "xxim_sdk-v0.0.2") # generated; do not edit
 
 # TODO Remove this workaround once Flutter supports Windows ARM.
 # https://github.com/flutter/flutter/issues/116196
