@@ -18,21 +18,29 @@ abstract class XximSdk {
 
   FlutterRustBridgeTaskConstMeta get kNewInstanceConstMeta;
 
-  Future<String> destroyInstance({required String param, dynamic hint});
+  Future<String> destroyInstance({required String instanceId, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDestroyInstanceConstMeta;
 
-  Future<String> init({required String param, dynamic hint});
+  Future<String> init({required String instanceId, required String params, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kInitConstMeta;
 
-  Future<String> setLoginInfo({required String param, dynamic hint});
+  Future<String> setLoginInfo({required String instanceId, required String params, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kSetLoginInfoConstMeta;
 
-  Future<String> unsetLoginInfo({required String param, dynamic hint});
+  Future<String> unsetLoginInfo({required String instanceId, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kUnsetLoginInfoConstMeta;
+
+  Future<String> contextWithTimeout({required String instanceId, required int timeoutMills, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kContextWithTimeoutConstMeta;
+
+  Future<String> userRegisterApi({required String instanceId, required String ctx, required Uint8List protobuf, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserRegisterApiConstMeta;
 }
 
 class XximSdkImpl implements XximSdk {
@@ -57,14 +65,14 @@ class XximSdkImpl implements XximSdk {
         argNames: [],
       );
 
-  Future<String> destroyInstance({required String param, dynamic hint}) {
-    var arg0 = _platform.api2wire_String(param);
+  Future<String> destroyInstance({required String instanceId, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_destroy_instance(port_, arg0),
       parseSuccessData: _wire2api_String,
       constMeta: kDestroyInstanceConstMeta,
       argValues: [
-        param
+        instanceId
       ],
       hint: hint,
     ));
@@ -73,18 +81,20 @@ class XximSdkImpl implements XximSdk {
   FlutterRustBridgeTaskConstMeta get kDestroyInstanceConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "destroy_instance",
         argNames: [
-          "param"
+          "instanceId"
         ],
       );
 
-  Future<String> init({required String param, dynamic hint}) {
-    var arg0 = _platform.api2wire_String(param);
+  Future<String> init({required String instanceId, required String params, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
+    var arg1 = _platform.api2wire_String(params);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_init(port_, arg0),
+      callFfi: (port_) => _platform.inner.wire_init(port_, arg0, arg1),
       parseSuccessData: _wire2api_String,
       constMeta: kInitConstMeta,
       argValues: [
-        param
+        instanceId,
+        params
       ],
       hint: hint,
     ));
@@ -93,18 +103,21 @@ class XximSdkImpl implements XximSdk {
   FlutterRustBridgeTaskConstMeta get kInitConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "init",
         argNames: [
-          "param"
+          "instanceId",
+          "params"
         ],
       );
 
-  Future<String> setLoginInfo({required String param, dynamic hint}) {
-    var arg0 = _platform.api2wire_String(param);
+  Future<String> setLoginInfo({required String instanceId, required String params, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
+    var arg1 = _platform.api2wire_String(params);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_set_login_info(port_, arg0),
+      callFfi: (port_) => _platform.inner.wire_set_login_info(port_, arg0, arg1),
       parseSuccessData: _wire2api_String,
       constMeta: kSetLoginInfoConstMeta,
       argValues: [
-        param
+        instanceId,
+        params
       ],
       hint: hint,
     ));
@@ -113,18 +126,19 @@ class XximSdkImpl implements XximSdk {
   FlutterRustBridgeTaskConstMeta get kSetLoginInfoConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "set_login_info",
         argNames: [
-          "param"
+          "instanceId",
+          "params"
         ],
       );
 
-  Future<String> unsetLoginInfo({required String param, dynamic hint}) {
-    var arg0 = _platform.api2wire_String(param);
+  Future<String> unsetLoginInfo({required String instanceId, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_unset_login_info(port_, arg0),
       parseSuccessData: _wire2api_String,
       constMeta: kUnsetLoginInfoConstMeta,
       argValues: [
-        param
+        instanceId
       ],
       hint: hint,
     ));
@@ -133,7 +147,56 @@ class XximSdkImpl implements XximSdk {
   FlutterRustBridgeTaskConstMeta get kUnsetLoginInfoConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "unset_login_info",
         argNames: [
-          "param"
+          "instanceId"
+        ],
+      );
+
+  Future<String> contextWithTimeout({required String instanceId, required int timeoutMills, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
+    var arg1 = _platform.api2wire_i64(timeoutMills);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_context_with_timeout(port_, arg0, arg1),
+      parseSuccessData: _wire2api_String,
+      constMeta: kContextWithTimeoutConstMeta,
+      argValues: [
+        instanceId,
+        timeoutMills
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kContextWithTimeoutConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "context_with_timeout",
+        argNames: [
+          "instanceId",
+          "timeoutMills"
+        ],
+      );
+
+  Future<String> userRegisterApi({required String instanceId, required String ctx, required Uint8List protobuf, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
+    var arg1 = _platform.api2wire_String(ctx);
+    var arg2 = _platform.api2wire_uint_8_list(protobuf);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_user_register_api(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_String,
+      constMeta: kUserRegisterApiConstMeta,
+      argValues: [
+        instanceId,
+        ctx,
+        protobuf
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kUserRegisterApiConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_register_api",
+        argNames: [
+          "instanceId",
+          "ctx",
+          "protobuf"
         ],
       );
 

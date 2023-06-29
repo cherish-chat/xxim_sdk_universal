@@ -5,8 +5,7 @@ use crate::config::Config;
 use lazy_static::lazy_static;
 use tokio::time;
 use tokio_util::sync::CancellationToken;
-use crate::client::client;
-use crate::client::client::Client;
+use crate::client::client::{Client, Context};
 use crate::pb::{common, user};
 use crate::store::sqlite::{sqlite_connection, sqlite_close, sqlite_destroy, sqlite_all_debug, Sqlite};
 use crate::tool::{json, log, uuid};
@@ -139,6 +138,12 @@ impl SdkApi {
 }
 
 impl SdkApi {
+    pub fn context_with_timeout(&self, timeout: i64) -> Context {
+        self.client.as_ref().unwrap().context_with_timeout(timeout)
+    }
+}
+
+impl SdkApi {
     pub async fn test_client(&self) {
         let req = common::RequestHeader {
             appId: "".to_string(),
@@ -176,24 +181,24 @@ impl SdkApi {
         cancel_token.cancel();
     }
 
-    pub async fn user_register(&self, req: user::UserRegisterReq) {
+    pub fn user_register(&self, trace_id: String, req: user::UserRegisterReq) {
         let box_req = Box::new(req);
-        let (cancel_token, cancel_token_clone) = self.client.as_ref().unwrap().new_cancel_token();
+        // let (cancel_token, cancel_token_clone) = self.client.as_ref().unwrap().new_cancel_token();
         // 模拟 1ms 后取消了请求，此时会on_error: canceled
-        let cancel = SdkApi::mock_cancel(cancel_token);
-        tokio::spawn(cancel);
-
-        self.client.as_ref().unwrap().request_async_cancelable(
-            "/v1/user/white/userRegister".to_string(),
-            box_req,
-            |resp: Box<user::UserRegisterResp>| {
-                log::debug(format!("resp: {:?}", resp).as_str());
-            },
-            |err| {
-                log::error(format!("err: {:?}", err).as_str());
-            },
-            cancel_token_clone,
-        ).await;
-
+        // let cancel = SdkApi::mock_cancel(cancel_token);
+        // tokio::spawn(cancel);
+        self.client.as_ref().unwrap().block_on(async move {
+            self.client.as_ref().unwrap().request_async_cancelable(
+                "/v1/user/white/userRegister".to_string(),
+                box_req,
+                |resp: Box<user::UserRegisterResp>| {
+                    log::debug(format!("resp: {:?}", resp).as_str());
+                },
+                |err| {
+                    log::error(format!("err: {:?}", err).as_str());
+                },
+                trace_id,
+            ).await;
+        });
     }
 }

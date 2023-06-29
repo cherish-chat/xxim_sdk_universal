@@ -7,3 +7,4 @@ mod client;
 mod store;
 pub mod config;
 pub mod param;
+mod test;

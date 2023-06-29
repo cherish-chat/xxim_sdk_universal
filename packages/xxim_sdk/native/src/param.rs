@@ -38,3 +38,11 @@ pub struct SetLoginInfoParam {
     pub token: String,
     pub user_id: String,
 }
+
+
+#[derive(Serialize, Deserialize)]
+pub struct UserRegisterParam {
+    pub trace_id: String,
+    pub protobuf: Vec<u8>,
+}
+

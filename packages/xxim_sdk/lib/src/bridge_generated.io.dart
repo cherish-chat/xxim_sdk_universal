@@ -21,6 +21,11 @@ class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> {
   }
 
   @protected
+  int api2wire_i64(int raw) {
+    return raw;
+  }
+
+  @protected
   ffi.Pointer<wire_uint_8_list> api2wire_uint_8_list(Uint8List raw) {
     final ans = inner.new_uint_8_list_0(raw.length);
     ans.ref.ptr.asTypedList(raw.length).setAll(0, raw);
@@ -29,7 +34,6 @@ class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> {
 // Section: finalizer
 
 // Section: api_fill_to_wire
-
 }
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names, avoid_positional_boolean_parameters, annotate_overrides, constant_identifier_names
@@ -120,11 +124,11 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
 
   void wire_destroy_instance(
     int port_,
-    ffi.Pointer<wire_uint_8_list> param,
+    ffi.Pointer<wire_uint_8_list> instance_id,
   ) {
     return _wire_destroy_instance(
       port_,
-      param,
+      instance_id,
     );
   }
 
@@ -133,42 +137,78 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
 
   void wire_init(
     int port_,
-    ffi.Pointer<wire_uint_8_list> param,
+    ffi.Pointer<wire_uint_8_list> instance_id,
+    ffi.Pointer<wire_uint_8_list> params,
   ) {
     return _wire_init(
       port_,
-      param,
+      instance_id,
+      params,
     );
   }
 
-  late final _wire_initPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_init');
-  late final _wire_init = _wire_initPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+  late final _wire_initPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>>('wire_init');
+  late final _wire_init = _wire_initPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_set_login_info(
     int port_,
-    ffi.Pointer<wire_uint_8_list> param,
+    ffi.Pointer<wire_uint_8_list> instance_id,
+    ffi.Pointer<wire_uint_8_list> params,
   ) {
     return _wire_set_login_info(
       port_,
-      param,
+      instance_id,
+      params,
     );
   }
 
-  late final _wire_set_login_infoPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_set_login_info');
-  late final _wire_set_login_info = _wire_set_login_infoPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+  late final _wire_set_login_infoPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>>('wire_set_login_info');
+  late final _wire_set_login_info = _wire_set_login_infoPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_unset_login_info(
     int port_,
-    ffi.Pointer<wire_uint_8_list> param,
+    ffi.Pointer<wire_uint_8_list> instance_id,
   ) {
     return _wire_unset_login_info(
       port_,
-      param,
+      instance_id,
     );
   }
 
   late final _wire_unset_login_infoPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_unset_login_info');
   late final _wire_unset_login_info = _wire_unset_login_infoPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_context_with_timeout(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> instance_id,
+    int timeout_mills,
+  ) {
+    return _wire_context_with_timeout(
+      port_,
+      instance_id,
+      timeout_mills,
+    );
+  }
+
+  late final _wire_context_with_timeoutPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Int64)>>('wire_context_with_timeout');
+  late final _wire_context_with_timeout = _wire_context_with_timeoutPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, int)>();
+
+  void wire_user_register_api(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> instance_id,
+    ffi.Pointer<wire_uint_8_list> ctx,
+    ffi.Pointer<wire_uint_8_list> protobuf,
+  ) {
+    return _wire_user_register_api(
+      port_,
+      instance_id,
+      ctx,
+      protobuf,
+    );
+  }
+
+  late final _wire_user_register_apiPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>>('wire_user_register_api');
+  late final _wire_user_register_api = _wire_user_register_apiPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,

@@ -19,7 +19,7 @@ serde = { version = "1.0", features = ["derive"] }
 chrono = "0.4"
 lazy_static = "1.4.0"
 reqwest = "0.11.18"
-tokio = "1.28.2"
+tokio = {version = "1.13", features = ["rt", "rt-multi-thread", "time"]}
 tonic = "0.9.2"
 prost = { version = "0.11.9", default_features = false, features = ["prost-derive"] }
 tokio-test = "0.4.2"
@@ -34,3 +34,19 @@ features = [
 ]
 
 [dev-dependencies]
+
+#针对 aarch64-linux-android 的打包依赖 openssl改为动态链接库
+[target.aarch64-linux-android.dependencies]
+openssl = { version = "0.10.55", features = ["vendored"] }
+
+#armv7-linux-androideabi
+[target.armv7-linux-androideabi.dependencies]
+openssl = { version = "0.10.55", features = ["vendored"] }
+
+#i686-linux-android
+[target.i686-linux-android.dependencies]
+openssl = { version = "0.10.55", features = ["vendored"] }
+
+#x86_64-linux-android
+[target.x86_64-linux-android.dependencies]
+openssl = { version = "0.10.55", features = ["vendored"] }

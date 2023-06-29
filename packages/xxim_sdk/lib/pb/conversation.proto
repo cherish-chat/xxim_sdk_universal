@@ -1,0 +1,367 @@
+syntax = "proto3";
+package pb;
+option go_package = "./pb";
+import "common.proto";
+
+//GroupCreate 创建群组
+
+message GroupCreateReq {
+  RequestHeader header = 1;
+  optional string name = 2;
+  optional string avatar = 3;
+  repeated string memberList = 4;
+  map<string, string> infoMap = 5;
+  map<string, string> extraMap = 6;
+}
+
+message GroupCreateResp {
+  ResponseHeader header = 1;
+  string groupId = 2;
+}
+
+//CountJoinGroupReq 统计加入的群组数量
+message CountJoinGroupReq {
+  RequestHeader header = 1;
+}
+
+message CountJoinGroupResp {
+  ResponseHeader header = 1;
+  int64 count = 2;
+}
+
+//CountCreateGroupReq 统计创建的群组数量
+message CountCreateGroupReq {
+  RequestHeader header = 1;
+}
+
+message CountCreateGroupResp {
+  ResponseHeader header = 1;
+  int64 count = 2;
+}
+
+//GroupSubscribe 群组订阅
+
+message GroupSubscribeReq {
+  RequestHeader header = 1;
+}
+
+message GroupSubscribeResp {
+  ResponseHeader header = 1;
+}
+
+//ListGroupSubscribersReq 列出群组订阅者
+message ListGroupSubscribersReq{
+  RequestHeader header = 1;
+  //GroupId 群组id
+  string groupId = 2;
+  //Cursor 游标
+  int64 cursor = 3;
+  //Limit 限制
+  int64 limit = 4;
+  //Filter 过滤器
+  message Filter {
+    //subscribeTimeGte 订阅时间大于等于
+    int64 subscribeTimeGte = 1;
+  }
+  //Option 选项
+  message Option {
+  }
+  Filter filter = 5;
+  Option option = 6;
+}
+
+message ListGroupSubscribersResp{
+  ResponseHeader header = 1;
+  //Cursor 游标
+  //List 列表
+  message Subscriber {
+    //UserId 用户id
+    string userId = 1;
+    //SubscribeTime 订阅时间
+    int64 subscribeTime = 2;
+  }
+  repeated Subscriber subscriberList = 2;
+}
+
+service groupService {
+  //GroupCreate 创建群组
+  rpc GroupCreate(GroupCreateReq) returns (GroupCreateResp) {}
+  //CountJoinGroup 统计加入的群组数量
+  rpc CountJoinGroup(CountJoinGroupReq) returns (CountJoinGroupResp) {}
+  //CountCreateGroup 统计创建的群组数量
+  rpc CountCreateGroup(CountCreateGroupReq) returns (CountCreateGroupResp) {}
+  //GroupSubscribe 群组订阅
+  rpc GroupSubscribe(GroupSubscribeReq) returns (GroupSubscribeResp) {}
+  //ListGroupSubscribers 列出群组订阅者
+  rpc ListGroupSubscribers(ListGroupSubscribersReq) returns (ListGroupSubscribersResp) {}
+}
+
+//FriendApplyStatus 好友申请状态
+enum FriendApplyStatus {
+  //Applying 申请中
+  Applying = 0;
+  //Accepted 已同意
+  Accepted = 1;
+  //Rejected 已拒绝
+  Rejected = 2;
+}
+
+//FriendApply 申请添加好友
+
+message FriendApplyReq {
+  RequestHeader header = 1;
+  string toUserId = 2;
+  //Message 附加消息
+  optional string message = 3;
+  //Answer 附加回答
+  optional string answer = 4;
+}
+
+message FriendApplyResp {
+  ResponseHeader header = 1;
+}
+
+//FriendApplyHandle 处理好友申请
+
+message FriendApplyHandleReq {
+  RequestHeader header = 1;
+  string applyId = 2;
+  //Agree 是否同意
+  bool agree = 3;
+  //同意后发送的第一条消息
+  optional string firstMessage = 4;
+}
+
+message FriendApplyHandleResp {
+  ResponseHeader header = 1;
+}
+
+//ListFriendApply 列出好友申请 给app用的
+
+message ListFriendApplyReq {
+  RequestHeader header = 1;
+  //Cursor 游标
+  int64 cursor = 2;
+  //Limit 限制
+  int64 limit = 3;
+  //Filter 过滤器
+  message Filter {
+    optional FriendApplyStatus status = 1;
+  }
+  //Option 选项
+  message Option {
+    bool includeApplyByMe = 1; //包含我发出的申请
+  }
+  Filter filter = 4;
+  Option option = 5;
+}
+
+message ListFriendApplyResp {
+  ResponseHeader header = 1;
+  //Cursor 游标
+  int64 cursor = 2;
+  //List 列表
+  message FriendApply {
+    //ApplyId 申请id
+    string applyId = 1;
+    //FromUserId 申请人id
+    string fromUserId = 2;
+    //ToUserId 被申请人id
+    string toUserId = 3;
+    //Message 附加消息
+    string message = 4;
+    //Answer 附加回答
+    string answer = 5;
+  }
+  repeated FriendApply friendApplyList = 3;
+}
+
+//CountFriendReq 统计好友数量
+message CountFriendReq {
+  RequestHeader header = 1;
+}
+
+message CountFriendResp {
+  ResponseHeader header = 1;
+  int64 count = 2;
+}
+
+service friendService {
+  //FriendApply 添加好友
+  rpc FriendApply(FriendApplyReq) returns (FriendApplyResp) {}
+  //FriendApplyHandle 处理好友申请
+  rpc FriendApplyHandle(FriendApplyHandleReq) returns (FriendApplyHandleResp) {}
+  //ListFriendApply 列出好友申请
+  rpc ListFriendApply(ListFriendApplyReq) returns (ListFriendApplyResp) {}
+  //CountFriend 统计好友数量
+  rpc CountFriend(CountFriendReq) returns (CountFriendResp) {}
+}
+
+message ConversationSettingUpdateReq {
+  RequestHeader header = 1;
+}
+
+message ConversationSettingUpdateResp {
+  ResponseHeader header = 1;
+}
+
+//ListJoinedConversations 列出加入的会话
+
+message ListJoinedConversationsReq {
+  RequestHeader header = 1;
+  ConversationType conversationType = 2;
+
+  //Cursor 游标
+  int64 cursor = 3;
+  //Limit 限制
+  int64 limit = 4;
+  //Filter 过滤器
+  message Filter {
+    message SettingKV {
+      enum Operator {
+        // 等于
+        Equal = 0;
+        // 不等于
+        NotEqual = 1;
+      }
+      ConversationSettingKey key = 1;
+      string value = 2;
+      Operator operator = 3;
+      bool orNotExists = 4;
+      bool orExists = 5;
+    }
+    //使用setting中的字段过滤
+    repeated SettingKV settingList = 1;
+  }
+  //Option 选项
+  message Option {
+    //IncludeSelfMemberInfo 是否包含自己的成员信息
+    bool includeSelfMemberInfo = 2;
+  }
+  Filter filter = 5;
+  Option option = 6;
+}
+
+message ListJoinedConversationsResp {
+  ResponseHeader header = 1;
+  //List 列表
+  message Conversation {
+    //ConversationId 会话id
+    string conversationId = 1;
+    ConversationType conversationType = 2;
+    message SelfMemberInfo {
+      int64 joinTime = 1;
+    }
+    optional SelfMemberInfo selfMemberInfo = 31;
+  }
+  repeated Conversation conversationList = 3;
+}
+
+
+service conversationService {
+  //ConversationSettingUpdate 更新会话设置
+  rpc ConversationSettingUpdate(ConversationSettingUpdateReq) returns (ConversationSettingUpdateResp) {}
+  //ListJoinedConversations 列出加入的会话
+  rpc ListJoinedConversations(ListJoinedConversationsReq) returns (ListJoinedConversationsResp) {}
+}
+
+//SubscriptionSubscribe 订阅号订阅
+
+message SubscriptionSubscribeReq {
+  RequestHeader header = 1;
+}
+
+message SubscriptionSubscribeResp {
+  ResponseHeader header = 1;
+}
+
+//SubscriptionAfterOnline 订阅号在做用户上线后的操作
+
+message SubscriptionAfterOnlineReq {
+  RequestHeader header = 1;
+}
+
+message SubscriptionAfterOnlineResp {
+  ResponseHeader header = 1;
+}
+
+//UserSubscription 用户订阅的订阅号
+message UserSubscription {
+  string subscriptionId = 1;
+  string Subscriber = 2;
+  int64 subscribeTime = 3;
+  map<string, string> extraMap = 6;
+}
+
+//UpsertUserSubscription 更新用户订阅的订阅号
+
+message UpsertUserSubscriptionReq {
+  RequestHeader header = 1;
+  //SubscriptionId 订阅号id
+  string subscriptionId = 2;
+  UserSubscription userSubscription = 3;
+}
+
+message UpsertUserSubscriptionResp {
+  ResponseHeader header = 1;
+}
+
+//DeleteUserSubscription 删除用户订阅的订阅号
+
+message DeleteUserSubscriptionReq {
+  RequestHeader header = 1;
+  //SubscriptionId 订阅号id
+  string subscriptionId = 2;
+}
+
+message DeleteUserSubscriptionResp {
+  ResponseHeader header = 1;
+}
+
+//ListSubscriptionSubscribers 列出订阅号订阅者
+
+message ListSubscriptionSubscribersReq {
+  RequestHeader header = 1;
+  //SubscriptionId 订阅号id
+  string subscriptionId = 2;
+  //Cursor 游标
+  int64 cursor = 3;
+  //Limit 限制
+  int64 limit = 4;
+  //Filter 过滤器
+  message Filter {
+    //subscribeTimeGte 订阅时间大于等于
+    int64 subscribeTimeGte = 1;
+  }
+  //Option 选项
+  message Option {
+  }
+  Filter filter = 5;
+  Option option = 6;
+}
+
+message ListSubscriptionSubscribersResp{
+  ResponseHeader header = 1;
+  //Cursor 游标
+  //List 列表
+  message Subscriber {
+    //UserId 用户id
+    string userId = 1;
+    //SubscribeTime 订阅时间
+    int64 subscribeTime = 2;
+  }
+  repeated Subscriber subscriberList = 2;
+}
+
+service subscriptionService {
+  //SubscriptionSubscribe 订阅号订阅
+  rpc SubscriptionSubscribe(SubscriptionSubscribeReq) returns (SubscriptionSubscribeResp) {}
+  //SubscriptionAfterOnline 订阅号在做用户上线后的操作
+  rpc SubscriptionAfterOnline(SubscriptionAfterOnlineReq) returns (SubscriptionAfterOnlineResp) {}
+  //UpsertUserSubscription 更新用户订阅的订阅号
+  rpc UpsertUserSubscription(UpsertUserSubscriptionReq) returns (UpsertUserSubscriptionResp) {}
+  //DeleteUserSubscription 删除用户订阅的订阅号
+  rpc DeleteUserSubscription(DeleteUserSubscriptionReq) returns (DeleteUserSubscriptionResp) {}
+  //ListSubscriptionSubscribers 列出订阅号订阅者
+  rpc ListSubscriptionSubscribers(ListSubscriptionSubscribersReq) returns (ListSubscriptionSubscribersResp) {}
+}

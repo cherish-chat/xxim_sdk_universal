@@ -31,7 +31,7 @@ fn wire_new_instance_impl(port_: MessagePort) {
         move || move |task_callback| Ok(new_instance()),
     )
 }
-fn wire_destroy_instance_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
+fn wire_destroy_instance_impl(port_: MessagePort, instance_id: impl Wire2Api<String> + UnwindSafe) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
             debug_name: "destroy_instance",
@@ -39,12 +39,16 @@ fn wire_destroy_instance_impl(port_: MessagePort, param: impl Wire2Api<String> +
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_param = param.wire2api();
-            move |task_callback| Ok(destroy_instance(api_param))
+            let api_instance_id = instance_id.wire2api();
+            move |task_callback| Ok(destroy_instance(api_instance_id))
         },
     )
 }
-fn wire_init_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
+fn wire_init_impl(
+    port_: MessagePort,
+    instance_id: impl Wire2Api<String> + UnwindSafe,
+    params: impl Wire2Api<String> + UnwindSafe,
+) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
             debug_name: "init",
@@ -52,12 +56,17 @@ fn wire_init_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe)
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_param = param.wire2api();
-            move |task_callback| Ok(init(api_param))
+            let api_instance_id = instance_id.wire2api();
+            let api_params = params.wire2api();
+            move |task_callback| Ok(init(api_instance_id, api_params))
         },
     )
 }
-fn wire_set_login_info_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
+fn wire_set_login_info_impl(
+    port_: MessagePort,
+    instance_id: impl Wire2Api<String> + UnwindSafe,
+    params: impl Wire2Api<String> + UnwindSafe,
+) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
             debug_name: "set_login_info",
@@ -65,12 +74,13 @@ fn wire_set_login_info_impl(port_: MessagePort, param: impl Wire2Api<String> + U
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_param = param.wire2api();
-            move |task_callback| Ok(set_login_info(api_param))
+            let api_instance_id = instance_id.wire2api();
+            let api_params = params.wire2api();
+            move |task_callback| Ok(set_login_info(api_instance_id, api_params))
         },
     )
 }
-fn wire_unset_login_info_impl(port_: MessagePort, param: impl Wire2Api<String> + UnwindSafe) {
+fn wire_unset_login_info_impl(port_: MessagePort, instance_id: impl Wire2Api<String> + UnwindSafe) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
             debug_name: "unset_login_info",
@@ -78,8 +88,46 @@ fn wire_unset_login_info_impl(port_: MessagePort, param: impl Wire2Api<String> +
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_param = param.wire2api();
-            move |task_callback| Ok(unset_login_info(api_param))
+            let api_instance_id = instance_id.wire2api();
+            move |task_callback| Ok(unset_login_info(api_instance_id))
+        },
+    )
+}
+fn wire_context_with_timeout_impl(
+    port_: MessagePort,
+    instance_id: impl Wire2Api<String> + UnwindSafe,
+    timeout_mills: impl Wire2Api<i64> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "context_with_timeout",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_instance_id = instance_id.wire2api();
+            let api_timeout_mills = timeout_mills.wire2api();
+            move |task_callback| Ok(context_with_timeout(api_instance_id, api_timeout_mills))
+        },
+    )
+}
+fn wire_user_register_api_impl(
+    port_: MessagePort,
+    instance_id: impl Wire2Api<String> + UnwindSafe,
+    ctx: impl Wire2Api<String> + UnwindSafe,
+    protobuf: impl Wire2Api<Vec<u8>> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "user_register_api",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_instance_id = instance_id.wire2api();
+            let api_ctx = ctx.wire2api();
+            let api_protobuf = protobuf.wire2api();
+            move |task_callback| Ok(user_register_api(api_instance_id, api_ctx, api_protobuf))
         },
     )
 }
@@ -106,6 +154,11 @@ where
     }
 }
 
+impl Wire2Api<i64> for i64 {
+    fn wire2api(self) -> i64 {
+        self
+    }
+}
 impl Wire2Api<u8> for u8 {
     fn wire2api(self) -> u8 {
         self
@@ -132,23 +185,38 @@ mod web {
     }
 
     #[wasm_bindgen]
-    pub fn wire_destroy_instance(port_: MessagePort, param: String) {
-        wire_destroy_instance_impl(port_, param)
+    pub fn wire_destroy_instance(port_: MessagePort, instance_id: String) {
+        wire_destroy_instance_impl(port_, instance_id)
     }
 
     #[wasm_bindgen]
-    pub fn wire_init(port_: MessagePort, param: String) {
-        wire_init_impl(port_, param)
+    pub fn wire_init(port_: MessagePort, instance_id: String, params: String) {
+        wire_init_impl(port_, instance_id, params)
     }
 
     #[wasm_bindgen]
-    pub fn wire_set_login_info(port_: MessagePort, param: String) {
-        wire_set_login_info_impl(port_, param)
+    pub fn wire_set_login_info(port_: MessagePort, instance_id: String, params: String) {
+        wire_set_login_info_impl(port_, instance_id, params)
     }
 
     #[wasm_bindgen]
-    pub fn wire_unset_login_info(port_: MessagePort, param: String) {
-        wire_unset_login_info_impl(port_, param)
+    pub fn wire_unset_login_info(port_: MessagePort, instance_id: String) {
+        wire_unset_login_info_impl(port_, instance_id)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_context_with_timeout(port_: MessagePort, instance_id: String, timeout_mills: i64) {
+        wire_context_with_timeout_impl(port_, instance_id, timeout_mills)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_user_register_api(
+        port_: MessagePort,
+        instance_id: String,
+        ctx: String,
+        protobuf: Box<[u8]>,
+    ) {
+        wire_user_register_api_impl(port_, instance_id, ctx, protobuf)
     }
 
     // Section: allocate functions
@@ -173,6 +241,11 @@ mod web {
     impl Wire2Api<String> for JsValue {
         fn wire2api(self) -> String {
             self.as_string().expect("non-UTF-8 string, or not a string")
+        }
+    }
+    impl Wire2Api<i64> for JsValue {
+        fn wire2api(self) -> i64 {
+            ::std::convert::TryInto::try_into(self.dyn_into::<js_sys::BigInt>().unwrap()).unwrap()
         }
     }
     impl Wire2Api<u8> for JsValue {
@@ -200,23 +273,50 @@ mod io {
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_destroy_instance(port_: i64, param: *mut wire_uint_8_list) {
-        wire_destroy_instance_impl(port_, param)
+    pub extern "C" fn wire_destroy_instance(port_: i64, instance_id: *mut wire_uint_8_list) {
+        wire_destroy_instance_impl(port_, instance_id)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_init(port_: i64, param: *mut wire_uint_8_list) {
-        wire_init_impl(port_, param)
+    pub extern "C" fn wire_init(
+        port_: i64,
+        instance_id: *mut wire_uint_8_list,
+        params: *mut wire_uint_8_list,
+    ) {
+        wire_init_impl(port_, instance_id, params)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_set_login_info(port_: i64, param: *mut wire_uint_8_list) {
-        wire_set_login_info_impl(port_, param)
+    pub extern "C" fn wire_set_login_info(
+        port_: i64,
+        instance_id: *mut wire_uint_8_list,
+        params: *mut wire_uint_8_list,
+    ) {
+        wire_set_login_info_impl(port_, instance_id, params)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_unset_login_info(port_: i64, param: *mut wire_uint_8_list) {
-        wire_unset_login_info_impl(port_, param)
+    pub extern "C" fn wire_unset_login_info(port_: i64, instance_id: *mut wire_uint_8_list) {
+        wire_unset_login_info_impl(port_, instance_id)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_context_with_timeout(
+        port_: i64,
+        instance_id: *mut wire_uint_8_list,
+        timeout_mills: i64,
+    ) {
+        wire_context_with_timeout_impl(port_, instance_id, timeout_mills)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_user_register_api(
+        port_: i64,
+        instance_id: *mut wire_uint_8_list,
+        ctx: *mut wire_uint_8_list,
+        protobuf: *mut wire_uint_8_list,
+    ) {
+        wire_user_register_api_impl(port_, instance_id, ctx, protobuf)
     }
 
     // Section: allocate functions

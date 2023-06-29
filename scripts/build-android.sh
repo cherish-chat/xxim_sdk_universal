@@ -7,6 +7,9 @@ cd $BUILD_DIR
 
 # Create the jniLibs build directory
 JNI_DIR=jniLibs
+# Cleanup
+rm -rf $JNI_DIR
+
 mkdir -p $JNI_DIR
 
 # Set up cargo-ndk
@@ -31,5 +34,3 @@ cd $JNI_DIR
 tar -czvf ../android.tar.gz *
 cd -
 
-# Cleanup
-rm -rf $JNI_DIR

@@ -23,11 +23,15 @@ class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> with FlutterRus
   }
 
   @protected
+  Object api2wire_i64(int raw) {
+    return castNativeBigInt(raw);
+  }
+
+  @protected
   Uint8List api2wire_uint_8_list(Uint8List raw) {
     return raw;
   }
 // Section: finalizer
-
 }
 
 // Section: WASM wire module
@@ -42,13 +46,17 @@ class XximSdkWasmModule implements WasmModule {
   external XximSdkWasmModule bind(dynamic thisArg, String moduleName);
   external dynamic /* void */ wire_new_instance(NativePortType port_);
 
-  external dynamic /* void */ wire_destroy_instance(NativePortType port_, String param);
+  external dynamic /* void */ wire_destroy_instance(NativePortType port_, String instance_id);
 
-  external dynamic /* void */ wire_init(NativePortType port_, String param);
+  external dynamic /* void */ wire_init(NativePortType port_, String instance_id, String params);
 
-  external dynamic /* void */ wire_set_login_info(NativePortType port_, String param);
+  external dynamic /* void */ wire_set_login_info(NativePortType port_, String instance_id, String params);
 
-  external dynamic /* void */ wire_unset_login_info(NativePortType port_, String param);
+  external dynamic /* void */ wire_unset_login_info(NativePortType port_, String instance_id);
+
+  external dynamic /* void */ wire_context_with_timeout(NativePortType port_, String instance_id, Object timeout_mills);
+
+  external dynamic /* void */ wire_user_register_api(NativePortType port_, String instance_id, String ctx, Uint8List protobuf);
 }
 
 // Section: WASM wire connector
@@ -58,11 +66,15 @@ class XximSdkWire extends FlutterRustBridgeWasmWireBase<XximSdkWasmModule> {
 
   void wire_new_instance(NativePortType port_) => wasmModule.wire_new_instance(port_);
 
-  void wire_destroy_instance(NativePortType port_, String param) => wasmModule.wire_destroy_instance(port_, param);
+  void wire_destroy_instance(NativePortType port_, String instance_id) => wasmModule.wire_destroy_instance(port_, instance_id);
 
-  void wire_init(NativePortType port_, String param) => wasmModule.wire_init(port_, param);
+  void wire_init(NativePortType port_, String instance_id, String params) => wasmModule.wire_init(port_, instance_id, params);
 
-  void wire_set_login_info(NativePortType port_, String param) => wasmModule.wire_set_login_info(port_, param);
+  void wire_set_login_info(NativePortType port_, String instance_id, String params) => wasmModule.wire_set_login_info(port_, instance_id, params);
 
-  void wire_unset_login_info(NativePortType port_, String param) => wasmModule.wire_unset_login_info(port_, param);
+  void wire_unset_login_info(NativePortType port_, String instance_id) => wasmModule.wire_unset_login_info(port_, instance_id);
+
+  void wire_context_with_timeout(NativePortType port_, String instance_id, Object timeout_mills) => wasmModule.wire_context_with_timeout(port_, instance_id, timeout_mills);
+
+  void wire_user_register_api(NativePortType port_, String instance_id, String ctx, Uint8List protobuf) => wasmModule.wire_user_register_api(port_, instance_id, ctx, protobuf);
 }

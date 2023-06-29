@@ -4,6 +4,5 @@ members = ["packages/xxim_sdk/native"]
 [profile.release]
 lto = true
 codegen-units = 1
-panic = "abort"
 strip = "symbols"
-#opt-level = "z"
+#panic = "abort" 优化微乎其微，但是会导致崩溃时无法获取堆栈信息
