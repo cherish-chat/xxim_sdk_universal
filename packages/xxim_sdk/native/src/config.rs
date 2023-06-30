@@ -1,5 +1,3 @@
-use std::time;
-
 use serde::{Deserialize, Serialize};
 
 use crate::store;
@@ -41,6 +39,7 @@ pub struct Config {
     // logLevel 日志级别，选填，默认为info，可选debug、info、warn、error
     pub log_level: tool::log::Level,
 }
+
 const APP_CONFIG_GLOBAL_DB_FILENAME: &str = "xxim_sdk_core_global.db";
 
 //Config.Validate 验证配置

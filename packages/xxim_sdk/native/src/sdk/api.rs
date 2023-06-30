@@ -1,14 +1,10 @@
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
 use crate::config::Config;
 use lazy_static::lazy_static;
-use tokio::time;
-use tokio_util::sync::CancellationToken;
-use crate::client::client::{Client, Context, Error};
-use crate::pb::{common, user};
+use crate::client::client::{Client};
 use crate::store::sqlite::{sqlite_connection, sqlite_close, sqlite_destroy, sqlite_all_debug, Sqlite};
-use crate::tool::{json, log, proto, uuid};
+use crate::tool::{log, uuid};
 
 pub struct SdkApi {
     pub config: Option<Config>,
@@ -23,37 +19,6 @@ const USER_INIT_SQL: &str = r#"CREATE TABLE IF NOT EXISTS `user_config` (
 );"#;
 
 impl SdkApi {
-    pub fn init(&mut self, config_str: String) -> bool {
-        // ONCE
-        let config_string = config_str.as_str();
-        log::info(format!("init: {}", config_string).as_str());
-        let config_result = json::unmarshal(config_string);
-        match config_result {
-            Ok(_) => {}
-            Err(e) => {
-                log::error("config unmarshal error");
-                log::error(e.to_string().as_str());
-                return false;
-            }
-        }
-        let mut config: Config = config_result.unwrap();
-        let validate_result = config.validate();
-        match validate_result {
-            Ok(_) => {}
-            Err(e) => {
-                log::error("config validate error");
-                log::error(e.to_string().as_str());
-                return false;
-            }
-        }
-        log::debug(format!("config: {:?}", config).as_str());
-        self.config = Some(config);
-        self.client = Some(Client::new(
-            self.config.as_ref().unwrap().clone(),
-        ));
-        return true;
-    }
-
     pub fn new(
         &mut self,
         host: String,
@@ -106,20 +71,6 @@ impl SdkApi {
         return true;
     }
 
-    pub fn set_login_info(&mut self, token: String, user_id: String) {
-        log::info(format!("set_user_token: {}, {}", token, user_id).as_str());
-        let mut config = self.config.as_mut().unwrap_or_else(|| {
-            log::error("config is None, please init first");
-            panic!();
-        });
-        config.user_token = Some(token);
-        config.user_id = Some(user_id);
-        log::debug(format!("config: {:?}", config).as_str());
-        // 初始化数据库
-        self.sqlite_connection();
-        sqlite_all_debug();
-    }
-
     fn sqlite_connection(&mut self) -> Arc<Mutex<Sqlite>> {
         sqlite_connection(self.db_path(), USER_INIT_SQL)
     }
@@ -135,8 +86,9 @@ impl SdkApi {
 
     pub fn unset_login_info(&mut self) {
         log::info("unset_user_token");
+        self.client.as_mut().unwrap().before_logout();
         let db_path = self.db_path();
-        let mut config = self.config.as_mut().unwrap_or_else(|| {
+        let config = self.config.as_mut().unwrap_or_else(|| {
             log::error("config is None, please init first");
             panic!();
         });
@@ -146,6 +98,29 @@ impl SdkApi {
         sqlite_close(db_path.clone());
         sqlite_destroy(db_path);
         sqlite_all_debug();
+    }
+
+    pub fn set_login_info(&mut self, token: String, user_id: String) {
+        log::info(format!("set_user_token: {}, {}", token, user_id).as_str());
+        let config = self.config.as_mut().unwrap_or_else(|| {
+            log::error("config is None, please init first");
+            panic!();
+        });
+        config.user_token = Some(token.clone());
+        config.user_id = Some(user_id.clone());
+        log::debug(format!("config: {:?}", config).as_str());
+        // 初始化数据库
+        self.sqlite_connection();
+        self.reconnect(Some(token.clone()), Some(user_id.clone()));
+        sqlite_all_debug();
+    }
+
+    fn reconnect(&mut self, token: Option<String>, user_id: Option<String>) {
+        let client = self.client.as_mut().unwrap();
+        if token.is_some() && user_id.is_some() {
+            client.set_user_token(token.unwrap(), user_id.unwrap());
+        }
+        client.connect();
     }
 }
 
@@ -186,14 +161,5 @@ impl SdkApi {
     pub fn destroy_instance(instance_id: String) {
         let mut map = SDK_INSTANCE_MAP.lock().unwrap();
         map.remove(&instance_id);
-    }
-}
-
-impl SdkApi {
-    pub fn context_with_timeout(&self, timeout: i64) -> Context {
-        self.client.as_ref().unwrap().context_with_timeout(timeout)
-    }
-    pub fn context_cancel(&self, trace_id: String) {
-        self.client.as_ref().unwrap().context_cancel(trace_id)
     }
 }

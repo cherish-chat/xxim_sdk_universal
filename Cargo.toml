@@ -5,4 +5,4 @@ members = ["packages/xxim_sdk/native"]
 lto = true
 codegen-units = 1
 strip = "symbols"
-panic = "abort" #优化微乎其微，但是会导致崩溃时无法获取堆栈信息
+#panic = "abort" #优化微乎其微，但是会导致崩溃时无法获取堆栈信息

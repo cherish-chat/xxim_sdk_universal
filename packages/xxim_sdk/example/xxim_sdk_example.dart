@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:xxim_sdk/xxim_sdk.dart';
 
@@ -85,17 +86,11 @@ Future<void> main() async {
     return;
   }
 
-  var setLoginInfoResult = ApiResult.fromString(await lib.setLoginInfo(
-    instanceId: instance_id,
-    userId: 'u',
-    token: 't',
-  ));
-  print('setLoginInfoResult: ${setLoginInfoResult.toString()}');
-
-  var unsetLoginInfoResult =
-      ApiResult.fromString(await lib.unsetLoginInfo(instanceId: instance_id));
-  print('unsetLoginInfoResult: ${unsetLoginInfoResult.toString()}');
-
+  if (false ){
+    var unsetLoginInfoResult =
+        ApiResult.fromString(await lib.unsetLoginInfo(instanceId: instance_id));
+    print('unsetLoginInfoResult: ${unsetLoginInfoResult.toString()}');
+  }
   // var destroy_instanceResult = ApiResult.fromString(await lib.destroyInstance(
   //     param:
   //         ApiParam.build(instance_id: instance_id, data: {}).toJsonString()));
@@ -126,10 +121,55 @@ Future<void> main() async {
     if (userRegisterResult.code != 0) {
       print('userRegisterResult: ${userRegisterResult.toString()}');
     }
-    UserRegisterResp resp =
-        UserRegisterResp.fromBuffer(base64Decode(userRegisterResult.data));
-    ResponseHeader header = resp.getField(1);
+    GatewayApiResponse apiResponse = GatewayApiResponse.fromBuffer(base64Decode(userRegisterResult.data));
+    ResponseHeader header = apiResponse.getField(1);
     print('userRegisterResp.header: ${header.toProto3Json()}');
+    UserRegisterResp resp =
+        UserRegisterResp.fromBuffer(apiResponse.body);
     print('userRegisterResp: ${resp.toProto3Json()}');
   }
+
+  if (false ){
+    var req = UserAccessTokenReq(
+      accountMap: {
+        'username': 'dart1',
+        'passwordSalt': 'dart1',
+        'password': 'dart1',
+        'phone': '13700000001',
+        'phoneCode': '86',
+      },
+      verifyMap: {
+        'smsCode': '123456',
+        'captchaId': '123456',
+        'captchaCode': '123456',
+      },
+    );
+    var userAccessTokenResult = ApiResult.fromString(await lib.userAccessToken(
+      protobuf: req.writeToBuffer(),
+      instanceId: instance_id,
+    ));
+    if (userAccessTokenResult.code != 0) {
+      print('userAccessTokenResult: ${userAccessTokenResult.toString()}');
+    }
+    GatewayApiResponse apiResponse = GatewayApiResponse.fromBuffer(base64Decode(userAccessTokenResult.data));
+    ResponseHeader header = apiResponse.getField(1);
+    print('userAccessTokenResp.header: ${header.toProto3Json()}');
+    UserAccessTokenResp resp =
+        UserAccessTokenResp.fromBuffer(apiResponse.body);
+    print('userAccessTokenResp: ${resp.toProto3Json()}');
+  }
+
+  {
+
+    var setLoginInfoResult = ApiResult.fromString(await lib.setLoginInfo(
+      instanceId: instance_id,
+      userId: 'dart1',
+      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE',
+    ));
+    print('setLoginInfoResult: ${setLoginInfoResult.toString()}');
+
+  }
+
+  // sleep
+  sleep(const Duration(seconds:10));
 }
