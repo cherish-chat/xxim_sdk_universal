@@ -1,21 +1,20 @@
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod tests {
-    use std::collections::HashMap;
-    use std::thread;
-    use std::time::Duration;
-    use crate::api::*;
-    use crate::param::*;
-    use crate::pb::user;
-    use crate::tool::*;
-    use super::*;
-    use crate::sdk::api::*;
+    // use std::collections::HashMap;
+    // use std::thread;
+    // use std::time::Duration;
+    // use crate::api::*;
+    // use crate::param::*;
+    // use crate::pb::user;
+    // use crate::tool::*;
+    // use super::*;
 
-    macro_rules! aw {
-        ($e:expr)=>{
-            tokio_test::block_on($e)
-        }
-    }
+    // macro_rules! aw {
+    //     ($e:expr)=>{
+    //         tokio_test::block_on($e)
+    //     }
+    // }
 
     // #[test]
     // fn test_2() {

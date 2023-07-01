@@ -1,10 +1,9 @@
-use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
-use lazy_static::lazy_static;
+use flutter_rust_bridge::{StreamSink};
 use prost::bytes::Bytes;
-use crate::sdk::api::SdkApi;
-use crate::tool::{json, log, proto};
+use crate::tool::{json, proto};
 use crate::param::*;
 use crate::pb::{user, conversation as friend, conversation as group, message as message, message as notice};
+use crate::store::values::{HttpClient, SdkApi};
 
 
 /// sdk暴露的方法的调用结果
@@ -54,7 +53,8 @@ pub fn init_instance(
     keep_alive_second: i32,
     log_level: i32,
 ) -> String {
-    let ok = SdkApi::instance(instance_id).lock().unwrap().new(
+    // let api = SdkApi::instance(instance_id).read().unwrap();
+    let ok = SdkApi::instance(instance_id).write().unwrap().new(
         host, port, ssl, app_id, install_id, platform, device_model, os_version, language,
         request_timeout_millisecond, db_dir, custom_header, keep_alive_second, log_level,
     );
@@ -62,14 +62,17 @@ pub fn init_instance(
 }
 
 /// preset_stream: 预设一个数据流
-pub fn preset_stream(instance_id: String, stream: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
-    log::info("preset_stream: 预设一个数据流");
-    SdkApi::instance(instance_id).lock().unwrap().preset_stream(stream);
+pub fn preset_stream(instance_id: String, stream: StreamSink<Vec<u8>>) {
+    let api = SdkApi::instance(instance_id);
+    let api = api.read().unwrap();
+    api.preset_stream(stream);
 }
 
 /// wait_stream_ready: 等待数据流准备好
 pub fn wait_stream_ready(instance_id: String) -> String {
-    return json::marshal(&ApiResult::success(SdkApi::instance(instance_id).lock().unwrap().wait_stream_ready().as_str()));
+    let api = SdkApi::instance(instance_id);
+    let api = api.read().unwrap();
+    return json::marshal(&ApiResult::success(api.wait_stream_ready().as_str()));
 }
 
 /// set_login_info: 设置登录信息 一般用于app启动后，用户登录成功后调用
@@ -77,14 +80,18 @@ pub fn wait_stream_ready(instance_id: String) -> String {
 /// @param token: 用户token
 /// @param user_id: 用户id
 pub fn set_login_info(instance_id: String, token: String, user_id: String) -> String {
-    SdkApi::instance(instance_id).lock().unwrap().set_login_info(token, user_id);
+    let api = SdkApi::instance(instance_id);
+    let api = api.read().unwrap();
+    api.set_login_info(token, user_id);
     return json::marshal(&ApiResult::success(""));
 }
 
 /// unset_login_info: 取消登录信息 一般用于app退出登录后调用
 /// @param instance_id: sdk实例id
 pub fn unset_login_info(instance_id: String) -> String {
-    SdkApi::instance(instance_id).lock().unwrap().unset_login_info();
+    let api = SdkApi::instance(instance_id);
+    let api = api.read().unwrap();
+    api.unset_login_info();
     return json::marshal(&ApiResult::success(""));
 }
 
@@ -94,40 +101,50 @@ pub fn unset_login_info(instance_id: String) -> String {
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的用户注册请求 详细请看 pb::user::UserRegisterReq
 pub fn user_register(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: user::UserRegisterReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().user_register(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.user_register(pb)));
 }
 
 /// user_access_token: 调用用户访问token API
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的用户访问token请求 详细请看 pb::user::UserAccessTokenReq
 pub fn user_access_token(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: user::UserAccessTokenReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().user_access_token(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.user_access_token(pb)));
 }
 
 /// create_robot: 调用创建机器人API
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的创建机器人请求 详细请看 pb::robot::CreateRobotReq
 pub fn create_robot(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: user::CreateRobotReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().create_robot(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.create_robot(pb)));
 }
 
 /// refresh_user_access_token: 调用刷新用户访问token API
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的刷新用户访问token请求 详细请看 pb::user::RefreshUserAccessTokenReq
 pub fn refresh_user_access_token(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: user::RefreshUserAccessTokenReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().refresh_user_access_token(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.refresh_user_access_token(pb)));
 }
 
 /// revoke_user_access_token: 调用注销用户访问token API
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的注销用户访问token请求 详细请看 pb::user::RevokeUserAccessTokenReq
 pub fn revoke_user_access_token(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: user::RevokeUserAccessTokenReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().revoke_user_access_token(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.revoke_user_access_token(pb)));
 }
 
 /// 下面是 friend 相关 api /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///
@@ -136,24 +153,30 @@ pub fn revoke_user_access_token(instance_id: String, protobuf: Vec<u8>) -> Strin
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的请求添加好友请求 详细请看 pb::friend::FriendApplyReq
 pub fn friend_apply(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: friend::FriendApplyReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().friend_apply(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.friend_apply(pb)));
 }
 
 /// list_friend_apply 获取好友申请列表
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的获取好友申请列表请求 详细请看 pb::friend::ListFriendApplyReq
 pub fn list_friend_apply(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: friend::ListFriendApplyReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().list_friend_apply(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.list_friend_apply(pb)));
 }
 
 /// friend_apply_handle 处理好友申请
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的处理好友申请请求 详细请看 pb::friend::FriendApplyHandleReq
 pub fn friend_apply_handle(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: friend::FriendApplyHandleReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().friend_apply_handle(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.friend_apply_handle(pb)));
 }
 
 /// 下面是 group 相关 api /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///
@@ -162,8 +185,10 @@ pub fn friend_apply_handle(instance_id: String, protobuf: Vec<u8>) -> String {
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的创建群组请求 详细请看 pb::group::GroupCreateReq
 pub fn group_create(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: group::GroupCreateReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().group_create(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.group_create(pb)));
 }
 
 /// 下面是 message 相关 api /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///
@@ -172,16 +197,20 @@ pub fn group_create(instance_id: String, protobuf: Vec<u8>) -> String {
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的发送消息请求 详细请看 pb::message::MessageSendReq
 pub fn message_send(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: message::MessageSendReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().message_send(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.message_send(pb)));
 }
 
 /// message_batch_send 批量发送消息
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的批量发送消息请求 详细请看 pb::message::MessageBatchSendReq
 pub fn message_batch_send(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: message::MessageBatchSendReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().message_batch_send(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.message_batch_send(pb)));
 }
 
 /// 下面是 notice 相关 api /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///
@@ -190,6 +219,8 @@ pub fn message_batch_send(instance_id: String, protobuf: Vec<u8>) -> String {
 /// @param instance_id: sdk实例id
 /// @param protobuf: protobuf编码的获取通知列表请求 详细请看 pb::notice::ListNoticeReq
 pub fn list_notice(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = HttpClient::instance(instance_id);
+    let api = api.read().unwrap();
     let pb: notice::ListNoticeReq = proto::unmarshal(Bytes::from(protobuf));
-    return json::marshal(&ApiResult::from_api_result(SdkApi::instance(instance_id).lock().unwrap().list_notice(pb)));
+    return json::marshal(&ApiResult::from_api_result(api.list_notice(pb)));
 }

@@ -1,13 +1,15 @@
-use crate::client::client::Error;
+use crate::httpapi::httpapi::Error;
 use crate::pb::message;
-use crate::sdk::api::SdkApi;
+use crate::store::values::HttpClient;
 use crate::tool::proto;
 
-impl SdkApi {
+impl HttpClient {
     /// MessageBatchSend 批量发送消息
     pub fn message_batch_send(&self, req: message::MessageBatchSendReq) -> Result<Vec<u8>, Error> {
+        let http_client = HttpClient::instance(self.instance_id.clone());
+        let http_client = http_client.read().unwrap();
         let box_req = Box::new(req);
-        let result: Result<Box<message::MessageBatchSendResp>, Error> = self.client.as_ref().unwrap().request_sync(
+        let result: Result<Box<message::MessageBatchSendResp>, Error> = http_client.request_sync(
             "/v1/message/messageBatchSend".to_string(),
             box_req,
         );
@@ -22,8 +24,10 @@ impl SdkApi {
 
     /// MessageSend 发送消息
     pub fn message_send(&self, req: message::MessageSendReq) -> Result<Vec<u8>, Error> {
+        let http_client = HttpClient::instance(self.instance_id.clone());
+        let http_client = http_client.read().unwrap();
         let box_req = Box::new(req);
-        let result: Result<Box<message::MessageSendResp>, Error> = self.client.as_ref().unwrap().request_sync(
+        let result: Result<Box<message::MessageSendResp>, Error> = http_client.request_sync(
             "/v1/message/messageSend".to_string(),
             box_req,
         );

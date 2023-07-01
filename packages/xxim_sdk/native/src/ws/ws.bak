@@ -1,8 +1,6 @@
 use std::cell::{RefCell};
 use crate::client::client::{Client};
 pub use std::net::TcpStream;
-use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
-use tokio_context::context::Context;
 use crate::config::Config;
 use crate::tool::log;
 use std::sync::{Mutex};
@@ -10,7 +8,6 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use lazy_static::lazy_static;
-use tokio::sync::mpsc::error::SendError;
 use websocket::{OwnedMessage};
 use websocket::sender::Writer;
 use crate::pb::common;
@@ -48,21 +45,21 @@ impl Client {
             self.user_token.clone().unwrap(),
         );
         // let (shutdown_tx, mut shutdown_rx) = unbounded_channel(); // 上层发送数据给底层
-        self.rt.block_on(async move {
-            loop {
-                tokio::select! {
-                    _ = shutdown_ctx.done() => {
-                        log::warn("shutdown_ctx.done");
-                        // shutdown_tx.send("shutdown_ctx.done".to_string()).unwrap();
-                        break;
-                    }
-                    _ = stream.connect() => {
-                        log::error("connect thread quit");
-                        continue;
-                    }
-                }
-            }
-        });
+        // std::thread::spawn(move || {
+        //     loop {
+        //         tokio::select! {
+        //             _ = shutdown_ctx.done() => {
+        //                 log::warn("shutdown_ctx.done");
+        //                 // shutdown_tx.send("shutdown_ctx.done".to_string()).unwrap();
+        //                 break;
+        //             }
+        //             _ = stream.connect() => {
+        //                 log::error("connect thread quit");
+        //                 continue;
+        //             }
+        //         }
+        //     }
+        // });
     }
 
 
@@ -249,25 +246,25 @@ impl Stream {
     async fn receive(&mut self, ws_sender: Writer<TcpStream>) -> String {
         let mut ws_sender = ws_sender;
         loop {
-            tokio::select! {
-                data = self.rx.recv() => {
-                    if data.is_none() {
-                        return "stop".to_string();
-                    }
-                    let data = data.unwrap();
-                    let message = OwnedMessage::Binary(data);
-                    let send_result = ws_sender.send_message(&message);
-                    if send_result.is_err() {
-                        println!("send_message error: {:?}", send_result);
-                        return "stop".to_string();
-                    }
-                    continue;
-                }
-                reconnect = self.reconnect_ctx.recv() => {
-                    log::debug("reconnect_ctx recv");
-                    return "continue".to_string();
-                }
-            }
+            // tokio::select! {
+            //     data = self.rx.recv() => {
+            //         if data.is_none() {
+            //             return "stop".to_string();
+            //         }
+            //         let data = data.unwrap();
+            //         let message = OwnedMessage::Binary(data);
+            //         let send_result = ws_sender.send_message(&message);
+            //         if send_result.is_err() {
+            //             println!("send_message error: {:?}", send_result);
+            //             return "stop".to_string();
+            //         }
+            //         continue;
+            //     }
+            //     reconnect = self.reconnect_ctx.recv() => {
+            //         log::debug("reconnect_ctx recv");
+            //         return "continue".to_string();
+            //     }
+            // }
         }
     }
 

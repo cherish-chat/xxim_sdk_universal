@@ -1,13 +1,15 @@
-use crate::client::client::Error;
+use crate::httpapi::httpapi::Error;
 use crate::pb::message as notice;
-use crate::sdk::api::SdkApi;
+use crate::store::values::HttpClient;
 use crate::tool::proto;
 
-impl SdkApi {
+impl HttpClient {
     /// ListNotice 列出通知
     pub fn list_notice(&self, req: notice::ListNoticeReq) -> Result<Vec<u8>, Error> {
+        let http_client = HttpClient::instance(self.instance_id.clone());
+        let http_client = http_client.read().unwrap();
         let box_req = Box::new(req);
-        let result: Result<Box<notice::ListNoticeResp>, Error> = self.client.as_ref().unwrap().request_sync(
+        let result: Result<Box<notice::ListNoticeResp>, Error> = http_client.request_sync(
             "/v1/notice/listNotice".to_string(),
             box_req,
         );

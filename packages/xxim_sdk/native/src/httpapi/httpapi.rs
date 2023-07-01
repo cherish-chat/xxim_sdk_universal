@@ -1,37 +1,10 @@
-use protobuf::MessageField;
-use reqwest::blocking::{Client as HttpClient};
+use std::sync::{Arc, RwLock};
 use reqwest::header::HeaderMap;
-use crate::config::{Config};
+use crate::store::values::{Config, HTTP_CLIENT_INSTANCE_MAP, HttpClient};
 use crate::pb::{common, gateway};
 use crate::tool::{log, proto};
+use protobuf::MessageField;
 use crate::tool::uuid::uuid;
-pub use std::net::TcpStream;
-
-pub struct Client {
-    pub config: Config,
-    http_client: HttpClient,
-    pub rt: tokio::runtime::Runtime,
-    pub uuid: String,
-    pub user_id: Option<String>,
-    pub user_token: Option<String>,
-}
-
-impl Client {
-    pub fn new(id: String, config: Config) -> Self {
-        Client {
-            config: config.clone(),
-            http_client: reqwest::blocking::Client::new(),
-            rt: tokio::runtime::Runtime::new().unwrap(),
-            uuid: id.clone(),
-            user_id: None,
-            user_token: None,
-        }
-    }
-    pub fn set_user_token(&mut self, token: String, user_id: String) {
-        self.user_token = Some(token);
-        self.user_id = Some(user_id);
-    }
-}
 
 #[derive(Debug)]
 pub enum ErrorCode {
@@ -64,20 +37,31 @@ impl Error {
     }
 }
 
-pub type OnSuccess<P: protobuf::Message> = fn(resp: Box<P>);
-pub type OnError = fn(err: Error);
+impl HttpClient {
+    pub fn new(instance_id: String) -> Self {
+        HttpClient {
+            instance_id,
+            http_client: reqwest::blocking::Client::new(),
+        }
+    }
 
-impl Client {
+    pub(crate) fn instance(id: String) -> Arc<RwLock<HttpClient>> {
+        let map = HTTP_CLIENT_INSTANCE_MAP.read().unwrap();
+        let client = map.get(id.as_str()).unwrap();
+        client.clone()
+    }
+
     pub fn request_sync<Q: protobuf::Message, P: protobuf::Message>(
         &self,
         path: String,
         req: Box<Q>,
-    ) -> Result<(Box<P>), Error> {
+    ) -> Result<Box<P>, Error> {
+        let config = Config::get_config(self.instance_id.clone()).lock().unwrap().clone();
         let builder = self.http_client.post(self.build_http_url(path.clone()));
         let builder = builder.headers(self.build_header());
         let builder = builder.body(self.build_body(req, path.clone().to_string()));
         // 毫秒 self.config.request_timeout_millisecond 转 Duration
-        let timeout = std::time::Duration::from_millis(self.config.request_timeout_millisecond as u64);
+        let timeout = std::time::Duration::from_millis(config.request_timeout_millisecond as u64);
         let builder = builder.timeout(timeout);
 
         let response_result = builder.send();
@@ -107,11 +91,12 @@ impl Client {
     }
 
     fn build_http_url(&self, path: String) -> String {
+        let config = Config::get_config(self.instance_id.clone()).lock().unwrap().clone();
         let mut scheme = "http";
-        if self.config.ssl {
+        if config.ssl {
             scheme = "https";
         }
-        format!("{}://{}:{}/api{}", scheme, self.config.host, self.config.port, path)
+        format!("{}://{}:{}/api{}", scheme, config.host, config.port, path)
     }
 
     fn build_header(&self) -> HeaderMap {
@@ -120,12 +105,13 @@ impl Client {
         header
     }
     fn build_body<Q: protobuf::Message>(&self, req: Box<Q>, path: String) -> Vec<u8> {
+        let config = Config::get_config(self.instance_id.clone()).lock().unwrap().clone();
         let body = proto::marshal_box(req);
-        let config = self.config.clone();
+        let config = config.clone();
         let header = common::RequestHeader {
             appId: config.app_id.to_string(),
-            userId: self.user_id.clone().unwrap_or_default(),
-            userToken: self.user_token.clone().unwrap_or_default(),
+            userId: config.user_id.clone().unwrap_or_default(),
+            userToken: config.user_token.clone().unwrap_or_default(),
             clientIp: "".to_string(),
             installId: config.install_id.to_string(),
             platform: protobuf::EnumOrUnknown::from_i32(config.platform),
@@ -140,7 +126,6 @@ impl Client {
             special_fields: Default::default(),
         };
         let request = &gateway::GatewayApiRequest {
-            //pub header: ::protobuf::MessageField<super::common::RequestHeader>,
             header: MessageField { 0: Some(Box::new(header)) },
             requestId: uuid().to_string(),
             path,
@@ -148,7 +133,6 @@ impl Client {
             special_fields: Default::default(),
         };
         let request_bytes = proto::marshal(request);
-        // log::debug(format!("request_bytes: {:?}", String::from_utf8(request_bytes.clone())).as_str());
         request_bytes
     }
 }

@@ -167,13 +167,22 @@ Future<void> main() async {
   }
 
   {
-    await lib.setLoginInfo(
+    lib.setLoginInfo(
       instanceId: instanceId,
       userId: 'dart1',
       token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE1',
     );
   }
+
+
+  sleep(const Duration(seconds: 5));
+
+  {
+    lib.unsetLoginInfo(instanceId: instanceId);
+  }
+
+  sleep(Duration(days: 1));
 }
 
 void onEvent(Uint8List event) {

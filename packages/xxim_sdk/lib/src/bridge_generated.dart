@@ -273,7 +273,7 @@ class XximSdkImpl implements XximSdk {
     var arg0 = _platform.api2wire_String(instanceId);
     return _platform.executeStream(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_preset_stream(port_, arg0),
-      parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
+      parseSuccessData: _wire2api_uint_8_list,
       constMeta: kPresetStreamConstMeta,
       argValues: [
         instanceId
@@ -638,10 +638,6 @@ class XximSdkImpl implements XximSdk {
 
   String _wire2api_String(dynamic raw) {
     return raw as String;
-  }
-
-  Uint8List _wire2api_ZeroCopyBuffer_Uint8List(dynamic raw) {
-    return raw as Uint8List;
   }
 
   int _wire2api_u8(dynamic raw) {

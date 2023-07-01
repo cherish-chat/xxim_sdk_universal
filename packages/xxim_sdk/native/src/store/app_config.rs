@@ -2,7 +2,7 @@
 该rust文件，用来app配置的存储和读取。这里使用sqlite进行存储，使用rust的sqlite库rusqlite进行操作。
  */
 use rusqlite::{params, Result};
-use crate::store::sqlite::sqlite_connection;
+use crate::store::values::Sqlite;
 
 use crate::tool;
 
@@ -20,7 +20,7 @@ pub struct AppConfig {
 
 impl AppConfig {
     pub fn find_by_k(self, k: &str) -> Result<String> {
-        let connection = sqlite_connection(self.db_path, INIT_SQL);
+        let connection = Sqlite::get_connection(self.db_path, INIT_SQL);
         let sql = format!("SELECT v FROM {} WHERE k = ?", TABLE_NAME);
         tool::log::debug(sql.as_str());
         let conn = connection.lock().unwrap();
@@ -36,7 +36,7 @@ impl AppConfig {
     }
 
     pub fn save(self, k: &str, v: &str) -> Result<()> {
-        let connection = sqlite_connection(self.db_path, INIT_SQL);
+        let connection = Sqlite::get_connection(self.db_path, INIT_SQL);
         let sql = format!("INSERT OR REPLACE INTO {} (k, v) VALUES (?, ?)", TABLE_NAME);
         tool::log::debug(sql.as_str());
         connection.lock().unwrap().execute(&sql, params![k, v])?;
