@@ -1,21 +1,17 @@
-use std::cell::{RefCell, RefMut};
-use std::rc::Rc;
-use crate::client::client::{Client, Error};
+use std::cell::{RefCell};
+use crate::client::client::{Client};
 pub use std::net::TcpStream;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
-use websocket::client::sync::{Client as WebSocketClient};
-use native_tls::TlsStream;
 use tokio_context::context::Context;
 use crate::config::Config;
 use crate::tool::log;
-use std::sync::{Arc, Mutex, RwLock};
+use std::sync::{Mutex};
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::ops::Deref;
+use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use lazy_static::lazy_static;
-use once_cell::sync::OnceCell;
 use tokio::sync::mpsc::error::SendError;
-use websocket::{CloseData, OwnedMessage, WebSocketResult};
+use websocket::{OwnedMessage};
 use websocket::sender::Writer;
 use crate::pb::common;
 use crate::pb::common::Platform;
@@ -52,7 +48,7 @@ impl Client {
             self.user_token.clone().unwrap(),
         );
         // let (shutdown_tx, mut shutdown_rx) = unbounded_channel(); // 上层发送数据给底层
-        self.rt.spawn(async move {
+        self.rt.block_on(async move {
             loop {
                 tokio::select! {
                     _ = shutdown_ctx.done() => {
@@ -67,26 +63,51 @@ impl Client {
                 }
             }
         });
-        // self.rt.spawn(async move {
-        //     loop {
-        //         tokio::select! {
-        //             message_result = rx.recv() => {
-        //                 match message_result {
-        //                     Some(message) => {
-        //                         log::info(format!("recv message: {:?}", message).as_str());
-        //                     }
-        //                     _ => {}
-        //                 }
-        //                 continue;
-        //             }
-        //             _ = shutdown_rx.recv() => {
-        //                 log::warn("shutdown_rx.recv");
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // });
     }
+
+
+
+    pub fn save_stream(&self,  stream: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+        self.rt.block_on(async move {
+            let mut map = STREAM_MAP.lock().unwrap();
+            map.insert(self.uuid.clone(), stream);
+            log::info(format!("save_stream, id: {}", self.uuid.clone()).as_str());
+        });
+    }
+
+    pub fn wait_stream_ready(&self) -> String {
+        let uuid = self.uuid.clone();
+        self.rt.block_on(async move {
+            loop {
+                // 不一定能申请锁成功
+                let map_lock_result = STREAM_MAP.lock();
+                match map_lock_result {
+                    Ok(mut map) => {
+                        let stream_sink_result = map.get_mut(&uuid);
+                        if stream_sink_result.is_some() {
+                            let stream_sink = stream_sink_result.unwrap();
+                            stream_sink.add(ZeroCopyBuffer(vec![0]));
+                            log::info("stream ready");
+                            break;
+                        } else {
+                            // 睡眠 1ms
+                            log::debug(format!("stream not ready, id: {}", uuid).as_str());
+                            std::thread::sleep(std::time::Duration::from_millis(1));
+                            continue;
+                        }
+                    }
+                    Err(_) => {
+                        // 睡眠 1ms
+                        log::debug("lock map failed");
+                        std::thread::sleep(std::time::Duration::from_millis(1));
+                        continue;
+                    }
+                }
+            }
+        });
+        return "ok".to_string();
+    }
+
 }
 
 pub struct CtxHandle {
@@ -98,6 +119,7 @@ pub struct CtxHandle {
 lazy_static! {
     static ref SHUTDOWN_CTX_HANDLE_MAP: Mutex<HashMap<String, CtxHandle>> = Mutex::new(HashMap::new());
     static ref RECONNECT_CTX_HANDLE_MAP: Mutex<HashMap<String, UnboundedSender<String>>> = Mutex::new(HashMap::new());
+    static ref STREAM_MAP: Mutex<HashMap<String, StreamSink<ZeroCopyBuffer<Vec<u8>>>>> = Mutex::new(HashMap::new());
 }
 
 impl CtxHandle {
@@ -146,6 +168,17 @@ impl Stream {
             once_call_stream.call_handle();
         }
     }
+
+    fn get_stream_sink(uuid: String) -> Option<StreamSink<ZeroCopyBuffer<Vec<u8>>>> {
+        let mut map = STREAM_MAP.lock().unwrap();
+        let stream_sink_result = map.get_mut(&uuid);
+        if stream_sink_result.is_some() {
+            let stream_sink = stream_sink_result.unwrap();
+            return Some(stream_sink.clone());
+        }
+        None
+    }
+
     fn reconnect_find_cancel(uuid: String) {
         // find
         let mut map = RECONNECT_CTX_HANDLE_MAP.lock().unwrap();
@@ -258,49 +291,55 @@ impl Stream {
                         // current runtime
                         let rt = tokio::runtime::Handle::current();
                         // let tx = self.tx.clone();
-                        let uuid = self.uuid.clone();
-                        rt.spawn(async move {
-                            for message in receiver.incoming_messages() {
-                                let message = match message {
-                                    Ok(m) => m,
-                                    Err(e) => {
-                                        log::warn(format!("websocket error: {:?}", e).as_str());
-                                        // tx.send("websocket error".to_string()).unwrap();
-                                        break;
-                                    }
-                                };
-                                match message {
-                                    OwnedMessage::Text(data) => {
-                                        log::debug(format!("websocket receive text: {:?}", data).as_str());
-                                    }
-                                    OwnedMessage::Binary(data) => {
-                                        log::debug(format!("websocket receive binary: {:?}", data).as_str());
-                                        // tx.send(data).unwrap();
-                                    }
-                                    OwnedMessage::Close(data) => {
-                                        match data {
-                                            None => {}
-                                            Some(data) => {
-                                                log::warn(format!("websocket close: {:?}", data).as_str());
-                                            }
-                                        };
-                                        break;
-                                    }
-                                    OwnedMessage::Ping(_) => {
-                                        log::debug("websocket ping")
-                                    }
-                                    OwnedMessage::Pong(_) => {
-                                        log::debug("websocket pong")
-                                    }
-                                    _ => {
-                                        log::warn("websocket other")
+                        {
+                            let uuid = self.uuid.clone();
+                            std::thread::spawn(move || {
+                                let sink = Stream::get_stream_sink(uuid.clone()).unwrap();
+                                for message in receiver.incoming_messages() {
+                                    let message = match message {
+                                        Ok(m) => m,
+                                        Err(e) => {
+                                            log::warn(format!("websocket error: {:?}", e).as_str());
+                                            // tx.send("websocket error".to_string()).unwrap();
+                                            break;
+                                        }
+                                    };
+                                    match message {
+                                        OwnedMessage::Text(data) => {
+                                            log::debug(format!("websocket receive text: {:?}", data).as_str());
+                                        }
+                                        OwnedMessage::Binary(data) => {
+                                            // tx.send(data).unwrap();
+                                            log::debug("websocket receive binary");
+                                            sink.add(ZeroCopyBuffer(data));
+                                            log::debug("send to sink success");
+                                        }
+                                        OwnedMessage::Close(data) => {
+                                            match data {
+                                                None => {}
+                                                Some(data) => {
+                                                    log::warn(format!("websocket close: {:?}", data).as_str());
+                                                }
+                                            };
+                                            break;
+                                        }
+                                        OwnedMessage::Ping(_) => {
+                                            log::debug("websocket ping")
+                                        }
+                                        OwnedMessage::Pong(_) => {
+                                            log::debug("websocket pong")
+                                        }
+                                        _ => {
+                                            log::warn("websocket other")
+                                        }
                                     }
                                 }
-                            }
-                            log::warn("receive end, retry after 1s...");
-                            tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-                            Stream::reconnect_find_cancel(uuid.clone());
-                        });
+                                log::warn("receive end, retry after 1s...");
+                                // sleep std
+                                std::thread::sleep(std::time::Duration::from_secs(1));
+                                Stream::reconnect_find_cancel(uuid.clone());
+                            });
+                        }
                         // 一直读取 self.rx
                         let result = self.receive(sender).await;
                         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;

@@ -17,7 +17,7 @@ abstract class XximSdk {
   /// sdk暴露的方法的调用结果
   /// new_instance: 创建sdk实例
   /// 你可以创建多个sdk实例，每个实例都有自己的独立的连接
-  Future<String> newInstance({dynamic hint});
+  Future<void> newInstance({required String instanceId, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kNewInstanceConstMeta;
 
@@ -45,6 +45,16 @@ abstract class XximSdk {
   Future<String> initInstance({required String instanceId, required String host, required int port, required bool ssl, String? appId, String? installId, required int platform, required String deviceModel, required String osVersion, required int language, required int requestTimeoutMillisecond, required String dbDir, String? customHeader, required int keepAliveSecond, required int logLevel, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kInitInstanceConstMeta;
+
+  /// preset_stream: 预设一个数据流
+  Stream<Uint8List> presetStream({required String instanceId, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kPresetStreamConstMeta;
+
+  /// wait_stream_ready: 等待数据流准备好
+  Future<String> waitStreamReady({required String instanceId, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kWaitStreamReadyConstMeta;
 
   /// set_login_info: 设置登录信息 一般用于app启动后，用户登录成功后调用
   /// @param instance_id: sdk实例id
@@ -157,19 +167,24 @@ class XximSdkImpl implements XximSdk {
   /// Only valid on web/WASM platforms.
   factory XximSdkImpl.wasm(FutureOr<WasmModule> module) => XximSdkImpl(module as ExternalLibrary);
   XximSdkImpl.raw(this._platform);
-  Future<String> newInstance({dynamic hint}) {
+  Future<void> newInstance({required String instanceId, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_new_instance(port_),
-      parseSuccessData: _wire2api_String,
+      callFfi: (port_) => _platform.inner.wire_new_instance(port_, arg0),
+      parseSuccessData: _wire2api_unit,
       constMeta: kNewInstanceConstMeta,
-      argValues: [],
+      argValues: [
+        instanceId
+      ],
       hint: hint,
     ));
   }
 
   FlutterRustBridgeTaskConstMeta get kNewInstanceConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "new_instance",
-        argNames: [],
+        argNames: [
+          "instanceId"
+        ],
       );
 
   Future<String> destroyInstance({required String instanceId, dynamic hint}) {
@@ -251,6 +266,46 @@ class XximSdkImpl implements XximSdk {
           "customHeader",
           "keepAliveSecond",
           "logLevel"
+        ],
+      );
+
+  Stream<Uint8List> presetStream({required String instanceId, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_preset_stream(port_, arg0),
+      parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
+      constMeta: kPresetStreamConstMeta,
+      argValues: [
+        instanceId
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kPresetStreamConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "preset_stream",
+        argNames: [
+          "instanceId"
+        ],
+      );
+
+  Future<String> waitStreamReady({required String instanceId, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_wait_stream_ready(port_, arg0),
+      parseSuccessData: _wire2api_String,
+      constMeta: kWaitStreamReadyConstMeta,
+      argValues: [
+        instanceId
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kWaitStreamReadyConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "wait_stream_ready",
+        argNames: [
+          "instanceId"
         ],
       );
 
@@ -585,12 +640,20 @@ class XximSdkImpl implements XximSdk {
     return raw as String;
   }
 
+  Uint8List _wire2api_ZeroCopyBuffer_Uint8List(dynamic raw) {
+    return raw as Uint8List;
+  }
+
   int _wire2api_u8(dynamic raw) {
     return raw as int;
   }
 
   Uint8List _wire2api_uint_8_list(dynamic raw) {
     return raw as Uint8List;
+  }
+
+  void _wire2api_unit(dynamic raw) {
+    return;
   }
 }
 

@@ -44,11 +44,15 @@ external XximSdkWasmModule get wasmModule;
 class XximSdkWasmModule implements WasmModule {
   external Object /* Promise */ call([String? moduleName]);
   external XximSdkWasmModule bind(dynamic thisArg, String moduleName);
-  external dynamic /* void */ wire_new_instance(NativePortType port_);
+  external dynamic /* void */ wire_new_instance(NativePortType port_, String instance_id);
 
   external dynamic /* void */ wire_destroy_instance(NativePortType port_, String instance_id);
 
   external dynamic /* void */ wire_init_instance(NativePortType port_, String instance_id, String host, int port, bool ssl, String? app_id, String? install_id, int platform, String device_model, String os_version, int language, int request_timeout_millisecond, String db_dir, String? custom_header, int keep_alive_second, int log_level);
+
+  external dynamic /* void */ wire_preset_stream(NativePortType port_, String instance_id);
+
+  external dynamic /* void */ wire_wait_stream_ready(NativePortType port_, String instance_id);
 
   external dynamic /* void */ wire_set_login_info(NativePortType port_, String instance_id, String token, String user_id);
 
@@ -84,11 +88,15 @@ class XximSdkWasmModule implements WasmModule {
 class XximSdkWire extends FlutterRustBridgeWasmWireBase<XximSdkWasmModule> {
   XximSdkWire(FutureOr<WasmModule> module) : super(WasmModule.cast<XximSdkWasmModule>(module));
 
-  void wire_new_instance(NativePortType port_) => wasmModule.wire_new_instance(port_);
+  void wire_new_instance(NativePortType port_, String instance_id) => wasmModule.wire_new_instance(port_, instance_id);
 
   void wire_destroy_instance(NativePortType port_, String instance_id) => wasmModule.wire_destroy_instance(port_, instance_id);
 
   void wire_init_instance(NativePortType port_, String instance_id, String host, int port, bool ssl, String? app_id, String? install_id, int platform, String device_model, String os_version, int language, int request_timeout_millisecond, String db_dir, String? custom_header, int keep_alive_second, int log_level) => wasmModule.wire_init_instance(port_, instance_id, host, port, ssl, app_id, install_id, platform, device_model, os_version, language, request_timeout_millisecond, db_dir, custom_header, keep_alive_second, log_level);
+
+  void wire_preset_stream(NativePortType port_, String instance_id) => wasmModule.wire_preset_stream(port_, instance_id);
+
+  void wire_wait_stream_ready(NativePortType port_, String instance_id) => wasmModule.wire_wait_stream_ready(port_, instance_id);
 
   void wire_set_login_info(NativePortType port_, String instance_id, String token, String user_id) => wasmModule.wire_set_login_info(port_, instance_id, token, user_id);
 

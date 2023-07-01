@@ -26,7 +26,7 @@ uintptr_t new_dart_opaque(Dart_Handle handle);
 
 intptr_t init_frb_dart_api_dl(void *obj);
 
-void wire_new_instance(int64_t port_);
+void wire_new_instance(int64_t port_, struct wire_uint_8_list *instance_id);
 
 void wire_destroy_instance(int64_t port_, struct wire_uint_8_list *instance_id);
 
@@ -46,6 +46,10 @@ void wire_init_instance(int64_t port_,
                         struct wire_uint_8_list *custom_header,
                         int32_t keep_alive_second,
                         int32_t log_level);
+
+void wire_preset_stream(int64_t port_, struct wire_uint_8_list *instance_id);
+
+void wire_wait_stream_ready(int64_t port_, struct wire_uint_8_list *instance_id);
 
 void wire_set_login_info(int64_t port_,
                          struct wire_uint_8_list *instance_id,
@@ -111,6 +115,8 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_new_instance);
     dummy_var ^= ((int64_t) (void*) wire_destroy_instance);
     dummy_var ^= ((int64_t) (void*) wire_init_instance);
+    dummy_var ^= ((int64_t) (void*) wire_preset_stream);
+    dummy_var ^= ((int64_t) (void*) wire_wait_stream_ready);
     dummy_var ^= ((int64_t) (void*) wire_set_login_info);
     dummy_var ^= ((int64_t) (void*) wire_unset_login_info);
     dummy_var ^= ((int64_t) (void*) wire_user_register);

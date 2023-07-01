@@ -17,12 +17,12 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn new(config: Config) -> Self {
+    pub fn new(id: String, config: Config) -> Self {
         Client {
             config: config.clone(),
             http_client: reqwest::blocking::Client::new(),
             rt: tokio::runtime::Runtime::new().unwrap(),
-            uuid: uuid(),
+            uuid: id.clone(),
             user_id: None,
             user_token: None,
         }

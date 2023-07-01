@@ -21,14 +21,17 @@ use std::sync::Arc;
 
 // Section: wire functions
 
-fn wire_new_instance_impl(port_: MessagePort) {
+fn wire_new_instance_impl(port_: MessagePort, instance_id: impl Wire2Api<String> + UnwindSafe) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
             debug_name: "new_instance",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
-        move || move |task_callback| Ok(new_instance()),
+        move || {
+            let api_instance_id = instance_id.wire2api();
+            move |task_callback| Ok(new_instance(api_instance_id))
+        },
     )
 }
 fn wire_destroy_instance_impl(port_: MessagePort, instance_id: impl Wire2Api<String> + UnwindSafe) {
@@ -103,6 +106,35 @@ fn wire_init_instance_impl(
                     api_log_level,
                 ))
             }
+        },
+    )
+}
+fn wire_preset_stream_impl(port_: MessagePort, instance_id: impl Wire2Api<String> + UnwindSafe) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "preset_stream",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || {
+            let api_instance_id = instance_id.wire2api();
+            move |task_callback| Ok(preset_stream(api_instance_id, task_callback.stream_sink()))
+        },
+    )
+}
+fn wire_wait_stream_ready_impl(
+    port_: MessagePort,
+    instance_id: impl Wire2Api<String> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "wait_stream_ready",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_instance_id = instance_id.wire2api();
+            move |task_callback| Ok(wait_stream_ready(api_instance_id))
         },
     )
 }
@@ -415,8 +447,8 @@ mod web {
     // Section: wire functions
 
     #[wasm_bindgen]
-    pub fn wire_new_instance(port_: MessagePort) {
-        wire_new_instance_impl(port_)
+    pub fn wire_new_instance(port_: MessagePort, instance_id: String) {
+        wire_new_instance_impl(port_, instance_id)
     }
 
     #[wasm_bindgen]
@@ -461,6 +493,16 @@ mod web {
             keep_alive_second,
             log_level,
         )
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_preset_stream(port_: MessagePort, instance_id: String) {
+        wire_preset_stream_impl(port_, instance_id)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_wait_stream_ready(port_: MessagePort, instance_id: String) {
+        wire_wait_stream_ready_impl(port_, instance_id)
     }
 
     #[wasm_bindgen]
@@ -616,8 +658,8 @@ mod io {
     // Section: wire functions
 
     #[no_mangle]
-    pub extern "C" fn wire_new_instance(port_: i64) {
-        wire_new_instance_impl(port_)
+    pub extern "C" fn wire_new_instance(port_: i64, instance_id: *mut wire_uint_8_list) {
+        wire_new_instance_impl(port_, instance_id)
     }
 
     #[no_mangle]
@@ -662,6 +704,16 @@ mod io {
             keep_alive_second,
             log_level,
         )
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_preset_stream(port_: i64, instance_id: *mut wire_uint_8_list) {
+        wire_preset_stream_impl(port_, instance_id)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_wait_stream_ready(port_: i64, instance_id: *mut wire_uint_8_list) {
+        wire_wait_stream_ready_impl(port_, instance_id)
     }
 
     #[no_mangle]

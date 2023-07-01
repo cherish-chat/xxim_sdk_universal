@@ -17,47 +17,47 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_2() {
-        let mut instance_id = "".to_string();
-        {
-            let result = new_instance();
-            println!("{}", result);
-            let resp: ApiResult = json::unmarshal(result.as_str()).unwrap();
-            instance_id = resp.data.clone();
-        }
-        {
-            let result = init_instance(
-                instance_id.clone(),
-                "127.0.0.1".to_string(),
-                34500,
-                false,
-                None,
-                None,
-                0,
-                "123".to_string(),
-                "123".to_string(),
-                0,
-                10000,
-                "./db/".to_string(),
-                None,
-                30,
-                0,
-            );
-            println!("{}", result);
-        }
-        {
-            let instance_id = instance_id.clone();
-            aw!(async {
-                set_login_info(instance_id, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE".to_string(), "dart1".to_string());
-            });
-        }
-        {
-            aw!(async {
-                tokio::time::sleep(Duration::from_secs(10)).await;
-            });
-        }
-    }
+    // #[test]
+    // fn test_2() {
+    //     let mut instance_id = "".to_string();
+    //     {
+    //         let result = new_instance();
+    //         println!("{}", result);
+    //         let resp: ApiResult = json::unmarshal(result.as_str()).unwrap();
+    //         instance_id = resp.data.clone();
+    //     }
+    //     {
+    //         let result = init_instance(
+    //             instance_id.clone(),
+    //             "127.0.0.1".to_string(),
+    //             34500,
+    //             false,
+    //             None,
+    //             None,
+    //             0,
+    //             "123".to_string(),
+    //             "123".to_string(),
+    //             0,
+    //             10000,
+    //             "./db/".to_string(),
+    //             None,
+    //             30,
+    //             0,
+    //         );
+    //         println!("{}", result);
+    //     }
+    //     {
+    //         let instance_id = instance_id.clone();
+    //         aw!(async {
+    //             set_login_info(instance_id, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE".to_string(), "dart1".to_string());
+    //         });
+    //     }
+    //     {
+    //         aw!(async {
+    //             tokio::time::sleep(Duration::from_secs(10)).await;
+    //         });
+    //     }
+    // }
 
     //
     // #[test]

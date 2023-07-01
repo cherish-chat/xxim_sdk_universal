@@ -1,6 +1,8 @@
+use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
+use lazy_static::lazy_static;
 use prost::bytes::Bytes;
 use crate::sdk::api::SdkApi;
-use crate::tool::{json, proto};
+use crate::tool::{json, log, proto};
 use crate::param::*;
 use crate::pb::{user, conversation as friend, conversation as group, message as message, message as notice};
 
@@ -9,9 +11,8 @@ use crate::pb::{user, conversation as friend, conversation as group, message as 
 
 /// new_instance: 创建sdk实例
 /// 你可以创建多个sdk实例，每个实例都有自己的独立的连接
-pub fn new_instance() -> String {
-    let instance_id = SdkApi::new_instance();
-    return json::marshal(&ApiResult::success(instance_id.as_str()));
+pub fn new_instance(instance_id: String) {
+    SdkApi::new_instance(instance_id.clone());
 }
 
 /// destroy_instance: 销毁sdk实例
@@ -58,6 +59,17 @@ pub fn init_instance(
         request_timeout_millisecond, db_dir, custom_header, keep_alive_second, log_level,
     );
     return json::marshal(&ApiResult::success(ok.to_string().as_str()));
+}
+
+/// preset_stream: 预设一个数据流
+pub fn preset_stream(instance_id: String, stream: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+    log::info("preset_stream: 预设一个数据流");
+    SdkApi::instance(instance_id).lock().unwrap().preset_stream(stream);
+}
+
+/// wait_stream_ready: 等待数据流准备好
+pub fn wait_stream_ready(instance_id: String) -> String {
+    return json::marshal(&ApiResult::success(SdkApi::instance(instance_id).lock().unwrap().wait_stream_ready().as_str()));
 }
 
 /// set_login_info: 设置登录信息 一般用于app启动后，用户登录成功后调用

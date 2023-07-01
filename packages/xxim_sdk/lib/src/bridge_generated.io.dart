@@ -113,14 +113,16 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
 
   void wire_new_instance(
     int port_,
+    ffi.Pointer<wire_uint_8_list> instance_id,
   ) {
     return _wire_new_instance(
       port_,
+      instance_id,
     );
   }
 
-  late final _wire_new_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_new_instance');
-  late final _wire_new_instance = _wire_new_instancePtr.asFunction<void Function(int)>();
+  late final _wire_new_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_new_instance');
+  late final _wire_new_instance = _wire_new_instancePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_destroy_instance(
     int port_,
@@ -175,6 +177,32 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
 
   late final _wire_init_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Uint16, ffi.Bool, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32)>>('wire_init_instance');
   late final _wire_init_instance = _wire_init_instancePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, bool, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int)>();
+
+  void wire_preset_stream(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> instance_id,
+  ) {
+    return _wire_preset_stream(
+      port_,
+      instance_id,
+    );
+  }
+
+  late final _wire_preset_streamPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_preset_stream');
+  late final _wire_preset_stream = _wire_preset_streamPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_wait_stream_ready(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> instance_id,
+  ) {
+    return _wire_wait_stream_ready(
+      port_,
+      instance_id,
+    );
+  }
+
+  late final _wire_wait_stream_readyPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_wait_stream_ready');
+  late final _wire_wait_stream_ready = _wire_wait_stream_readyPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_set_login_info(
     int port_,

@@ -1,8 +1,10 @@
 use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, LockResult, Mutex, RwLock};
+use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use crate::config::Config;
 use lazy_static::lazy_static;
 use crate::client::client::{Client};
+use crate::client::ws::Stream;
 use crate::store::sqlite::{sqlite_connection, sqlite_close, sqlite_destroy, sqlite_all_debug, Sqlite};
 use crate::tool::{log, uuid};
 
@@ -66,6 +68,7 @@ impl SdkApi {
         log::debug(format!("config: {:?}", config).as_str());
         self.config = Some(config);
         self.client = Some(Client::new(
+            self.instance_id.clone(),
             self.config.as_ref().unwrap().clone(),
         ));
         return true;
@@ -100,6 +103,15 @@ impl SdkApi {
         sqlite_all_debug();
     }
 
+    pub fn preset_stream(&mut self, stream: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+        log::info("preset_stream");
+        self.client.as_mut().unwrap().save_stream(stream);
+    }
+
+    pub fn wait_stream_ready(&mut self) -> String {
+        return self.client.as_mut().unwrap().wait_stream_ready();
+    }
+
     pub fn set_login_info(&mut self, token: String, user_id: String) {
         log::info(format!("set_user_token: {}, {}", token, user_id).as_str());
         let config = self.config.as_mut().unwrap_or_else(|| {
@@ -125,12 +137,12 @@ impl SdkApi {
 }
 
 lazy_static! {
-    static ref SDK_INSTANCE_MAP: Mutex<HashMap<String, Arc<Mutex<SdkApi>>>> = Mutex::new(HashMap::new());
+    static ref SDK_INSTANCE_MAP: RwLock<HashMap<String, Arc<Mutex<SdkApi>>>> = RwLock::new(HashMap::new());
 }
 
 impl SdkApi {
     pub fn instance(instance_id: String) -> Arc<Mutex<SdkApi>> {
-        let map = SDK_INSTANCE_MAP.lock().unwrap();
+        let map = SDK_INSTANCE_MAP.read().unwrap();
         let instance = map.get(&instance_id);
         match instance {
             Some(instance) => {
@@ -143,23 +155,19 @@ impl SdkApi {
         }
     }
 
-
-    pub fn new_instance() -> String {
-        let id = uuid::uuid();
-        let id_copy1 = id.clone();
-        let id_copy2 = id.clone();
-        let mut map = SDK_INSTANCE_MAP.lock().unwrap();
+    pub fn new_instance(id: String) {
+        let mut map = SDK_INSTANCE_MAP.write().unwrap();
         let sdk_api = SdkApi {
             config: None,
-            instance_id: id,
+            instance_id: id.clone(),
             client: None,
         };
-        map.insert(id_copy1, Arc::new(Mutex::new(sdk_api)));
-        id_copy2
+        log::debug(format!("new_instance: {}", id).as_str());
+        map.insert(id, Arc::new(Mutex::new(sdk_api)));
     }
 
     pub fn destroy_instance(instance_id: String) {
-        let mut map = SDK_INSTANCE_MAP.lock().unwrap();
+        let mut map = SDK_INSTANCE_MAP.write().unwrap();
         map.remove(&instance_id);
     }
 }
