@@ -1,4 +1,4 @@
-use std::sync::{Arc, RwLock, TryLockResult};
+use std::sync::{Arc, RwLock};
 use std::thread::{sleep};
 use websocket::OwnedMessage;
 use crate::pb::common;
@@ -62,11 +62,14 @@ impl WsClient {
         if config.ssl {
             let connect_result = client_builder.connect_secure(None);
             match connect_result {
-                Ok(ws_client) => {}
+                Ok(_) => {
+
+                }
                 Err(e) => {
                     log::error(format!("ws client {} connect error: {:?}", instance_id, e).as_str());
                 }
             }
+            todo!();
         } else {
             let connect_result = client_builder.connect_insecure();
             match connect_result {
@@ -110,9 +113,9 @@ impl WsClient {
                             OwnedMessage::Pong(_) => {
                                 log::debug("websocket pong")
                             }
-                            _ => {
-                                log::warn("websocket other")
-                            }
+                            // _ => {
+                            //     log::warn("websocket other")
+                            // }
                         }
                     }
                 }

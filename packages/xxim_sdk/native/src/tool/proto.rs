@@ -29,6 +29,16 @@ pub fn unmarshal<T>(buf: Bytes) -> T
     v
 }
 
+pub fn unmarshal_or_err<T>(buf: Bytes) -> Result<T, String>
+    where
+        T: protobuf::Message, {
+    let mut v = T::new();
+    match v.merge_from_bytes(&*buf) {
+        Ok(_) => Ok(v),
+        Err(err) => Err(err.to_string()),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use prost::bytes::Bytes;

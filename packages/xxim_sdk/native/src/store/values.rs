@@ -6,6 +6,8 @@ use std::net::TcpStream;
 use serde::{Deserialize, Serialize};
 use flutter_rust_bridge::{StreamSink};
 use native_tls::TlsStream;
+use std::sync::mpsc::SyncSender;
+use crate::pb::gateway;
 
 // Sqlite实例缓存
 lazy_static! {
@@ -115,4 +117,9 @@ lazy_static! {
 
 pub struct WsReader {
     pub instance_id: String,
+}
+
+//WsResponse实例缓存 key=uuid value=channel Sender
+lazy_static! {
+    pub static ref WS_RESPONSE_SENDER_MAP: RwLock<HashMap<String, Arc<RwLock<SyncSender<gateway::GatewayApiResponse>>>>> = RwLock::new(HashMap::new());
 }

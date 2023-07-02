@@ -54,7 +54,7 @@ Future<void> main() async {
     deviceModel: 'Macos',
     osVersion: '10.15.7',
     language: 0,
-    requestTimeoutMillisecond: 100,
+    requestTimeoutMillisecond: 1000,
     dbDir: './db/',
     keepAliveSecond: 5,
     logLevel: 0,
