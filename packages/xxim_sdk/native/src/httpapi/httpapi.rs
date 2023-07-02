@@ -56,7 +56,7 @@ impl HttpClient {
         path: String,
         req: Box<Q>,
     ) -> Result<Box<P>, Error> {
-        let config = Config::get_config(self.instance_id.clone()).lock().unwrap().clone();
+        let config = Config::get_config(self.instance_id.clone()).read().unwrap().clone();
         let builder = self.http_client.post(self.build_http_url(path.clone()));
         let builder = builder.headers(self.build_header());
         let builder = builder.body(self.build_body(req, path.clone().to_string()));
@@ -91,7 +91,7 @@ impl HttpClient {
     }
 
     fn build_http_url(&self, path: String) -> String {
-        let config = Config::get_config(self.instance_id.clone()).lock().unwrap().clone();
+        let config = Config::get_config(self.instance_id.clone()).read().unwrap().clone();
         let mut scheme = "http";
         if config.ssl {
             scheme = "https";
@@ -105,7 +105,7 @@ impl HttpClient {
         header
     }
     fn build_body<Q: protobuf::Message>(&self, req: Box<Q>, path: String) -> Vec<u8> {
-        let config = Config::get_config(self.instance_id.clone()).lock().unwrap().clone();
+        let config = Config::get_config(self.instance_id.clone()).read().unwrap().clone();
         let body = proto::marshal_box(req);
         let config = config.clone();
         let header = common::RequestHeader {

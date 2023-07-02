@@ -1,6 +1,6 @@
 use std::sync::{Arc, Mutex, RwLock};
 use flutter_rust_bridge::{StreamSink};
-use crate::store::values::{SDK_INSTANCE_MAP, CONFIG_INSTANCE_MAP, SdkApi, Config, STREAM_INSTANCE_MAP, Sqlite, HTTP_CLIENT_INSTANCE_MAP, HttpClient, WS_CLIENT_INSTANCE_MAP, WsClient};
+use crate::store::values::{SDK_INSTANCE_MAP, CONFIG_INSTANCE_MAP, SdkApi, Config, STREAM_INSTANCE_MAP, Sqlite, HTTP_CLIENT_INSTANCE_MAP, HttpClient, WS_CLIENT_INSTANCE_MAP, WsClient, WS_WRITER_INSTANCE_MAP, WsWriter, WS_READER_INSTANCE_MAP, WsReader};
 use crate::tool::{log};
 
 const USER_INIT_SQL: &str = r#"CREATE TABLE IF NOT EXISTS `user_config` (
@@ -51,7 +51,7 @@ impl SdkApi {
             return match validate_result {
                 Ok(config) => {
                     let mut map = CONFIG_INSTANCE_MAP.write().unwrap();
-                    map.insert(self.instance_id.clone(), Arc::new(Mutex::new(config.clone())));
+                    map.insert(self.instance_id.clone(), Arc::new(RwLock::new(config.clone())));
                     true
                 }
                 Err(e) => {
@@ -67,12 +67,13 @@ impl SdkApi {
         log::info("unset_user_token");
         let mut map = CONFIG_INSTANCE_MAP.write().unwrap();
         let config = map.get_mut(&self.instance_id).unwrap();
-        let mut config = config.lock().unwrap();
+        let mut config = config.write().unwrap();
         let db_path = format!("{}{}-{}.db", config.db_dir, config.user_id.as_ref().unwrap(), config.app_id);
         config.user_token = None;
         config.user_id = None;
         log::debug(format!("config: {:?}", config).as_str());
         // TODO: 断开连接
+        WsClient::close_connect(self.instance_id.clone());
         Sqlite::sqlite_close(db_path.clone());
         Sqlite::sqlite_destroy(db_path);
         Sqlite::sqlite_all_debug();
@@ -120,14 +121,13 @@ impl SdkApi {
         let instance_id_clone = self.instance_id.clone();
         let mut map = CONFIG_INSTANCE_MAP.write().unwrap();
         let config = map.get_mut(&instance_id).unwrap();
-        let mut config = config.lock().unwrap();
+        let mut config = config.write().unwrap();
         config.user_token = Some(token.clone());
         config.user_id = Some(user_id.clone());
         log::debug(format!("config: {:?}", config).as_str());
         // 初始化数据库
         let db_path = format!("{}{}-{}.db", config.db_dir, config.user_id.as_ref().unwrap(), config.app_id);
         Sqlite::get_connection(db_path, USER_INIT_SQL);
-        // TODO 建立连接
         WsClient::loop_reconnect(instance_id_clone.clone());
         Sqlite::sqlite_all_debug();
     }
@@ -162,6 +162,12 @@ impl SdkApi {
 
         let mut map = WS_CLIENT_INSTANCE_MAP.write().unwrap();
         map.insert(id.clone(), Arc::new(RwLock::new(WsClient::new(id.clone()))));
+
+        let mut map = WS_WRITER_INSTANCE_MAP.write().unwrap();
+        map.insert(id.clone(), Arc::new(RwLock::new(WsWriter::new(id.clone()))));
+        
+        let mut map = WS_READER_INSTANCE_MAP.write().unwrap();
+        map.insert(id.clone(), Arc::new(RwLock::new(WsReader::new(id.clone()))));
     }
 
     pub fn destroy_instance(instance_id: String) {
@@ -172,6 +178,12 @@ impl SdkApi {
         map.remove(&instance_id);
 
         let mut map = WS_CLIENT_INSTANCE_MAP.write().unwrap();
+        map.remove(&instance_id);
+
+        let mut map = WS_WRITER_INSTANCE_MAP.write().unwrap();
+        map.remove(&instance_id);
+        
+        let mut map = WS_READER_INSTANCE_MAP.write().unwrap();
         map.remove(&instance_id);
     }
 

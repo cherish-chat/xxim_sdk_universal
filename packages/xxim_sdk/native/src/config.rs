@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 use crate::store;
 use crate::store::values::{Config, CONFIG_INSTANCE_MAP};
@@ -8,7 +8,7 @@ const APP_CONFIG_GLOBAL_DB_FILENAME: &str = "xxim_sdk_core_global.db";
 
 //Config.Validate 验证配置
 impl Config {
-    pub fn get_config(id: String) -> Arc<Mutex<Config>> {
+    pub fn get_config(id: String) -> Arc<RwLock<Config>> {
         let map = CONFIG_INSTANCE_MAP.write().unwrap();
         let instance = map.get(&id);
         return match instance {
@@ -17,6 +17,18 @@ impl Config {
             }
             None => {
                 panic!("config [{}] not found", id.clone())
+            }
+        };
+    }
+    pub fn get_config_or_none(id: String) -> Option<Arc<RwLock<Config>>> {
+        let map = CONFIG_INSTANCE_MAP.write().unwrap();
+        let instance = map.get(&id);
+        return match instance {
+            Some(instance) => {
+                Some(instance.clone())
+            }
+            None => {
+                None
             }
         };
     }

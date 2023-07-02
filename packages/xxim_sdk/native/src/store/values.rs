@@ -2,8 +2,10 @@ use lazy_static::lazy_static;
 use rusqlite::{Connection};
 use std::sync::{Arc, Mutex, RwLock};
 use std::collections::HashMap;
+use std::net::TcpStream;
 use serde::{Deserialize, Serialize};
 use flutter_rust_bridge::{StreamSink};
+use native_tls::TlsStream;
 
 // Sqlite实例缓存
 lazy_static! {
@@ -17,7 +19,7 @@ pub struct Sqlite {
 
 // Config实例缓存
 lazy_static! {
-    pub static ref CONFIG_INSTANCE_MAP: RwLock<HashMap<String, Arc<Mutex<Config>>>> = RwLock::new(HashMap::new());
+    pub static ref CONFIG_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<Config>>>> = RwLock::new(HashMap::new());
 }
 
 //Config 配置
@@ -90,5 +92,27 @@ lazy_static! {
 }
 
 pub struct WsClient {
+    pub instance_id: String,
+}
+
+//WsWriter实例缓存
+lazy_static! {
+    pub static ref WS_WRITER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsWriter>>>> = RwLock::new(HashMap::new());
+}
+
+pub struct WsWriter {
+    pub instance_id: String,
+    // no tls
+    pub ws_writer: Option<websocket::sender::Writer<TcpStream>>,
+    // tls
+    pub ws_writer_tls: Option<websocket::sender::Writer<TlsStream<TcpStream>>>,
+}
+
+//WsReader实例缓存
+lazy_static! {
+    pub static ref WS_READER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsReader>>>> = RwLock::new(HashMap::new());
+}
+
+pub struct WsReader {
     pub instance_id: String,
 }

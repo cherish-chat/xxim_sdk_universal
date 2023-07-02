@@ -24,6 +24,7 @@ prost = { version = "0.11.9", default_features = false, features = ["prost-deriv
 base64 = "0.21.2"
 websocket = "0.26.5"
 crossbeam-channel = "0.5.8"
+native-tls = "0.2.11"
 
 [dependencies.uuid]
 version = "1.3.4"
