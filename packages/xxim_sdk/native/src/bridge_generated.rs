@@ -50,6 +50,7 @@ fn wire_destroy_instance_impl(port_: MessagePort, instance_id: impl Wire2Api<Str
 fn wire_init_instance_impl(
     port_: MessagePort,
     instance_id: impl Wire2Api<String> + UnwindSafe,
+    net: impl Wire2Api<Option<i32>> + UnwindSafe,
     host: impl Wire2Api<String> + UnwindSafe,
     port: impl Wire2Api<u16> + UnwindSafe,
     ssl: impl Wire2Api<bool> + UnwindSafe,
@@ -73,6 +74,7 @@ fn wire_init_instance_impl(
         },
         move || {
             let api_instance_id = instance_id.wire2api();
+            let api_net = net.wire2api();
             let api_host = host.wire2api();
             let api_port = port.wire2api();
             let api_ssl = ssl.wire2api();
@@ -90,6 +92,7 @@ fn wire_init_instance_impl(
             move |task_callback| {
                 Ok(init_instance(
                     api_instance_id,
+                    api_net,
                     api_host,
                     api_port,
                     api_ssl,
@@ -415,6 +418,7 @@ impl Wire2Api<bool> for bool {
         self
     }
 }
+
 impl Wire2Api<i32> for i32 {
     fn wire2api(self) -> i32 {
         self
@@ -460,6 +464,7 @@ mod web {
     pub fn wire_init_instance(
         port_: MessagePort,
         instance_id: String,
+        net: JsValue,
         host: String,
         port: u16,
         ssl: bool,
@@ -478,6 +483,7 @@ mod web {
         wire_init_instance_impl(
             port_,
             instance_id,
+            net,
             host,
             port,
             ssl,
@@ -633,6 +639,11 @@ mod web {
             (!self.is_undefined() && !self.is_null()).then(|| self.wire2api())
         }
     }
+    impl Wire2Api<Option<i32>> for JsValue {
+        fn wire2api(self) -> Option<i32> {
+            (!self.is_undefined() && !self.is_null()).then(|| self.wire2api())
+        }
+    }
     impl Wire2Api<u16> for JsValue {
         fn wire2api(self) -> u16 {
             self.unchecked_into_f64() as _
@@ -671,6 +682,7 @@ mod io {
     pub extern "C" fn wire_init_instance(
         port_: i64,
         instance_id: *mut wire_uint_8_list,
+        net: *mut i32,
         host: *mut wire_uint_8_list,
         port: u16,
         ssl: bool,
@@ -689,6 +701,7 @@ mod io {
         wire_init_instance_impl(
             port_,
             instance_id,
+            net,
             host,
             port,
             ssl,
@@ -842,6 +855,11 @@ mod io {
     // Section: allocate functions
 
     #[no_mangle]
+    pub extern "C" fn new_box_autoadd_i32_0(value: i32) -> *mut i32 {
+        support::new_leak_box_ptr(value)
+    }
+
+    #[no_mangle]
     pub extern "C" fn new_uint_8_list_0(len: i32) -> *mut wire_uint_8_list {
         let ans = wire_uint_8_list {
             ptr: support::new_leak_vec_ptr(Default::default(), len),
@@ -858,6 +876,12 @@ mod io {
         fn wire2api(self) -> String {
             let vec: Vec<u8> = self.wire2api();
             String::from_utf8_lossy(&vec).into_owned()
+        }
+    }
+
+    impl Wire2Api<i32> for *mut i32 {
+        fn wire2api(self) -> i32 {
+            unsafe { *support::box_from_leak_ptr(self) }
         }
     }
 

@@ -8,7 +8,7 @@ use crate::pb::common::ResponseCode;
 use crate::store::values::{Config, WS_WRITER_INSTANCE_MAP, WsWriter};
 use crate::tool::{log, proto};
 use crate::tool::uuid::uuid;
-use crate::ws::response::WsResponse;
+use crate::store::api_response::APIResponse;
 
 impl WsWriter {
     pub fn new(id: String) -> Self {
@@ -135,7 +135,7 @@ impl WsWriter {
                 if result.is_err() {
                     log::warn(format!("heartbeat error: {:?}", result.err()).as_str());
                 }
-                let receiver = WsResponse::new(request_id.clone(), std::time::Duration::from_secs(timeout_mills));
+                let receiver = APIResponse::new(request_id.clone(), std::time::Duration::from_secs(timeout_mills));
                 match receiver.recv() {
                     Ok(response) => {
                         match response.header.clone().unwrap().code.unwrap() {

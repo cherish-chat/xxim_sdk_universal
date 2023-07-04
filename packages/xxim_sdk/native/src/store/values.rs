@@ -35,6 +35,9 @@ pub struct Config {
     pub port: u16,
     // ssl 是否使用SSL，选填，默认为false
     pub ssl: bool,
+    // 网络选择
+    pub net: i32,
+    // 0: websocket 直连peer；1: webrtc p2p连接peer；
     // appId 应用ID，选填，默认为空
     pub app_id: String,
     // installId 安装ID，选填，默认会生成一个随机id
@@ -88,6 +91,17 @@ pub struct HttpClient {
     pub http_client: reqwest::blocking::Client,
 }
 
+//MeshClient实例缓存
+lazy_static! {
+    pub static ref MESH_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<MeshClient>>>> = RwLock::new(HashMap::new());
+}
+
+pub struct MeshClient {
+    pub instance_id: String,
+    // pub data_channel: Option<Arc<RwLock<webrtc::data::DataChannel>>>,
+}
+
+
 //WsClient实例缓存
 lazy_static! {
     pub static ref WS_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsClient>>>> = RwLock::new(HashMap::new());
@@ -121,5 +135,5 @@ pub struct WsReader {
 
 //WsResponse实例缓存 key=uuid value=channel Sender
 lazy_static! {
-    pub static ref WS_RESPONSE_SENDER_MAP: RwLock<HashMap<String, Arc<RwLock<SyncSender<gateway::GatewayApiResponse>>>>> = RwLock::new(HashMap::new());
+    pub static ref API_RESPONSE_SENDER_MAP: RwLock<HashMap<String, Arc<RwLock<SyncSender<gateway::GatewayApiResponse>>>>> = RwLock::new(HashMap::new());
 }

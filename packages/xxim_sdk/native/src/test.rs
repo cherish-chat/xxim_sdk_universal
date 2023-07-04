@@ -1,6 +1,8 @@
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod tests {
+    #[test]
+    fn test_3(){}
     // use std::collections::HashMap;
     // use std::thread;
     // use std::time::Duration;

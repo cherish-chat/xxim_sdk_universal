@@ -4,38 +4,8 @@ use crate::store::values::{Config, HTTP_CLIENT_INSTANCE_MAP, HttpClient};
 use crate::pb::{common, gateway};
 use crate::tool::{log, proto};
 use protobuf::MessageField;
+use crate::store::apihandler::{Error, ErrorCode};
 use crate::tool::uuid::uuid;
-
-#[derive(Debug)]
-pub enum ErrorCode {
-    NoError,
-    Timeout,
-    Cancelled,
-    HttpError,
-    RequestError,
-}
-
-#[derive(Debug)]
-pub struct Error {
-    code: ErrorCode,
-    message: String,
-}
-
-impl Error {
-    pub fn code_i32(&self) -> i32 {
-        match self.code {
-            ErrorCode::NoError => 0,
-            ErrorCode::Timeout => 1,
-            ErrorCode::Cancelled => 2,
-            ErrorCode::HttpError => 3,
-            ErrorCode::RequestError => 4,
-        }
-    }
-
-    pub fn message_str(&self) -> &str {
-        self.message.as_str()
-    }
-}
 
 impl HttpClient {
     pub fn new(instance_id: String) -> Self {

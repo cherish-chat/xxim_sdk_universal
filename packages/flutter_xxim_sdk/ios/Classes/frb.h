@@ -32,6 +32,7 @@ void wire_destroy_instance(int64_t port_, struct wire_uint_8_list *instance_id);
 
 void wire_init_instance(int64_t port_,
                         struct wire_uint_8_list *instance_id,
+                        int32_t *net,
                         struct wire_uint_8_list *host,
                         uint16_t port,
                         bool ssl,
@@ -106,6 +107,8 @@ void wire_list_notice(int64_t port_,
                       struct wire_uint_8_list *instance_id,
                       struct wire_uint_8_list *protobuf);
 
+int32_t *new_box_autoadd_i32_0(int32_t value);
+
 struct wire_uint_8_list *new_uint_8_list_0(int32_t len);
 
 void free_WireSyncReturn(WireSyncReturn ptr);
@@ -131,6 +134,7 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_message_send);
     dummy_var ^= ((int64_t) (void*) wire_message_batch_send);
     dummy_var ^= ((int64_t) (void*) wire_list_notice);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_i32_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
     dummy_var ^= ((int64_t) (void*) free_WireSyncReturn);
     dummy_var ^= ((int64_t) (void*) store_dart_post_cobject);

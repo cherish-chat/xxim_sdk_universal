@@ -4,7 +4,7 @@ use crate::pb::{common, gateway};
 use crate::pb::gateway::GatewayWriteDataType;
 use crate::store::values::{WS_READER_INSTANCE_MAP, WsReader};
 use crate::tool::{log, proto};
-use crate::ws::response::WsResponse;
+use crate::store::api_response::APIResponse;
 
 impl WsReader {
     pub fn new(id: String) -> Self {
@@ -46,7 +46,7 @@ impl WsReader {
 
     fn on_receive_response(&self, response: gateway::GatewayApiResponse) {
         log::debug("on_receive_response");
-        WsResponse::on_response(self.instance_id.clone(), response);
+        APIResponse::on_response(self.instance_id.clone(), response);
     }
 
     fn on_receive_push_message(&self, message: common::Message) {

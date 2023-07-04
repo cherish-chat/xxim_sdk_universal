@@ -38,6 +38,12 @@ impl WsClient {
     }
 
     pub fn loop_reconnect(instance_id: String) {
+        let config = Config::get_config(instance_id.clone()).read().unwrap().clone();
+        if config.net != 0 {
+            drop(config);
+            return;
+        }
+        drop(config);
         std::thread::spawn(move || {
             let ws_client = WsClient::instance(instance_id.clone());
             let ws_client = ws_client.write().unwrap();

@@ -46,6 +46,7 @@ Future<void> main() async {
   stream.listen(onEvent);
 
   var initResult = ApiResult.fromString(await lib.initInstance(
+    net: 0, // 0是传统ws 1是p2p mesh 目前还在写
     instanceId: instanceId,
     host: '127.0.0.1',
     port: 34500,

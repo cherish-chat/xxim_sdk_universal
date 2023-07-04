@@ -42,7 +42,7 @@ abstract class XximSdk {
   /// @param custom_header: 自定义请求头 example: "{\"xx\":\"xx\"}"
   /// @param keep_alive_second: 保持连接的时间 example: 60
   /// @param log_level: 日志级别 example: 1; | 0: debug | 1: info | 2: warn | 3: error |
-  Future<String> initInstance({required String instanceId, required String host, required int port, required bool ssl, String? appId, String? installId, required int platform, required String deviceModel, required String osVersion, required int language, required int requestTimeoutMillisecond, required String dbDir, String? customHeader, required int keepAliveSecond, required int logLevel, dynamic hint});
+  Future<String> initInstance({required String instanceId, int? net, required String host, required int port, required bool ssl, String? appId, String? installId, required int platform, required String deviceModel, required String osVersion, required int language, required int requestTimeoutMillisecond, required String dbDir, String? customHeader, required int keepAliveSecond, required int logLevel, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kInitInstanceConstMeta;
 
@@ -207,28 +207,30 @@ class XximSdkImpl implements XximSdk {
         ],
       );
 
-  Future<String> initInstance({required String instanceId, required String host, required int port, required bool ssl, String? appId, String? installId, required int platform, required String deviceModel, required String osVersion, required int language, required int requestTimeoutMillisecond, required String dbDir, String? customHeader, required int keepAliveSecond, required int logLevel, dynamic hint}) {
+  Future<String> initInstance({required String instanceId, int? net, required String host, required int port, required bool ssl, String? appId, String? installId, required int platform, required String deviceModel, required String osVersion, required int language, required int requestTimeoutMillisecond, required String dbDir, String? customHeader, required int keepAliveSecond, required int logLevel, dynamic hint}) {
     var arg0 = _platform.api2wire_String(instanceId);
-    var arg1 = _platform.api2wire_String(host);
-    var arg2 = api2wire_u16(port);
-    var arg3 = ssl;
-    var arg4 = _platform.api2wire_opt_String(appId);
-    var arg5 = _platform.api2wire_opt_String(installId);
-    var arg6 = api2wire_i32(platform);
-    var arg7 = _platform.api2wire_String(deviceModel);
-    var arg8 = _platform.api2wire_String(osVersion);
-    var arg9 = api2wire_i32(language);
-    var arg10 = api2wire_i32(requestTimeoutMillisecond);
-    var arg11 = _platform.api2wire_String(dbDir);
-    var arg12 = _platform.api2wire_opt_String(customHeader);
-    var arg13 = api2wire_i32(keepAliveSecond);
-    var arg14 = api2wire_i32(logLevel);
+    var arg1 = _platform.api2wire_opt_box_autoadd_i32(net);
+    var arg2 = _platform.api2wire_String(host);
+    var arg3 = api2wire_u16(port);
+    var arg4 = ssl;
+    var arg5 = _platform.api2wire_opt_String(appId);
+    var arg6 = _platform.api2wire_opt_String(installId);
+    var arg7 = api2wire_i32(platform);
+    var arg8 = _platform.api2wire_String(deviceModel);
+    var arg9 = _platform.api2wire_String(osVersion);
+    var arg10 = api2wire_i32(language);
+    var arg11 = api2wire_i32(requestTimeoutMillisecond);
+    var arg12 = _platform.api2wire_String(dbDir);
+    var arg13 = _platform.api2wire_opt_String(customHeader);
+    var arg14 = api2wire_i32(keepAliveSecond);
+    var arg15 = api2wire_i32(logLevel);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_init_instance(port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14),
+      callFfi: (port_) => _platform.inner.wire_init_instance(port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15),
       parseSuccessData: _wire2api_String,
       constMeta: kInitInstanceConstMeta,
       argValues: [
         instanceId,
+        net,
         host,
         port,
         ssl,
@@ -252,6 +254,7 @@ class XximSdkImpl implements XximSdk {
         debugName: "init_instance",
         argNames: [
           "instanceId",
+          "net",
           "host",
           "port",
           "ssl",

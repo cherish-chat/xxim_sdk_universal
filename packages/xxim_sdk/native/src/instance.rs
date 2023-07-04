@@ -1,6 +1,6 @@
 use std::sync::{Arc, RwLock};
 use flutter_rust_bridge::{StreamSink};
-use crate::store::values::{SDK_INSTANCE_MAP, CONFIG_INSTANCE_MAP, SdkApi, Config, STREAM_INSTANCE_MAP, Sqlite, HTTP_CLIENT_INSTANCE_MAP, HttpClient, WS_CLIENT_INSTANCE_MAP, WsClient, WS_WRITER_INSTANCE_MAP, WsWriter, WS_READER_INSTANCE_MAP, WsReader};
+use crate::store::values::{SDK_INSTANCE_MAP, CONFIG_INSTANCE_MAP, SdkApi, Config, STREAM_INSTANCE_MAP, Sqlite, HTTP_CLIENT_INSTANCE_MAP, HttpClient, WS_CLIENT_INSTANCE_MAP, WsClient, WS_WRITER_INSTANCE_MAP, WsWriter, WS_READER_INSTANCE_MAP, WsReader, MESH_CLIENT_INSTANCE_MAP, MeshClient};
 use crate::tool::{log};
 
 const USER_INIT_SQL: &str = r#"CREATE TABLE IF NOT EXISTS `user_config` (
@@ -12,6 +12,7 @@ const USER_INIT_SQL: &str = r#"CREATE TABLE IF NOT EXISTS `user_config` (
 impl SdkApi {
     pub fn new(
         &mut self,
+        net: Option<i32>,// 0: websocket 直连peer；1: webrtc p2p连接peer；
         host: String,
         port: u16,
         ssl: bool,
@@ -32,6 +33,10 @@ impl SdkApi {
             host,
             port,
             ssl,
+            net: match net {
+                Some(net) => net,
+                None => 0,
+            },
             app_id: app_id.unwrap_or_default(),
             install_id: install_id.unwrap_or_default(),
             platform,
@@ -59,7 +64,7 @@ impl SdkApi {
                     log::error(e.to_string().as_str());
                     false
                 }
-            }
+            };
         }
     }
 
@@ -127,11 +132,12 @@ impl SdkApi {
         log::debug(format!("config: {:?}", config).as_str());
         // 初始化数据库
         let db_path = format!("{}{}-{}.db", config.db_dir, config.user_id.as_ref().unwrap(), config.app_id);
+        drop(config);
+        drop(map);
         Sqlite::get_connection(db_path, USER_INIT_SQL);
         WsClient::loop_reconnect(instance_id_clone.clone());
         Sqlite::sqlite_all_debug();
     }
-
 }
 
 impl SdkApi {
@@ -156,18 +162,29 @@ impl SdkApi {
         };
         log::debug(format!("new_instance: {}", id).as_str());
         map.insert(id.clone(), Arc::new(RwLock::new(sdk_api)));
+        drop(map);
 
         let mut map = HTTP_CLIENT_INSTANCE_MAP.write().unwrap();
         map.insert(id.clone(), Arc::new(RwLock::new(HttpClient::new(id.clone()))));
+        drop(map);
+
+        let mut map = MESH_CLIENT_INSTANCE_MAP.write().unwrap();
+        map.insert(id.clone(), Arc::new(RwLock::new(MeshClient::new(id.clone()))));
+        drop(map);
+        MeshClient::loop_reconnect(id.clone());
 
         let mut map = WS_CLIENT_INSTANCE_MAP.write().unwrap();
         map.insert(id.clone(), Arc::new(RwLock::new(WsClient::new(id.clone()))));
+        drop(map);
 
         let mut map = WS_WRITER_INSTANCE_MAP.write().unwrap();
         map.insert(id.clone(), Arc::new(RwLock::new(WsWriter::new(id.clone()))));
-        
+        drop(map);
+
         let mut map = WS_READER_INSTANCE_MAP.write().unwrap();
         map.insert(id.clone(), Arc::new(RwLock::new(WsReader::new(id.clone()))));
+        drop(map);
+
     }
 
     pub fn destroy_instance(instance_id: String) {
@@ -182,9 +199,8 @@ impl SdkApi {
 
         let mut map = WS_WRITER_INSTANCE_MAP.write().unwrap();
         map.remove(&instance_id);
-        
+
         let mut map = WS_READER_INSTANCE_MAP.write().unwrap();
         map.remove(&instance_id);
     }
-
 }

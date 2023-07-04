@@ -2,28 +2,28 @@ use std::sync::{Arc, RwLock};
 use std::sync::mpsc::{Receiver};
 use std::time::Duration;
 use crate::pb::{common, gateway};
-use crate::store::values::{WS_RESPONSE_SENDER_MAP};
+use crate::store::values::{API_RESPONSE_SENDER_MAP};
 use crate::tool::log;
 
-pub struct WsResponse {}
+pub struct APIResponse {}
 
-impl WsResponse {
+impl APIResponse {
     pub fn new(uuid: String, timeout: Duration) -> Receiver<gateway::GatewayApiResponse> {
         let (sender, receiver) = std::sync::mpsc::sync_channel(1);
-        let mut map = WS_RESPONSE_SENDER_MAP.write().unwrap();
+        let mut map = API_RESPONSE_SENDER_MAP.write().unwrap();
         map.insert(uuid.clone(), Arc::new(RwLock::new(sender)));
         drop(map);
         // 延迟移除
         let uuid_ = uuid.clone();
         std::thread::spawn(move || {
-            WsResponse::delay_remove(uuid_, timeout);
+            APIResponse::delay_remove(uuid_, timeout);
         });
         receiver
     }
 
     fn delay_remove(uuid: String, timeout: Duration) {
         std::thread::sleep(timeout);
-        let mut map = WS_RESPONSE_SENDER_MAP.write().unwrap();
+        let mut map = API_RESPONSE_SENDER_MAP.write().unwrap();
         // get
         match map.get(&uuid) {
             None => {}
@@ -62,7 +62,7 @@ impl WsResponse {
     }
 
     pub fn on_response(uuid: String, data: gateway::GatewayApiResponse) {
-        let map = WS_RESPONSE_SENDER_MAP.read().unwrap();
+        let map = API_RESPONSE_SENDER_MAP.read().unwrap();
         match map.get(&uuid) {
             None => {}
             Some(sender) => {
@@ -73,7 +73,7 @@ impl WsResponse {
         };
         // 立即删除
         drop(map);
-        let mut map = WS_RESPONSE_SENDER_MAP.write().unwrap();
+        let mut map = API_RESPONSE_SENDER_MAP.write().unwrap();
         map.remove(&uuid);
         drop(map);
     }
