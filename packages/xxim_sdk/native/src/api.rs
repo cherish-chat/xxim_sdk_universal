@@ -3,7 +3,7 @@ use prost::bytes::Bytes;
 use crate::tool::{json, proto};
 use crate::param::*;
 use crate::pb::{user, conversation as friend, conversation as group, message as message, message as notice};
-use crate::store::apihandler::ApiClient;
+use crate::store::api_handler::ApiClient;
 use crate::store::values::{SdkApi};
 
 
@@ -43,6 +43,7 @@ pub fn init_instance(
     host: String,
     port: u16,
     ssl: bool,
+    ice_servers: Option<Vec<String>>,
     app_id: Option<String>,
     install_id: Option<String>,
     platform: i32,
@@ -57,7 +58,7 @@ pub fn init_instance(
 ) -> String {
     // let api = SdkApi::instance(instance_id).read().unwrap();
     let ok = SdkApi::instance(instance_id).write().unwrap().new(
-        net,
+        net, ice_servers,
         host, port, ssl,
         app_id, install_id, platform, device_model, os_version, language,
         request_timeout_millisecond, db_dir, custom_header, keep_alive_second, log_level,

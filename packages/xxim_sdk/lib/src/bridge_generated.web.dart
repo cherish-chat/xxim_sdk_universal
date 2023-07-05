@@ -23,6 +23,11 @@ class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> with FlutterRus
   }
 
   @protected
+  List<String> api2wire_StringList(List<String> raw) {
+    return raw;
+  }
+
+  @protected
   int api2wire_box_autoadd_i32(int raw) {
     return api2wire_i32(raw);
   }
@@ -30,6 +35,11 @@ class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> with FlutterRus
   @protected
   String? api2wire_opt_String(String? raw) {
     return raw == null ? null : api2wire_String(raw);
+  }
+
+  @protected
+  List<String>? api2wire_opt_StringList(List<String>? raw) {
+    return raw == null ? null : api2wire_StringList(raw);
   }
 
   @protected
@@ -58,7 +68,7 @@ class XximSdkWasmModule implements WasmModule {
 
   external dynamic /* void */ wire_destroy_instance(NativePortType port_, String instance_id);
 
-  external dynamic /* void */ wire_init_instance(NativePortType port_, String instance_id, int? net, String host, int port, bool ssl, String? app_id, String? install_id, int platform, String device_model, String os_version, int language, int request_timeout_millisecond, String db_dir, String? custom_header, int keep_alive_second, int log_level);
+  external dynamic /* void */ wire_init_instance(NativePortType port_, String instance_id, int? net, String host, int port, bool ssl, List<String>? ice_servers, String? app_id, String? install_id, int platform, String device_model, String os_version, int language, int request_timeout_millisecond, String db_dir, String? custom_header, int keep_alive_second, int log_level);
 
   external dynamic /* void */ wire_preset_stream(NativePortType port_, String instance_id);
 
@@ -102,7 +112,7 @@ class XximSdkWire extends FlutterRustBridgeWasmWireBase<XximSdkWasmModule> {
 
   void wire_destroy_instance(NativePortType port_, String instance_id) => wasmModule.wire_destroy_instance(port_, instance_id);
 
-  void wire_init_instance(NativePortType port_, String instance_id, int? net, String host, int port, bool ssl, String? app_id, String? install_id, int platform, String device_model, String os_version, int language, int request_timeout_millisecond, String db_dir, String? custom_header, int keep_alive_second, int log_level) => wasmModule.wire_init_instance(port_, instance_id, net, host, port, ssl, app_id, install_id, platform, device_model, os_version, language, request_timeout_millisecond, db_dir, custom_header, keep_alive_second, log_level);
+  void wire_init_instance(NativePortType port_, String instance_id, int? net, String host, int port, bool ssl, List<String>? ice_servers, String? app_id, String? install_id, int platform, String device_model, String os_version, int language, int request_timeout_millisecond, String db_dir, String? custom_header, int keep_alive_second, int log_level) => wasmModule.wire_init_instance(port_, instance_id, net, host, port, ssl, ice_servers, app_id, install_id, platform, device_model, os_version, language, request_timeout_millisecond, db_dir, custom_header, keep_alive_second, log_level);
 
   void wire_preset_stream(NativePortType port_, String instance_id) => wasmModule.wire_preset_stream(port_, instance_id);
 

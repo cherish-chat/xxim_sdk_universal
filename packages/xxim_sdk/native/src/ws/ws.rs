@@ -2,7 +2,7 @@ use std::sync::{Arc, RwLock};
 use std::thread::{sleep};
 use websocket::OwnedMessage;
 use crate::pb::common;
-use crate::store::values::{Config, WS_CLIENT_INSTANCE_MAP, WsClient, WsReader, WsWriter};
+use crate::store::values::{Config, WS_CLIENT_INSTANCE_MAP, WsClient, ApiReader, WsWriter};
 use crate::tool::{log};
 
 impl WsClient {
@@ -99,7 +99,7 @@ impl WsClient {
                                 log::debug(format!("websocket receive text: {:?}", data).as_str());
                             }
                             OwnedMessage::Binary(data) => {
-                                WsReader::on_receive(instance_id.clone(), data);
+                                ApiReader::on_receive(instance_id.clone(), data);
                             }
                             OwnedMessage::Close(data) => {
                                 match data {

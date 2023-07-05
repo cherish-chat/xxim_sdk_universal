@@ -9,6 +9,7 @@ pub enum ErrorCode {
     Cancelled,
     HttpError,
     RequestError,
+    ResponseError,
 }
 
 #[derive(Debug)]
@@ -25,6 +26,7 @@ impl Error {
             ErrorCode::Cancelled => 2,
             ErrorCode::HttpError => 3,
             ErrorCode::RequestError => 4,
+            ErrorCode::ResponseError => 5,
         }
     }
 
@@ -76,7 +78,7 @@ impl ApiClient {
             // 传统 http
             HttpClient::instance(instance_id.clone())
         } else {
-            MeshClient::instance(instance_id.clone())
+            Arc::new(RwLock::new(MeshClient{instance_id: instance_id.clone()}))
         }
     }
 }

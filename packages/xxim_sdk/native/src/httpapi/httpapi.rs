@@ -4,7 +4,7 @@ use crate::store::values::{Config, HTTP_CLIENT_INSTANCE_MAP, HttpClient};
 use crate::pb::{common, gateway};
 use crate::tool::{log, proto};
 use protobuf::MessageField;
-use crate::store::apihandler::{Error, ErrorCode};
+use crate::store::api_handler::{Error, ErrorCode};
 use crate::tool::uuid::uuid;
 
 impl HttpClient {

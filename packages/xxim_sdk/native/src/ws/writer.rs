@@ -1,6 +1,7 @@
 use std::net::TcpStream;
 use std::sync::{Arc, RwLock};
 use std::thread::{sleep, spawn};
+use std::time::Duration;
 use native_tls::TlsStream;
 use websocket::WebSocketResult;
 use crate::pb::{gateway};
@@ -107,19 +108,23 @@ impl WsWriter {
         let instance_id = self.instance_id.clone();
         spawn(move || {
             loop {
-                log::debug(format!("heartbeat: {}", instance_id.clone()).as_str());
+                log::debug(format!("ws heartbeat: {}", instance_id.clone()).as_str());
                 let instance_id = instance_id.clone();
-                // let config = Config::get_config_or_none(self.instance_id.clone()).read().unwrap().clone();
-                let (keep_alive_second, timeout_mills) = match Config::get_config_or_none(instance_id.clone()) {
-                    None => {
-                        (15 as u64, 10 as u64)
-                    }
-                    Some(config) => {
-                        let config = config.read().unwrap().clone();
-                        (config.keep_alive_second.clone() as u64, config.request_timeout_millisecond.clone() as u64)
-                    }
+                let config_or_none = Config::get_config_or_none(instance_id.clone());
+                if config_or_none.is_none() {
+                    sleep(Duration::from_millis(100));
+                    drop(config_or_none);
+                    continue;
+                }
+                let (keep_alive_second, timeout_mills, net) = {
+                    let conf = config_or_none.unwrap().read().unwrap().clone();
+                    (conf.keep_alive_second.clone() as u64, conf.request_timeout_millisecond.clone() as u64, conf.net.clone())
                 };
-                log::debug(format!("heartbeat: {} is running, after {}s", instance_id.clone(), keep_alive_second.clone()).as_str());
+                if net != 0 {
+                    log::debug(format!("ws heartbeat: {} is quit", instance_id.clone()).as_str());
+                    return;
+                }
+                log::debug(format!("ws heartbeat: {} is running, after {}s", instance_id.clone(), keep_alive_second.clone()).as_str());
 
                 sleep(std::time::Duration::from_secs(keep_alive_second.clone()));
                 let heartbeat_data = &gateway::GatewayKeepAliveReq { header: Default::default(), special_fields: Default::default() };
@@ -133,17 +138,17 @@ impl WsWriter {
                 };
                 let result = WsWriter::send_message(instance_id.clone(), proto::marshal(heartbeat_data));
                 if result.is_err() {
-                    log::warn(format!("heartbeat error: {:?}", result.err()).as_str());
+                    log::warn(format!("ws heartbeat error: {:?}", result.err()).as_str());
                 }
                 let receiver = APIResponse::new(request_id.clone(), std::time::Duration::from_secs(timeout_mills));
                 match receiver.recv() {
                     Ok(response) => {
                         match response.header.clone().unwrap().code.unwrap() {
                             ResponseCode::SUCCESS => {
-                                log::debug(format!("heartbeat success: {}", instance_id.clone()).as_str());
+                                log::debug(format!("ws heartbeat success: {}", instance_id.clone()).as_str());
                             }
                             _ => {
-                                log::error(format!("heartbeat error: {}, response.header: {}", instance_id.clone(), response.header.unwrap()).as_str());
+                                log::error(format!("ws heartbeat error: {}, response.header: {}", instance_id.clone(), response.header.unwrap()).as_str());
                             }
                         };
                     }

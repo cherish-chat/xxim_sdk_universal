@@ -22,6 +22,7 @@ pub struct Sqlite {
 // Config实例缓存
 lazy_static! {
     pub static ref CONFIG_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<Config>>>> = RwLock::new(HashMap::new());
+    pub static ref DEFAULT_ICE_SERVERS: Vec<String> = vec!["stun:stun.l.google.com:19302".to_string()];
 }
 
 //Config 配置
@@ -35,9 +36,10 @@ pub struct Config {
     pub port: u16,
     // ssl 是否使用SSL，选填，默认为false
     pub ssl: bool,
-    // 网络选择
+    // 网络选择 0: websocket 直连peer；1: webrtc p2p连接peer；
     pub net: i32,
-    // 0: websocket 直连peer；1: webrtc p2p连接peer；
+    // ice_servers ice服务器列表，选填，默认为空
+    pub ice_servers: Vec<String>,
     // appId 应用ID，选填，默认为空
     pub app_id: String,
     // installId 安装ID，选填，默认会生成一个随机id
@@ -93,12 +95,11 @@ pub struct HttpClient {
 
 //MeshClient实例缓存
 lazy_static! {
-    pub static ref MESH_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<MeshClient>>>> = RwLock::new(HashMap::new());
+    pub static ref MESH_REQUEST_CHANNEL_MAP: RwLock<HashMap<String, Arc<RwLock<SyncSender<gateway::GatewayApiRequest>>>>> = RwLock::new(HashMap::new());
 }
 
 pub struct MeshClient {
     pub instance_id: String,
-    // pub data_channel: Option<Arc<RwLock<webrtc::data::DataChannel>>>,
 }
 
 
@@ -126,10 +127,10 @@ pub struct WsWriter {
 
 //WsReader实例缓存
 lazy_static! {
-    pub static ref WS_READER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsReader>>>> = RwLock::new(HashMap::new());
+    pub static ref WS_READER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<ApiReader >>>> = RwLock::new(HashMap::new());
 }
 
-pub struct WsReader {
+pub struct ApiReader {
     pub instance_id: String,
 }
 

@@ -46,11 +46,18 @@ Future<void> main() async {
   stream.listen(onEvent);
 
   var initResult = ApiResult.fromString(await lib.initInstance(
-    net: 0, // 0是传统ws 1是p2p mesh 目前还在写
     instanceId: instanceId,
-    host: '127.0.0.1',
-    port: 34500,
+    // net: 0, // 0是传统ws 1是p2p mesh 目前还在写
+    // host: '127.0.0.1',
+    // port: 34500,
+    // ssl: false,
+    net: 1,
+    // 0是传统ws 1是p2p mesh 目前还在写
+    host: 'imcloudx.cherish.chat',
+    port: 80,
     ssl: false,
+    appId: '1',
+
     platform: 0,
     deviceModel: 'Macos',
     osVersion: '10.15.7',
@@ -167,7 +174,7 @@ Future<void> main() async {
     print('userAccessTokenResp: ${resp.toProto3Json()}');
   }
 
-  {
+  if (true) {
     await lib.setLoginInfo(
       instanceId: instanceId,
       userId: 'dart1',
@@ -175,7 +182,6 @@ Future<void> main() async {
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE1',
     );
   }
-
 
   sleep(const Duration(seconds: 5));
 
@@ -188,8 +194,23 @@ Future<void> main() async {
       instanceId: instanceId,
       userId: 'dart1',
       token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE',
     );
+  }
+
+  if (true) {
+    var req = GroupCreateReq(
+      name: 'dart1',
+      avatar: 'dart1',
+      memberList: ['dart1', '1', '2'],
+    );
+    var apiResponse = ApiResult.fromString(await lib.groupCreate(
+        instanceId: instanceId, protobuf: req.writeToBuffer()));
+    if (apiResponse.code != 0) {
+      print('groupCreateResult: ${apiResponse.toString()}');
+    }
+    GroupCreateResp resp = GroupCreateResp.fromBuffer(base64Decode(apiResponse.data));
+    print('groupCreateResp: ${resp.toProto3Json()}');
   }
 
   sleep(Duration(days: 1));

@@ -2,32 +2,33 @@ use std::sync::{Arc, RwLock};
 use prost::bytes::Bytes;
 use crate::pb::{common, gateway};
 use crate::pb::gateway::GatewayWriteDataType;
-use crate::store::values::{WS_READER_INSTANCE_MAP, WsReader};
+use crate::store::values::{WS_READER_INSTANCE_MAP, ApiReader};
 use crate::tool::{log, proto};
 use crate::store::api_response::APIResponse;
 
-impl WsReader {
+impl ApiReader {
     pub fn new(id: String) -> Self {
-        WsReader {
+        ApiReader {
             instance_id: id,
         }
     }
 
-    pub fn instance(id: String) -> Arc<RwLock<WsReader>> {
+    pub fn instance(id: String) -> Arc<RwLock<ApiReader>> {
         let map = WS_READER_INSTANCE_MAP.read().unwrap();
         let ws_reader = map.get(id.as_str()).unwrap();
         ws_reader.clone()
     }
 
     fn on_receive_(&self, data: Vec<u8>) {
-        log::debug("on_receive: websocket receive binary");
+        log::debug("on_receive: receive binary");
         let result: Result<gateway::GatewayWriteDataContent, String> = proto::unmarshal_or_err(Bytes::from(data));
         match result {
             Ok(data_content) => {
                 let data_content = data_content as gateway::GatewayWriteDataContent;
                 match data_content.dataType.unwrap() {
                     GatewayWriteDataType::Response => {
-                        self.on_receive_response(data_content.response.unwrap());
+                        let response = data_content.response.unwrap();
+                        self.on_receive_response(response.requestId.clone(), response);
                     }
                     GatewayWriteDataType::PushMessage => {
                         self.on_receive_push_message(data_content.message.unwrap());
@@ -36,7 +37,7 @@ impl WsReader {
                         self.on_receive_push_notice(data_content.notice.unwrap());
                     }
                 }
-            },
+            }
             Err(e) => {
                 log::warn(format!("on_receive: unmarshal_or_err err: {}", e).as_str());
             }
@@ -44,9 +45,9 @@ impl WsReader {
         // let data_content: gateway::GatewayWriteDataContent = proto::unmarshal_or_err(data)
     }
 
-    fn on_receive_response(&self, response: gateway::GatewayApiResponse) {
+    fn on_receive_response(&self, request_id: String, response: gateway::GatewayApiResponse) {
         log::debug("on_receive_response");
-        APIResponse::on_response(self.instance_id.clone(), response);
+        APIResponse::on_response(request_id.clone(), response);
     }
 
     fn on_receive_push_message(&self, message: common::Message) {
@@ -57,8 +58,8 @@ impl WsReader {
         log::debug(format!("on_receive_push_notice: {}", notice).as_str());
     }
 
-    pub fn on_receive(instance_id:String, data: Vec<u8>) {
-        let reader = WsReader::instance(instance_id.clone());
+    pub fn on_receive(instance_id: String, data: Vec<u8>) {
+        let reader = ApiReader::instance(instance_id.clone());
         let reader = reader.read().unwrap();
         reader.on_receive_(data);
     }

@@ -25,6 +25,8 @@ base64 = "0.21.2"
 websocket = "0.26.5"
 crossbeam-channel = "0.5.8"
 native-tls = "0.2.11"
+datachannel = { version = "0.9.1", features = ["vendored"] }
+webrtc-sdp = "0.3.10"
 
 [dependencies.uuid]
 version = "1.3.4"

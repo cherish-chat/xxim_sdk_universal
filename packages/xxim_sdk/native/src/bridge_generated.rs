@@ -54,6 +54,7 @@ fn wire_init_instance_impl(
     host: impl Wire2Api<String> + UnwindSafe,
     port: impl Wire2Api<u16> + UnwindSafe,
     ssl: impl Wire2Api<bool> + UnwindSafe,
+    ice_servers: impl Wire2Api<Option<Vec<String>>> + UnwindSafe,
     app_id: impl Wire2Api<Option<String>> + UnwindSafe,
     install_id: impl Wire2Api<Option<String>> + UnwindSafe,
     platform: impl Wire2Api<i32> + UnwindSafe,
@@ -78,6 +79,7 @@ fn wire_init_instance_impl(
             let api_host = host.wire2api();
             let api_port = port.wire2api();
             let api_ssl = ssl.wire2api();
+            let api_ice_servers = ice_servers.wire2api();
             let api_app_id = app_id.wire2api();
             let api_install_id = install_id.wire2api();
             let api_platform = platform.wire2api();
@@ -96,6 +98,7 @@ fn wire_init_instance_impl(
                     api_host,
                     api_port,
                     api_ssl,
+                    api_ice_servers,
                     api_app_id,
                     api_install_id,
                     api_platform,
@@ -468,6 +471,7 @@ mod web {
         host: String,
         port: u16,
         ssl: bool,
+        ice_servers: Option<JsValue>,
         app_id: Option<String>,
         install_id: Option<String>,
         platform: i32,
@@ -487,6 +491,7 @@ mod web {
             host,
             port,
             ssl,
+            ice_servers,
             app_id,
             install_id,
             platform,
@@ -605,9 +610,23 @@ mod web {
             self
         }
     }
+    impl Wire2Api<Vec<String>> for JsValue {
+        fn wire2api(self) -> Vec<String> {
+            self.dyn_into::<JsArray>()
+                .unwrap()
+                .iter()
+                .map(Wire2Api::wire2api)
+                .collect()
+        }
+    }
 
     impl Wire2Api<Option<String>> for Option<String> {
         fn wire2api(self) -> Option<String> {
+            self.map(Wire2Api::wire2api)
+        }
+    }
+    impl Wire2Api<Option<Vec<String>>> for Option<JsValue> {
+        fn wire2api(self) -> Option<Vec<String>> {
             self.map(Wire2Api::wire2api)
         }
     }
@@ -636,6 +655,11 @@ mod web {
     }
     impl Wire2Api<Option<String>> for JsValue {
         fn wire2api(self) -> Option<String> {
+            (!self.is_undefined() && !self.is_null()).then(|| self.wire2api())
+        }
+    }
+    impl Wire2Api<Option<Vec<String>>> for JsValue {
+        fn wire2api(self) -> Option<Vec<String>> {
             (!self.is_undefined() && !self.is_null()).then(|| self.wire2api())
         }
     }
@@ -686,6 +710,7 @@ mod io {
         host: *mut wire_uint_8_list,
         port: u16,
         ssl: bool,
+        ice_servers: *mut wire_StringList,
         app_id: *mut wire_uint_8_list,
         install_id: *mut wire_uint_8_list,
         platform: i32,
@@ -705,6 +730,7 @@ mod io {
             host,
             port,
             ssl,
+            ice_servers,
             app_id,
             install_id,
             platform,
@@ -855,6 +881,15 @@ mod io {
     // Section: allocate functions
 
     #[no_mangle]
+    pub extern "C" fn new_StringList_0(len: i32) -> *mut wire_StringList {
+        let wrap = wire_StringList {
+            ptr: support::new_leak_vec_ptr(<*mut wire_uint_8_list>::new_with_null_ptr(), len),
+            len,
+        };
+        support::new_leak_box_ptr(wrap)
+    }
+
+    #[no_mangle]
     pub extern "C" fn new_box_autoadd_i32_0(value: i32) -> *mut i32 {
         support::new_leak_box_ptr(value)
     }
@@ -878,6 +913,15 @@ mod io {
             String::from_utf8_lossy(&vec).into_owned()
         }
     }
+    impl Wire2Api<Vec<String>> for *mut wire_StringList {
+        fn wire2api(self) -> Vec<String> {
+            let vec = unsafe {
+                let wrap = support::box_from_leak_ptr(self);
+                support::vec_from_leak_ptr(wrap.ptr, wrap.len)
+            };
+            vec.into_iter().map(Wire2Api::wire2api).collect()
+        }
+    }
 
     impl Wire2Api<i32> for *mut i32 {
         fn wire2api(self) -> i32 {
@@ -894,6 +938,13 @@ mod io {
         }
     }
     // Section: wire structs
+
+    #[repr(C)]
+    #[derive(Clone)]
+    pub struct wire_StringList {
+        ptr: *mut *mut wire_uint_8_list,
+        len: i32,
+    }
 
     #[repr(C)]
     #[derive(Clone)]

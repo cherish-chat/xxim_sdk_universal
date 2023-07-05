@@ -14,6 +14,11 @@ typedef struct wire_uint_8_list {
   int32_t len;
 } wire_uint_8_list;
 
+typedef struct wire_StringList {
+  struct wire_uint_8_list **ptr;
+  int32_t len;
+} wire_StringList;
+
 typedef struct DartCObject *WireSyncReturn;
 
 void store_dart_post_cobject(DartPostCObjectFnType ptr);
@@ -36,6 +41,7 @@ void wire_init_instance(int64_t port_,
                         struct wire_uint_8_list *host,
                         uint16_t port,
                         bool ssl,
+                        struct wire_StringList *ice_servers,
                         struct wire_uint_8_list *app_id,
                         struct wire_uint_8_list *install_id,
                         int32_t platform,
@@ -107,6 +113,8 @@ void wire_list_notice(int64_t port_,
                       struct wire_uint_8_list *instance_id,
                       struct wire_uint_8_list *protobuf);
 
+struct wire_StringList *new_StringList_0(int32_t len);
+
 int32_t *new_box_autoadd_i32_0(int32_t value);
 
 struct wire_uint_8_list *new_uint_8_list_0(int32_t len);
@@ -134,6 +142,7 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_message_send);
     dummy_var ^= ((int64_t) (void*) wire_message_batch_send);
     dummy_var ^= ((int64_t) (void*) wire_list_notice);
+    dummy_var ^= ((int64_t) (void*) new_StringList_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_i32_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
     dummy_var ^= ((int64_t) (void*) free_WireSyncReturn);

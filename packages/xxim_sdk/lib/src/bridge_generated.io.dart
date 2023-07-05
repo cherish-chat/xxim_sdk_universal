@@ -21,6 +21,15 @@ class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> {
   }
 
   @protected
+  ffi.Pointer<wire_StringList> api2wire_StringList(List<String> raw) {
+    final ans = inner.new_StringList_0(raw.length);
+    for (var i = 0; i < raw.length; i++) {
+      ans.ref.ptr[i] = api2wire_String(raw[i]);
+    }
+    return ans;
+  }
+
+  @protected
   ffi.Pointer<ffi.Int32> api2wire_box_autoadd_i32(int raw) {
     return inner.new_box_autoadd_i32_0(api2wire_i32(raw));
   }
@@ -28,6 +37,11 @@ class XximSdkPlatform extends FlutterRustBridgeBase<XximSdkWire> {
   @protected
   ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
     return raw == null ? ffi.nullptr : api2wire_String(raw);
+  }
+
+  @protected
+  ffi.Pointer<wire_StringList> api2wire_opt_StringList(List<String>? raw) {
+    return raw == null ? ffi.nullptr : api2wire_StringList(raw);
   }
 
   @protected
@@ -154,6 +168,7 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> host,
     int port,
     bool ssl,
+    ffi.Pointer<wire_StringList> ice_servers,
     ffi.Pointer<wire_uint_8_list> app_id,
     ffi.Pointer<wire_uint_8_list> install_id,
     int platform,
@@ -173,6 +188,7 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
       host,
       port,
       ssl,
+      ice_servers,
       app_id,
       install_id,
       platform,
@@ -187,8 +203,8 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
     );
   }
 
-  late final _wire_init_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, ffi.Uint16, ffi.Bool, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32)>>('wire_init_instance');
-  late final _wire_init_instance = _wire_init_instancePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, int, bool, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int)>();
+  late final _wire_init_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, ffi.Uint16, ffi.Bool, ffi.Pointer<wire_StringList>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32)>>('wire_init_instance');
+  late final _wire_init_instance = _wire_init_instancePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, int, bool, ffi.Pointer<wire_StringList>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int)>();
 
   void wire_preset_stream(
     int port_,
@@ -426,6 +442,17 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
   late final _wire_list_noticePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>>('wire_list_notice');
   late final _wire_list_notice = _wire_list_noticePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
+  ffi.Pointer<wire_StringList> new_StringList_0(
+    int len,
+  ) {
+    return _new_StringList_0(
+      len,
+    );
+  }
+
+  late final _new_StringList_0Ptr = _lookup<ffi.NativeFunction<ffi.Pointer<wire_StringList> Function(ffi.Int32)>>('new_StringList_0');
+  late final _new_StringList_0 = _new_StringList_0Ptr.asFunction<ffi.Pointer<wire_StringList> Function(int)>();
+
   ffi.Pointer<ffi.Int32> new_box_autoadd_i32_0(
     int value,
   ) {
@@ -464,6 +491,13 @@ class _Dart_Handle extends ffi.Opaque {}
 
 class wire_uint_8_list extends ffi.Struct {
   external ffi.Pointer<ffi.Uint8> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
+
+class wire_StringList extends ffi.Struct {
+  external ffi.Pointer<ffi.Pointer<wire_uint_8_list>> ptr;
 
   @ffi.Int32()
   external int len;
