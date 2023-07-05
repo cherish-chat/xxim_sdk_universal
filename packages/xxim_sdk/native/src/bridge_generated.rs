@@ -393,6 +393,24 @@ fn wire_list_notice_impl(
         },
     )
 }
+fn wire_get_user_connection_impl(
+    port_: MessagePort,
+    instance_id: impl Wire2Api<String> + UnwindSafe,
+    protobuf: impl Wire2Api<Vec<u8>> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "get_user_connection",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_instance_id = instance_id.wire2api();
+            let api_protobuf = protobuf.wire2api();
+            move |task_callback| Ok(get_user_connection(api_instance_id, api_protobuf))
+        },
+    )
+}
 // Section: wrapper structs
 
 // Section: static checks
@@ -597,6 +615,11 @@ mod web {
     #[wasm_bindgen]
     pub fn wire_list_notice(port_: MessagePort, instance_id: String, protobuf: Box<[u8]>) {
         wire_list_notice_impl(port_, instance_id, protobuf)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_get_user_connection(port_: MessagePort, instance_id: String, protobuf: Box<[u8]>) {
+        wire_get_user_connection_impl(port_, instance_id, protobuf)
     }
 
     // Section: allocate functions
@@ -876,6 +899,15 @@ mod io {
         protobuf: *mut wire_uint_8_list,
     ) {
         wire_list_notice_impl(port_, instance_id, protobuf)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_get_user_connection(
+        port_: i64,
+        instance_id: *mut wire_uint_8_list,
+        protobuf: *mut wire_uint_8_list,
+    ) {
+        wire_get_user_connection_impl(port_, instance_id, protobuf)
     }
 
     // Section: allocate functions

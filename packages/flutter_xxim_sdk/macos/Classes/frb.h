@@ -113,6 +113,10 @@ void wire_list_notice(int64_t port_,
                       struct wire_uint_8_list *instance_id,
                       struct wire_uint_8_list *protobuf);
 
+void wire_get_user_connection(int64_t port_,
+                              struct wire_uint_8_list *instance_id,
+                              struct wire_uint_8_list *protobuf);
+
 struct wire_StringList *new_StringList_0(int32_t len);
 
 int32_t *new_box_autoadd_i32_0(int32_t value);
@@ -142,6 +146,7 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_message_send);
     dummy_var ^= ((int64_t) (void*) wire_message_batch_send);
     dummy_var ^= ((int64_t) (void*) wire_list_notice);
+    dummy_var ^= ((int64_t) (void*) wire_get_user_connection);
     dummy_var ^= ((int64_t) (void*) new_StringList_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_i32_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);

@@ -101,6 +101,8 @@ class XximSdkWasmModule implements WasmModule {
   external dynamic /* void */ wire_message_batch_send(NativePortType port_, String instance_id, Uint8List protobuf);
 
   external dynamic /* void */ wire_list_notice(NativePortType port_, String instance_id, Uint8List protobuf);
+
+  external dynamic /* void */ wire_get_user_connection(NativePortType port_, String instance_id, Uint8List protobuf);
 }
 
 // Section: WASM wire connector
@@ -145,4 +147,6 @@ class XximSdkWire extends FlutterRustBridgeWasmWireBase<XximSdkWasmModule> {
   void wire_message_batch_send(NativePortType port_, String instance_id, Uint8List protobuf) => wasmModule.wire_message_batch_send(port_, instance_id, protobuf);
 
   void wire_list_notice(NativePortType port_, String instance_id, Uint8List protobuf) => wasmModule.wire_list_notice(port_, instance_id, protobuf);
+
+  void wire_get_user_connection(NativePortType port_, String instance_id, Uint8List protobuf) => wasmModule.wire_get_user_connection(port_, instance_id, protobuf);
 }

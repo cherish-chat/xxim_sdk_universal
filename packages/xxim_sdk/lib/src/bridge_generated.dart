@@ -158,6 +158,14 @@ abstract class XximSdk {
   Future<String> listNotice({required String instanceId, required Uint8List protobuf, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kListNoticeConstMeta;
+
+  /// 下面是 gateway 相关 api /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///
+  /// get_user_connection 获取用户连接信息
+  /// @param instance_id: sdk实例id
+  /// @param protobuf: protobuf编码的获取用户连接信息请求 详细请看 pb::gateway::GetUserConnectionReq
+  Future<String> getUserConnection({required String instanceId, required Uint8List protobuf, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetUserConnectionConstMeta;
 }
 
 class XximSdkImpl implements XximSdk {
@@ -631,6 +639,29 @@ class XximSdkImpl implements XximSdk {
 
   FlutterRustBridgeTaskConstMeta get kListNoticeConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "list_notice",
+        argNames: [
+          "instanceId",
+          "protobuf"
+        ],
+      );
+
+  Future<String> getUserConnection({required String instanceId, required Uint8List protobuf, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceId);
+    var arg1 = _platform.api2wire_uint_8_list(protobuf);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_get_user_connection(port_, arg0, arg1),
+      parseSuccessData: _wire2api_String,
+      constMeta: kGetUserConnectionConstMeta,
+      argValues: [
+        instanceId,
+        protobuf
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGetUserConnectionConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_user_connection",
         argNames: [
           "instanceId",
           "protobuf"

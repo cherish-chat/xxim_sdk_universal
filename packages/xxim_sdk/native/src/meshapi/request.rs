@@ -1,6 +1,5 @@
 use std::sync::{Arc, RwLock};
-use std::sync::mpsc::{SendError, SyncSender};
-use crate::pb::gateway;
+use std::sync::mpsc::{SyncSender};
 use crate::pb::gateway::GatewayApiRequest;
 use crate::store::api_handler::{Error, ErrorCode};
 use crate::store::values::MESH_REQUEST_CHANNEL_MAP;
@@ -8,7 +7,7 @@ use crate::store::values::MESH_REQUEST_CHANNEL_MAP;
 pub struct MeshRequest {}
 
 impl MeshRequest {
-    pub fn set_sender(instance_id: String, sender: SyncSender<gateway::GatewayApiRequest>) {
+    pub fn set_sender(instance_id: String, sender: SyncSender<GatewayApiRequest>) {
         let mut map = MESH_REQUEST_CHANNEL_MAP.write().unwrap();
         // 判断之前的sender是否存在，如果存在则关闭
         match map.get(instance_id.as_str()) {

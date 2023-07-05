@@ -1,5 +1,5 @@
 use std::sync::{Arc, RwLock};
-use crate::pb::{user as user, conversation as friend, conversation as group, message as message, message as notice};
+use crate::pb::{user as user, conversation as friend, conversation as group, message as message, message as notice, gateway};
 use crate::store::values::{Config, HttpClient, MeshClient};
 
 #[derive(Debug)]
@@ -65,6 +65,9 @@ pub trait ApiHandler {
 
     //list_notice
     fn list_notice(&self, req: notice::ListNoticeReq) -> Result<Vec<u8>, Error>;
+
+    //gateway
+    fn get_user_connection(&self, req: gateway::GatewayGetUserConnectionReq) -> Result<Vec<u8>, Error>;
 }
 
 pub struct ApiClient {

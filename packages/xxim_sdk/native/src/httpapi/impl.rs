@@ -1,4 +1,5 @@
 use crate::pb::{user as user, conversation as friend, conversation as group, message as message, message as notice};
+use crate::pb::gateway::{GatewayGetUserConnectionReq, GatewayGetUserConnectionResp};
 use crate::store::api_handler::{ApiHandler, Error};
 use crate::store::values::{HttpClient};
 use crate::tool::proto;
@@ -220,6 +221,27 @@ impl ApiHandler for HttpClient {
                 return Ok(bytes);
             }
             Err(e) => Err(e)
+        }
+    }
+
+    fn get_user_connection(&self, req: GatewayGetUserConnectionReq) -> Result<Vec<u8>, Error> {
+        let client = HttpClient::instance(self.instance_id.clone());
+        let client = client.read().unwrap();
+
+        let box_req = Box::new(req);
+        let result: Result<Box<GatewayGetUserConnectionResp>, Error> = client.request_sync(
+            "/v1/gateway/getUserConnection".to_string(),
+            box_req,
+        );
+
+        match result {
+            Ok(response) => {
+                let bytes = proto::marshal_box(response);
+                return Ok(bytes);
+            }
+            Err(e) => {
+                return Err(e);
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ use flutter_rust_bridge::{StreamSink};
 use prost::bytes::Bytes;
 use crate::tool::{json, proto};
 use crate::param::*;
-use crate::pb::{user, conversation as friend, conversation as group, message as message, message as notice};
+use crate::pb::{user, conversation as friend, conversation as group, message as message, message as notice, gateway};
 use crate::store::api_handler::ApiClient;
 use crate::store::values::{SdkApi};
 
@@ -228,4 +228,16 @@ pub fn list_notice(instance_id: String, protobuf: Vec<u8>) -> String {
     let api = api.read().unwrap();
     let pb: notice::ListNoticeReq = proto::unmarshal(Bytes::from(protobuf));
     return json::marshal(&ApiResult::from_api_result(api.list_notice(pb)));
+}
+
+/// 下面是 gateway 相关 api /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///
+
+/// get_user_connection 获取用户连接信息
+/// @param instance_id: sdk实例id
+/// @param protobuf: protobuf编码的获取用户连接信息请求 详细请看 pb::gateway::GetUserConnectionReq
+pub fn get_user_connection(instance_id: String, protobuf: Vec<u8>) -> String {
+    let api = ApiClient::instance(instance_id);
+    let api = api.read().unwrap();
+    let pb: gateway::GatewayGetUserConnectionReq = proto::unmarshal(Bytes::from(protobuf));
+    return json::marshal(&ApiResult::from_api_result(api.get_user_connection(pb)));
 }

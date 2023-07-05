@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:xxim_sdk/src/bridge_generated.dart';
 import 'package:xxim_sdk/xxim_sdk.dart';
 
 class ApiResult {
@@ -62,7 +63,7 @@ Future<void> main() async {
     deviceModel: 'Macos',
     osVersion: '10.15.7',
     language: 0,
-    requestTimeoutMillisecond: 1000,
+    requestTimeoutMillisecond: 2000,
     dbDir: './db/',
     keepAliveSecond: 5,
     logLevel: 0,
@@ -209,11 +210,35 @@ Future<void> main() async {
     if (apiResponse.code != 0) {
       print('groupCreateResult: ${apiResponse.toString()}');
     }
-    GroupCreateResp resp = GroupCreateResp.fromBuffer(base64Decode(apiResponse.data));
+    GroupCreateResp resp =
+        GroupCreateResp.fromBuffer(base64Decode(apiResponse.data));
     print('groupCreateResp: ${resp.toProto3Json()}');
   }
 
+  if (true) {
+    await getConn(instanceId: instanceId, lib: lib);
+  }
+
   sleep(Duration(days: 1));
+}
+
+Future<void> getConn({required String instanceId, required XximSdk lib}) async {
+  while (true) {
+    var req = GatewayGetUserConnectionReq(
+      userId: 'dart1',
+    );
+    var res = await lib.getUserConnection(
+        instanceId: instanceId, protobuf: req.writeToBuffer());
+    print('getUserConnection: $res');
+    var apiResponse = ApiResult.fromString(res);
+    if (apiResponse.code != 0) {
+      print('getUserConnection: ${apiResponse.toString()}');
+    }
+    GatewayGetUserConnectionResp resp =
+        GatewayGetUserConnectionResp.fromBuffer(base64Decode(apiResponse.data));
+    print('getUserConnectionResp: ${resp.toProto3Json()}');
+    sleep(const Duration(seconds: 5));
+  }
 }
 
 void onEvent(Uint8List event) {

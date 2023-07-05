@@ -1,5 +1,3 @@
-use std::sync::{Arc, RwLock};
-use std::sync::mpsc::{SyncSender};
 use std::thread::{sleep, spawn};
 use std::time::Duration;
 use crate::store::values::{Config, MeshClient, ApiReader};
@@ -44,7 +42,7 @@ impl MeshClient {
             }
         };
 
-        let receiver = APIResponse::new(request_id.clone(), Duration::from_secs(timeout_mills));
+        let receiver = APIResponse::new(request_id.clone(), Duration::from_millis(timeout_mills));
 
         log::info(format!("mesh request: {}", path.clone()).as_str());
         let mesh_request = MeshRequest::request(instance_id.clone(), api_request);
@@ -98,7 +96,7 @@ impl MeshClient {
             }
         };
 
-        let receiver = APIResponse::new(request_id.clone(), Duration::from_secs(timeout_mills));
+        let receiver = APIResponse::new(request_id.clone(), Duration::from_millis(timeout_mills));
 
         log::info(format!("mesh request: {}", path.clone()).as_str());
         let mesh_request = MeshRequest::request(instance_id.clone(), api_request);
@@ -387,8 +385,8 @@ impl MeshClient {
                                     }
                                 };
                             }
-                            Err(err) => {
-                                log::info(format!("mesh client {} recv error: {}", instance_id.clone(), err).as_str());
+                            Err(_) => {
+                                log::warn("channel closed, reconnect");
                                 break;
                             }
                         };
@@ -453,9 +451,9 @@ impl PeerConnectionHandler for ConnectionListener {
         }
     }
 
-    fn on_connection_state_change(&mut self, state: ConnectionState) {}
+    fn on_connection_state_change(&mut self, _: ConnectionState) {}
 
-    fn on_data_channel(&mut self, mut dc: Box<RtcDataChannel<Self::DCH>>) {
+    fn on_data_channel(&mut self, _: Box<RtcDataChannel<Self::DCH>>) {
         // TODO: store `dc` to keep receiving its messages (otherwise it will be dropped)
     }
 }
@@ -478,7 +476,7 @@ impl DataChannelHandler for DataChannelListener {
         log::warn(format!("mesh client {} data channel closed", self.instance_id.clone()).as_str());
         MeshRequest::remove_sender(self.instance_id.clone());
     }
-    fn on_error(&mut self, err: &str) {}
+    fn on_error(&mut self, _: &str) {}
     fn on_message(&mut self, data: &[u8]) {
         log::debug("on_receive: websocket receive binary");
         ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));

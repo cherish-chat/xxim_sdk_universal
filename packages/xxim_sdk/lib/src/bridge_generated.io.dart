@@ -442,6 +442,21 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
   late final _wire_list_noticePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>>('wire_list_notice');
   late final _wire_list_notice = _wire_list_noticePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_get_user_connection(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> instance_id,
+    ffi.Pointer<wire_uint_8_list> protobuf,
+  ) {
+    return _wire_get_user_connection(
+      port_,
+      instance_id,
+      protobuf,
+    );
+  }
+
+  late final _wire_get_user_connectionPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>>('wire_get_user_connection');
+  late final _wire_get_user_connection = _wire_get_user_connectionPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
   ffi.Pointer<wire_StringList> new_StringList_0(
     int len,
   ) {

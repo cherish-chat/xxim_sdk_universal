@@ -1,7 +1,8 @@
 use crate::pb::{user as user, conversation as friend, conversation as group, message as message, message as notice};
+use crate::pb::gateway::{GatewayGetUserConnectionReq, GatewayGetUserConnectionResp};
 use crate::store::api_handler::{ApiHandler, Error};
 use crate::store::values::{MeshClient};
-use crate::tool::proto;
+use crate::tool::{log, proto};
 
 impl ApiHandler for MeshClient {
     /// UserRegister 用户注册
@@ -206,6 +207,22 @@ impl ApiHandler for MeshClient {
             Ok(response) => {
                 let bytes = proto::marshal_box(response);
                 return Ok(bytes);
+            }
+            Err(e) => Err(e)
+        }
+    }
+
+    fn get_user_connection(&self, req: GatewayGetUserConnectionReq) -> Result<Vec<u8>, Error> {
+        let box_req = Box::new(req);
+        let result: Result<Box<GatewayGetUserConnectionResp>, Error> = MeshClient::request_sync(
+            self.instance_id.clone(),
+            "/v1/gateway/getUserConnection".to_string(),
+            box_req,
+        );
+        match result {
+            Ok(response) => {
+                let bytes = proto::marshal_box(response);
+                Ok(bytes)
             }
             Err(e) => Err(e)
         }
