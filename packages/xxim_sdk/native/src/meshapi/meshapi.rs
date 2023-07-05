@@ -129,7 +129,7 @@ impl MeshClient {
 }
 
 impl MeshClient {
-    fn loop_heartbeat(instance_id: String) {
+    pub fn loop_heartbeat(instance_id: String) {
         spawn(move || {
             loop {
                 let config_or_none = Config::get_config_or_none(instance_id.clone());

@@ -72,10 +72,11 @@ impl SdkApi {
         };
         {
             let validate_result = Config::validate(config);
-            return match validate_result {
+            let res = match validate_result {
                 Ok(config) => {
                     let mut map = CONFIG_INSTANCE_MAP.write().unwrap();
                     map.insert(self.instance_id.clone(), Arc::new(RwLock::new(config.clone())));
+                    drop(map);
                     true
                 }
                 Err(e) => {
@@ -84,6 +85,8 @@ impl SdkApi {
                     false
                 }
             };
+            MeshClient::loop_heartbeat(self.instance_id.clone());
+            res
         }
     }
 
