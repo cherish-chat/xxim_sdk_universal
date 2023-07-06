@@ -182,11 +182,11 @@ impl SdkApi {
     }
 
     pub fn new_instance(id: String) {
+        log::debug(format!("new_instance: {}", id.clone()).as_str());
         let mut map = SDK_INSTANCE_MAP.write().unwrap();
         let sdk_api = SdkApi {
             instance_id: id.clone(),
         };
-        log::debug(format!("new_instance: {}", id).as_str());
         map.insert(id.clone(), Arc::new(RwLock::new(sdk_api)));
         drop(map);
 

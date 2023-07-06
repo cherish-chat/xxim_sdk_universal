@@ -180,6 +180,9 @@ impl MeshClient {
 
     pub fn reset_header(instance_id: String) {
         let config = Config::get_config(instance_id.clone()).read().unwrap().clone();
+        if config.net.clone() != 1 {
+            return;
+        }
         let conf = config.clone();
         drop(config);
         log::debug("mesh reset header");

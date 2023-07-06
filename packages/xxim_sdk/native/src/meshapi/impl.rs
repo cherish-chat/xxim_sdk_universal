@@ -2,7 +2,7 @@ use crate::pb::{user as user, conversation as friend, conversation as group, mes
 use crate::pb::gateway::{GatewayGetUserConnectionReq, GatewayGetUserConnectionResp};
 use crate::store::api_handler::{ApiHandler, Error};
 use crate::store::values::{MeshClient};
-use crate::tool::{log, proto};
+use crate::tool::{proto};
 
 impl ApiHandler for MeshClient {
     /// UserRegister 用户注册

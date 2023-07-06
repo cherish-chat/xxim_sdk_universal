@@ -1,4 +1,5 @@
 use std::sync::{Arc, RwLock};
+use prost::bytes::Bytes;
 use reqwest::header::HeaderMap;
 use crate::store::values::{Config, HTTP_CLIENT_INSTANCE_MAP, HttpClient};
 use crate::pb::{common, gateway};
@@ -47,8 +48,9 @@ impl HttpClient {
                 log::debug(format!("status: {:?}", status).as_str());
                 if status.is_success() {
                     let bytes = response.bytes().unwrap();
+                    let api_response: gateway::GatewayApiResponse = proto::unmarshal(Bytes::from(bytes));
                     // log::debug(format!("bytes: {:?}", String::from_utf8(bytes.clone().to_vec()).unwrap()).as_str());
-                    let resp = proto::unmarshal::<P>(bytes);
+                    let resp = proto::unmarshal::<P>(Bytes::from(api_response.body));
                     Ok(Box::new(resp))
                 } else {
                     Err(Error {

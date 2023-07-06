@@ -5,7 +5,6 @@ import 'dart:typed_data';
 
 import 'package:xxim_sdk/src/bridge_generated.dart';
 import 'package:xxim_sdk/xxim_sdk.dart';
-import 'package:fixnum/fixnum.dart' as $fixnum;
 
 class ApiResult {
   int code = 0;
@@ -32,13 +31,6 @@ class ApiResult {
   }
 }
 
-Future<void> main1() async {
-  var b = "AQIDBAU=";
-  //base64解码
-  var bytes = base64Decode(b);
-  print(bytes);
-}
-
 Future<void> main() async {
   var lib = createLib();
   const instanceId = '1';
@@ -49,15 +41,15 @@ Future<void> main() async {
 
   var initResult = ApiResult.fromString(await lib.initInstance(
     instanceId: instanceId,
-    // net: 0, // 0是传统ws 1是p2p mesh 目前还在写
-    // host: '127.0.0.1',
-    // port: 34500,
-    // ssl: false,
-    net: 1,
-    // 0是传统ws 1是p2p mesh 目前还在写
-    host: 'imcloudx.cherish.chat',
-    port: 80,
+    net: 0, // 0是传统ws 1是p2p mesh 目前还在写
+    host: '127.0.0.1',
+    port: 34500,
     ssl: false,
+    // net: 1,
+    // // 0是传统ws 1是p2p mesh 目前还在写
+    // host: 'imcloudx.cherish.chat',
+    // port: 80,
+    // ssl: false,
     appId: '1',
 
     platform: 0,
@@ -115,14 +107,14 @@ Future<void> main() async {
 
   {
     var req = UserRegisterReq(
-      userId: 'dart1',
-      nickname: 'dart1',
-      avatar: 'dart1',
+      userId: 'dart3',
+      nickname: 'dart3',
+      avatar: 'dart3',
       accountMap: {
-        'username': 'dart1',
-        'passwordSalt': 'dart1',
-        'password': 'dart1',
-        'phone': '13700000001',
+        'username': 'dart3',
+        'passwordSalt': 'dart3',
+        'password': 'dart3',
+        'phone': '13700000003',
         'phoneCode': '86',
       },
       verifyMap: {
@@ -131,28 +123,37 @@ Future<void> main() async {
         'captchaCode': '123456',
       },
     );
-    var userRegisterResult = ApiResult.fromString(await lib.userRegister(
-      protobuf: req.writeToBuffer(),
-      instanceId: instanceId,
-    ));
-    if (userRegisterResult.code != 0) {
+    while (false) {
+      var userRegisterResult = ApiResult.fromString(await lib.userRegister(
+        protobuf: req.writeToBuffer(),
+        instanceId: instanceId,
+      ));
       print('userRegisterResult: ${userRegisterResult.toString()}');
+      if (userRegisterResult.code != 0) {
+        sleep(Duration(seconds: 1));
+        continue;
+      }
+      GatewayApiResponse apiResponse =
+          GatewayApiResponse.fromBuffer(base64Decode(userRegisterResult.data));
+      ResponseHeader header = apiResponse.getField(1);
+      print('userRegisterResp.header: ${header.toProto3Json()}');
+      if (header.code != ResponseCode.SUCCESS) {
+        sleep(Duration(seconds: 1));
+        continue;
+      }
+      UserRegisterResp resp = UserRegisterResp.fromBuffer(apiResponse.body);
+      print('userRegisterResp: ${resp.toProto3Json()}');
+      break;
     }
-    GatewayApiResponse apiResponse =
-        GatewayApiResponse.fromBuffer(base64Decode(userRegisterResult.data));
-    ResponseHeader header = apiResponse.getField(1);
-    print('userRegisterResp.header: ${header.toProto3Json()}');
-    UserRegisterResp resp = UserRegisterResp.fromBuffer(apiResponse.body);
-    print('userRegisterResp: ${resp.toProto3Json()}');
   }
 
-  if (false) {
+  if (true) {
     var req = UserAccessTokenReq(
       accountMap: {
-        'username': 'dart1',
-        'passwordSalt': 'dart1',
-        'password': 'dart1',
-        'phone': '13700000001',
+        'username': 'dart3',
+        'passwordSalt': 'dart3',
+        'password': 'dart3',
+        'phone': '13700000003',
         'phoneCode': '86',
       },
       verifyMap: {
@@ -161,50 +162,39 @@ Future<void> main() async {
         'captchaCode': '123456',
       },
     );
-    var userAccessTokenResult = ApiResult.fromString(await lib.userAccessToken(
-      protobuf: req.writeToBuffer(),
-      instanceId: instanceId,
-    ));
-    if (userAccessTokenResult.code != 0) {
+    while (true) {
+      var userAccessTokenResult =
+          ApiResult.fromString(await lib.userAccessToken(
+        protobuf: req.writeToBuffer(),
+        instanceId: instanceId,
+      ));
       print('userAccessTokenResult: ${userAccessTokenResult.toString()}');
+      if (userAccessTokenResult.code != 0) {
+        sleep(Duration(seconds: 1));
+        continue;
+      }
+
+      UserAccessTokenResp resp =
+      UserAccessTokenResp.fromBuffer(base64Decode(userAccessTokenResult.data));
+      print('userAccessTokenResp: ${resp.toProto3Json()}');
+      if (resp.header.code != ResponseCode.SUCCESS) {
+        exit(1);
+      }
+
+      await lib.setLoginInfo(
+        instanceId: instanceId,
+        userId: resp.userId,
+        token: resp.accessToken,
+      );
+      break;
     }
-    GatewayApiResponse apiResponse =
-        GatewayApiResponse.fromBuffer(base64Decode(userAccessTokenResult.data));
-    ResponseHeader header = apiResponse.getField(1);
-    print('userAccessTokenResp.header: ${header.toProto3Json()}');
-    UserAccessTokenResp resp = UserAccessTokenResp.fromBuffer(apiResponse.body);
-    print('userAccessTokenResp: ${resp.toProto3Json()}');
-  }
-
-  if (true) {
-    await lib.setLoginInfo(
-      instanceId: instanceId,
-      userId: 'dart1',
-      token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE1',
-    );
-  }
-
-  sleep(const Duration(seconds: 5));
-
-  if (true) {
-    await lib.unsetLoginInfo(instanceId: instanceId);
-  }
-
-  if (true) {
-    await lib.setLoginInfo(
-      instanceId: instanceId,
-      userId: 'dart1',
-      token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE',
-    );
   }
 
   if (true) {
     var req = GroupCreateReq(
-      name: 'dart1',
-      avatar: 'dart1',
-      memberList: ['dart1', '1', '2'],
+      name: 'dart3',
+      avatar: 'dart3',
+      memberList: ['dart1', 'dart2', '1', '2'],
     );
     var apiResponse = ApiResult.fromString(await lib.groupCreate(
         instanceId: instanceId, protobuf: req.writeToBuffer()));
@@ -217,49 +207,18 @@ Future<void> main() async {
   }
 
   if (true) {
-    while (true) {
-      var req = ListFriendApplyReq(
-        cursor: $fixnum.Int64(0),
-        limit: $fixnum.Int64(10),
-        filter: ListFriendApplyReq_Filter(
-          status: FriendApplyStatus.Applying,
-        ),
-        option: ListFriendApplyReq_Option(
-          includeApplyByMe: true,
-        ),
-      );
-      var apiResponse = ApiResult.fromString(await lib.listFriendApply(
-          instanceId: instanceId, protobuf: req.writeToBuffer()));
-      if (apiResponse.code != 0) {
-        print('listFriendApplyResult: ${apiResponse.toString()}');
-        sleep(Duration(seconds: 1));
-        continue;
-      } else {
-        ListFriendApplyResp resp =
-        ListFriendApplyResp.fromBuffer(base64Decode(apiResponse.data));
-        print('listFriendApplyResp: ${resp.toProto3Json()}');
-        for (var element in resp.friendApplyList) {
-          var applyId = element.applyId;
-          // 同意
-          if (true) {
-            var req = FriendApplyHandleReq(
-              applyId: applyId,
-              agree: true,
-              firstMessage: 'hello',
-            );
-            var apiResponse = ApiResult.fromString(await lib.friendApplyHandle(
-                instanceId: instanceId, protobuf: req.writeToBuffer()));
-            if (apiResponse.code != 0) {
-              print('friendApplyHandleResult: ${apiResponse.toString()}');
-            } else {
-              FriendApplyHandleResp resp =
-              FriendApplyHandleResp.fromBuffer(base64Decode(apiResponse.data));
-              print('friendApplyHandleResp: ${resp.toProto3Json()}');
-            }
-          }
-        }
-        break;
-      }
+    var req = FriendApplyReq(
+      toUserId: 'dart1',
+      message: '加我',
+    );
+    var apiResponse = ApiResult.fromString(await lib.friendApply(
+        instanceId: instanceId, protobuf: req.writeToBuffer()));
+    if (apiResponse.code != 0) {
+      print('friendApplyResult: ${apiResponse.toString()}');
+    } else {
+      FriendApplyResp resp =
+          FriendApplyResp.fromBuffer(base64Decode(apiResponse.data));
+      print('friendApplyResp: ${resp.toProto3Json()}');
     }
   }
 
