@@ -2,7 +2,7 @@ use std::sync::{Arc, RwLock};
 use std::thread::{sleep};
 use websocket::OwnedMessage;
 use crate::pb::common;
-use crate::store::values::{Config, WS_CLIENT_INSTANCE_MAP, WsClient, ApiReader, WsWriter};
+use crate::store::values::{Config, WEBSOCKET_CLIENT_INSTANCE_MAP, WsClient, ApiReader, WsWriter};
 use crate::tool::{log};
 
 impl WsClient {
@@ -13,7 +13,7 @@ impl WsClient {
     }
 
     pub(crate) fn instance(id: String) -> Arc<RwLock<WsClient>> {
-        let map = WS_CLIENT_INSTANCE_MAP.read().unwrap();
+        let map = WEBSOCKET_CLIENT_INSTANCE_MAP.read().unwrap();
         let client = map.get(id.as_str()).unwrap();
         client.clone()
     }

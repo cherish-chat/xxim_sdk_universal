@@ -9,7 +9,7 @@ pub struct APIResponse {}
 
 impl APIResponse {
     pub fn new(uuid: String, timeout: Duration) -> Receiver<gateway::GatewayApiResponse> {
-        let (sender, receiver) = std::sync::mpsc::sync_channel(1);
+        let (sender, receiver) = std::sync::mpsc::channel();
         let mut map = API_RESPONSE_SENDER_MAP.write().unwrap();
         map.insert(uuid.clone(), Arc::new(RwLock::new(sender)));
         drop(map);

@@ -1,6 +1,9 @@
 use std::sync::{Arc, RwLock};
 use flutter_rust_bridge::{StreamSink};
-use crate::store::values::{SDK_INSTANCE_MAP, CONFIG_INSTANCE_MAP, SdkApi, Config, STREAM_INSTANCE_MAP, Sqlite, HTTP_CLIENT_INSTANCE_MAP, HttpClient, WS_CLIENT_INSTANCE_MAP, WsClient, WS_WRITER_INSTANCE_MAP, WsWriter, WS_READER_INSTANCE_MAP, ApiReader, MeshClient, DEFAULT_ICE_SERVERS};
+use crate::store::values::{SDK_INSTANCE_MAP, CONFIG_INSTANCE_MAP, SdkApi, Config,
+                           STREAM_INSTANCE_MAP, Sqlite, WEBSOCKET_CLIENT_INSTANCE_MAP,
+                           API_READER_INSTANCE_MAP,
+                           ApiReader, MeshClient, DEFAULT_ICE_SERVERS, WebsocketClient};
 use crate::tool::{log};
 
 const USER_INIT_SQL: &str = r#"CREATE TABLE IF NOT EXISTS `user_config` (
@@ -39,11 +42,11 @@ impl SdkApi {
                 None => 0,
             },
             ice_servers: match net.clone() {
-                None => {vec![]}
+                None => { vec![] }
                 Some(net) => {
                     match net {
-                        1=> match ice_servers {
-                            None => {DEFAULT_ICE_SERVERS.clone()}
+                        1 => match ice_servers {
+                            None => { DEFAULT_ICE_SERVERS.clone() }
                             Some(ice_servers) => {
                                 if ice_servers.is_empty() {
                                     DEFAULT_ICE_SERVERS.clone()
@@ -52,7 +55,7 @@ impl SdkApi {
                                 }
                             }
                         },
-                        _=>vec![],
+                        _ => vec![],
                     }
                 }
             },
@@ -102,7 +105,7 @@ impl SdkApi {
         drop(config);
         drop(map);
         // TODO: 断开连接
-        WsClient::close_connect(self.instance_id.clone());
+        // WsClient::close_connect(self.instance_id.clone());
         MeshClient::reset_header(self.instance_id.clone());
         Sqlite::sqlite_close(db_path.clone());
         Sqlite::sqlite_destroy(db_path);
@@ -161,7 +164,7 @@ impl SdkApi {
         drop(map);
         MeshClient::reset_header(instance_id_clone.clone());
         Sqlite::get_connection(db_path, USER_INIT_SQL);
-        WsClient::loop_reconnect(instance_id_clone.clone());
+        // WsClient::loop_reconnect(instance_id_clone.clone());
         Sqlite::sqlite_all_debug();
     }
 }
@@ -190,40 +193,25 @@ impl SdkApi {
         map.insert(id.clone(), Arc::new(RwLock::new(sdk_api)));
         drop(map);
 
-        let mut map = HTTP_CLIENT_INSTANCE_MAP.write().unwrap();
-        map.insert(id.clone(), Arc::new(RwLock::new(HttpClient::new(id.clone()))));
-        drop(map);
+        // let mut map = WEBSOCKET_CLIENT_INSTANCE_MAP.write().unwrap();
+        // map.insert(id.clone(), Arc::new(RwLock::new(WebsocketClient::new(id.clone()))));
+        // drop(map);
 
         MeshClient::loop_reconnect(id.clone());
 
-        let mut map = WS_CLIENT_INSTANCE_MAP.write().unwrap();
-        map.insert(id.clone(), Arc::new(RwLock::new(WsClient::new(id.clone()))));
-        drop(map);
-
-        let mut map = WS_WRITER_INSTANCE_MAP.write().unwrap();
-        map.insert(id.clone(), Arc::new(RwLock::new(WsWriter::new(id.clone()))));
-        drop(map);
-
-        let mut map = WS_READER_INSTANCE_MAP.write().unwrap();
+        let mut map = API_READER_INSTANCE_MAP.write().unwrap();
         map.insert(id.clone(), Arc::new(RwLock::new(ApiReader::new(id.clone()))));
         drop(map);
-
     }
 
     pub fn destroy_instance(instance_id: String) {
         let mut map = SDK_INSTANCE_MAP.write().unwrap();
         map.remove(&instance_id);
 
-        let mut map = HTTP_CLIENT_INSTANCE_MAP.write().unwrap();
+        let mut map = WEBSOCKET_CLIENT_INSTANCE_MAP.write().unwrap();
         map.remove(&instance_id);
 
-        let mut map = WS_CLIENT_INSTANCE_MAP.write().unwrap();
-        map.remove(&instance_id);
-
-        let mut map = WS_WRITER_INSTANCE_MAP.write().unwrap();
-        map.remove(&instance_id);
-
-        let mut map = WS_READER_INSTANCE_MAP.write().unwrap();
+        let mut map = API_READER_INSTANCE_MAP.write().unwrap();
         map.remove(&instance_id);
     }
 }

@@ -1,6 +1,6 @@
 use std::sync::{Arc, RwLock};
 use crate::pb::{user as user, conversation as friend, conversation as group, message as message, message as notice, gateway};
-use crate::store::values::{Config, HttpClient, MeshClient};
+use crate::store::values::{Config, MeshClient};
 
 #[derive(Debug)]
 pub enum ErrorCode {
@@ -78,8 +78,7 @@ impl ApiClient {
     pub fn instance(instance_id: String) -> Arc<RwLock<dyn ApiHandler>> {
         let config = Config::get_config(instance_id.clone()).read().unwrap().clone();
         return if config.net == 0 {
-            // 传统 http
-            HttpClient::instance(instance_id.clone())
+            panic!("not support ws");
         } else {
             Arc::new(RwLock::new(MeshClient{instance_id: instance_id.clone()}))
         }

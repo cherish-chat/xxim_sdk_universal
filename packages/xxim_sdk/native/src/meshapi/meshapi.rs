@@ -1,6 +1,7 @@
+use std::sync::{Arc, RwLock};
 use std::thread::{sleep, spawn};
 use std::time::Duration;
-use crate::store::values::{Config, MeshClient, ApiReader};
+use crate::store::values::{Config, MeshClient, ApiReader, LongConnection, LONG_CONNECTION_INSTANCE_MAP};
 use datachannel::{DataChannelHandler, DataChannelInfo, PeerConnectionHandler, RtcConfig, RtcDataChannel, RtcPeerConnection, SessionDescription, SdpType, ConnectionState};
 use datachannel::sdp::SdpSession;
 use reqwest::blocking::Response;
@@ -14,6 +15,7 @@ use prost::bytes::Bytes;
 use crate::pb::common::RequestHeader;
 use crate::pb::gateway::GatewayKeepAliveResp;
 use crate::store::api_handler::{Error, ErrorCode};
+use crate::tool::crypto::{aes_decrypt, generate_key};
 use crate::tool::uuid::uuid;
 
 
@@ -261,8 +263,22 @@ impl MeshClient {
             instance_id: instance_id.clone(),
         }).unwrap();
 
+        let long_connection_id = uuid();
+        let (p, k) = generate_key();
+        let long_connection = LongConnection {
+            instance_id: instance_id.clone(),
+            connection_id: long_connection_id.clone(),
+            private_key: p,
+            public_key: k,
+            aes_key: None,
+        };
+        let mut map = LONG_CONNECTION_INSTANCE_MAP.write().unwrap();
+        map.insert(instance_id.clone(), Arc::new(RwLock::new(long_connection)));
+        drop(map);
+
         let mut data_channel = peer_connection.create_data_channel("data", DataChannelListener {
             instance_id: instance_id.clone(),
+            long_connection_id: long_connection_id.clone(),
         }).unwrap();
 
         // 交换信令
@@ -360,14 +376,38 @@ impl MeshClient {
                     };
                     let answer = SessionDescription { sdp: session, sdp_type: SdpType::Answer };
                     peer_connection.set_remote_description(&answer).unwrap();
-                    let (sender, receiver) = std::sync::mpsc::sync_channel(1);
+                    let (sender, receiver) = std::sync::mpsc::channel();
                     MeshRequest::set_sender(instance_id.clone(), sender);
                     loop {
                         match receiver.recv() {
                             Ok(req) => {
                                 let uuid = req.requestId.clone();
                                 let path = req.path.clone();
-                                let buf = proto::marshal(&req);
+                                let mut buf = proto::marshal(&req);
+                                // 是否加密
+                                log::debug("on_receive: websocket receive binary");
+                                let map = LONG_CONNECTION_INSTANCE_MAP.read().unwrap();
+                                let connection_id = long_connection_id.clone();
+                                let connection_id = connection_id.as_str();
+                                let long_connection = map.get(connection_id).unwrap();
+                                let long_connection = long_connection.read().unwrap();
+                                let aes_key = long_connection.aes_key.clone();
+                                drop(long_connection);
+                                drop(map);
+                                if aes_key.is_some() {
+                                    let aes_key = aes_key.unwrap();
+                                    // iv 取中间16位
+                                    let iv: Vec<u8> = aes_key[8..24].to_vec();
+                                    match aes_decrypt(aes_key, iv, Vec::from(buf)) {
+                                        Ok(data) => {
+                                            buf = data;
+                                        }
+                                        Err(err) => {
+                                            log::error(err.as_str());
+                                            break;
+                                        }
+                                    };
+                                }
                                 match data_channel.send(&buf) {
                                     Ok(_) => {}
                                     Err(e) => {
@@ -451,6 +491,7 @@ impl PeerConnectionHandler for ConnectionListener {
     fn data_channel_handler(&mut self, _info: DataChannelInfo) -> Self::DCH {
         DataChannelListener {
             instance_id: self.instance_id.clone(),
+            long_connection_id: "".to_string(),
         }
     }
 
@@ -463,6 +504,7 @@ impl PeerConnectionHandler for ConnectionListener {
 
 struct DataChannelListener {
     instance_id: String,
+    long_connection_id: String,
 }
 
 impl DataChannelHandler for DataChannelListener {
@@ -482,6 +524,28 @@ impl DataChannelHandler for DataChannelListener {
     fn on_error(&mut self, _: &str) {}
     fn on_message(&mut self, data: &[u8]) {
         log::debug("on_receive: websocket receive binary");
-        ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));
+        let map = LONG_CONNECTION_INSTANCE_MAP.read().unwrap();
+        let connection_id = self.long_connection_id.clone();
+        let connection_id = connection_id.as_str();
+        let long_connection = map.get(connection_id).unwrap();
+        let long_connection = long_connection.read().unwrap();
+        let aes_key = long_connection.aes_key.clone();
+        drop(long_connection);
+        drop(map);
+        if aes_key.is_some() {
+            let aes_key = aes_key.unwrap();
+            // iv 取中间16位
+            let iv: Vec<u8> = aes_key[8..24].to_vec();
+            match aes_decrypt(aes_key, iv, Vec::from(data)) {
+                Ok(data) => {
+                    ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));
+                }
+                Err(err) => {
+                    log::error(err.as_str());
+                }
+            };
+        } else {
+            ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));
+        }
     }
 }

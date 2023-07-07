@@ -6,7 +6,9 @@ use std::net::TcpStream;
 use serde::{Deserialize, Serialize};
 use flutter_rust_bridge::{StreamSink};
 use native_tls::TlsStream;
-use std::sync::mpsc::SyncSender;
+use std::sync::mpsc::{Sender};
+use elliptic_curve::ecdh::EphemeralSecret;
+use p256::NistP256;
 use crate::pb::gateway;
 
 // Sqlite实例缓存
@@ -83,51 +85,72 @@ lazy_static! {
     pub static ref STREAM_INSTANCE_MAP: RwLock<HashMap<String, StreamSink<Vec<u8>>>> = RwLock::new(HashMap::new());
 }
 
-//HttpClient实例缓存
-lazy_static! {
-    pub static ref HTTP_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<HttpClient>>>> = RwLock::new(HashMap::new());
-}
-
-pub struct HttpClient {
-    pub instance_id: String,
-    pub http_client: reqwest::blocking::Client,
-}
+// //HttpClient实例缓存
+// lazy_static! {
+//     pub static ref HTTP_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<HttpClient>>>> = RwLock::new(HashMap::new());
+// }
+//
+// pub struct HttpClient {
+//     pub instance_id: String,
+//     pub http_client: reqwest::blocking::Client,
+// }
 
 //MeshClient实例缓存
 lazy_static! {
-    pub static ref MESH_REQUEST_CHANNEL_MAP: RwLock<HashMap<String, Arc<RwLock<SyncSender<gateway::GatewayApiRequest>>>>> = RwLock::new(HashMap::new());
+    pub static ref MESH_REQUEST_CHANNEL_MAP: RwLock<HashMap<String, Arc<RwLock<Sender<gateway::GatewayApiRequest>>>>> = RwLock::new(HashMap::new());
 }
 
 pub struct MeshClient {
     pub instance_id: String,
 }
 
-
-//WsClient实例缓存
+//WebsocketClient实例缓存
 lazy_static! {
-    pub static ref WS_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsClient>>>> = RwLock::new(HashMap::new());
+    pub static ref WEBSOCKET_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WebsocketClient>>>> = RwLock::new(HashMap::new());
 }
 
-pub struct WsClient {
+pub struct WebsocketClient {
     pub instance_id: String,
 }
 
-//WsWriter实例缓存
+//LongConnection实例缓存
 lazy_static! {
-    pub static ref WS_WRITER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsWriter>>>> = RwLock::new(HashMap::new());
+    pub static ref LONG_CONNECTION_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<LongConnection>>>> = RwLock::new(HashMap::new());
 }
 
-pub struct WsWriter {
+pub struct LongConnection {
     pub instance_id: String,
-    // no tls
-    pub ws_writer: Option<websocket::sender::Writer<TcpStream>>,
-    // tls
-    pub ws_writer_tls: Option<websocket::sender::Writer<TlsStream<TcpStream>>>,
+    pub connection_id: String,
+    pub private_key: EphemeralSecret<NistP256>,
+    pub public_key: Vec<u8>, // hex
+    pub aes_key: Option<Vec<u8>>, // 只有不为空时才会加密 解密
 }
 
-//WsReader实例缓存
+// //WsClient实例缓存
+// lazy_static! {
+//     pub static ref WS_CLIENT_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsClient>>>> = RwLock::new(HashMap::new());
+// }
+//
+// pub struct WsClient {
+//     pub instance_id: String,
+// }
+
+// //WsWriter实例缓存
+// lazy_static! {
+//     pub static ref WS_WRITER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<WsWriter>>>> = RwLock::new(HashMap::new());
+// }
+//
+// pub struct WsWriter {
+//     pub instance_id: String,
+//     // no tls
+//     pub ws_writer: Option<websocket::sender::Writer<TcpStream>>,
+//     // tls
+//     pub ws_writer_tls: Option<websocket::sender::Writer<TlsStream<TcpStream>>>,
+// }
+
+//ApiReader实例缓存
 lazy_static! {
-    pub static ref WS_READER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<ApiReader >>>> = RwLock::new(HashMap::new());
+    pub static ref API_READER_INSTANCE_MAP: RwLock<HashMap<String, Arc<RwLock<ApiReader >>>> = RwLock::new(HashMap::new());
 }
 
 pub struct ApiReader {
@@ -136,5 +159,5 @@ pub struct ApiReader {
 
 //WsResponse实例缓存 key=uuid value=channel Sender
 lazy_static! {
-    pub static ref API_RESPONSE_SENDER_MAP: RwLock<HashMap<String, Arc<RwLock<SyncSender<gateway::GatewayApiResponse>>>>> = RwLock::new(HashMap::new());
+    pub static ref API_RESPONSE_SENDER_MAP: RwLock<HashMap<String, Arc<RwLock<Sender<gateway::GatewayApiResponse>>>>> = RwLock::new(HashMap::new());
 }

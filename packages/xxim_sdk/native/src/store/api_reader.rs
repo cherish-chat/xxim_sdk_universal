@@ -2,7 +2,7 @@ use std::sync::{Arc, RwLock};
 use prost::bytes::Bytes;
 use crate::pb::{common, gateway};
 use crate::pb::gateway::GatewayWriteDataType;
-use crate::store::values::{WS_READER_INSTANCE_MAP, ApiReader};
+use crate::store::values::{API_READER_INSTANCE_MAP, ApiReader};
 use crate::tool::{log, proto};
 use crate::store::api_response::APIResponse;
 
@@ -14,7 +14,7 @@ impl ApiReader {
     }
 
     pub fn instance(id: String) -> Arc<RwLock<ApiReader>> {
-        let map = WS_READER_INSTANCE_MAP.read().unwrap();
+        let map = API_READER_INSTANCE_MAP.read().unwrap();
         let ws_reader = map.get(id.as_str()).unwrap();
         ws_reader.clone()
     }
