@@ -25,102 +25,6 @@ const Platform$json = const {
 
 /// Descriptor for `Platform`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List platformDescriptor = $convert.base64Decode('CghQbGF0Zm9ybRIHCgNJT1MQABILCgdBTkRST0lEEAESBwoDV0VCEAISCwoHV0lORE9XUxADEgcKA01BQxAEEgkKBUxJTlVYEAUSCAoESXBhZBAGEg4KCkFuZHJvaWRQYWQQBw==');
-@$core.Deprecated('Use i18nLanguageDescriptor instead')
-const I18nLanguage$json = const {
-  '1': 'I18nLanguage',
-  '2': const [
-    const {'1': 'UNSET_LANGUAGE', '2': 0},
-    const {'1': 'Afrikaans', '2': 1},
-    const {'1': 'Albanian', '2': 2},
-    const {'1': 'Amharic', '2': 3},
-    const {'1': 'Arabic', '2': 4},
-    const {'1': 'Armenian', '2': 5},
-    const {'1': 'Azerbaijani', '2': 6},
-    const {'1': 'Bengali', '2': 7},
-    const {'1': 'Bosnian', '2': 8},
-    const {'1': 'Bulgarian', '2': 9},
-    const {'1': 'Catalan', '2': 10},
-    const {'1': 'Chinese_Simplified', '2': 11},
-    const {'1': 'Chinese_Traditional', '2': 12},
-    const {'1': 'Croatian', '2': 13},
-    const {'1': 'Czech', '2': 14},
-    const {'1': 'Danish', '2': 15},
-    const {'1': 'Dari', '2': 16},
-    const {'1': 'Dutch', '2': 17},
-    const {'1': 'English', '2': 18},
-    const {'1': 'Estonian', '2': 19},
-    const {'1': 'Farsi_Persian', '2': 20},
-    const {'1': 'Filipino_Tagalog', '2': 21},
-    const {'1': 'Finnish', '2': 22},
-    const {'1': 'French', '2': 23},
-    const {'1': 'French_Canada', '2': 24},
-    const {'1': 'Georgian', '2': 25},
-    const {'1': 'German', '2': 26},
-    const {'1': 'Greek', '2': 27},
-    const {'1': 'Gujarati', '2': 28},
-    const {'1': 'Haitian_Creole', '2': 29},
-    const {'1': 'Hausa', '2': 30},
-    const {'1': 'Hebrew', '2': 31},
-    const {'1': 'Hindi', '2': 32},
-    const {'1': 'Hungarian', '2': 33},
-    const {'1': 'Icelandic', '2': 34},
-    const {'1': 'Indonesian', '2': 35},
-    const {'1': 'Irish', '2': 36},
-    const {'1': 'Italian', '2': 37},
-    const {'1': 'Japanese', '2': 38},
-    const {'1': 'Kannada', '2': 39},
-    const {'1': 'Kazakh', '2': 40},
-    const {'1': 'Korean', '2': 41},
-    const {'1': 'Latvian', '2': 42},
-    const {'1': 'Lithuanian', '2': 43},
-    const {'1': 'Macedonian', '2': 44},
-    const {'1': 'Malay', '2': 45},
-    const {'1': 'Malayalam', '2': 46},
-    const {'1': 'Maltese', '2': 47},
-    const {'1': 'Marathi', '2': 48},
-    const {'1': 'Mongolian', '2': 49},
-    const {'1': 'Norwegian_Bokmal', '2': 50},
-    const {'1': 'Pashto', '2': 51},
-    const {'1': 'Polish', '2': 52},
-    const {'1': 'Portuguese_Brazil', '2': 53},
-    const {'1': 'Portuguese_Portugal', '2': 54},
-    const {'1': 'Punjabi', '2': 55},
-    const {'1': 'Romanian', '2': 56},
-    const {'1': 'Russian', '2': 57},
-    const {'1': 'Serbian', '2': 58},
-    const {'1': 'Sinhala', '2': 59},
-    const {'1': 'Slovak', '2': 60},
-    const {'1': 'Slovenian', '2': 61},
-    const {'1': 'Somali', '2': 62},
-    const {'1': 'Spanish', '2': 63},
-    const {'1': 'Spanish_Mexico', '2': 64},
-    const {'1': 'Swahili', '2': 65},
-    const {'1': 'Swedish', '2': 66},
-    const {'1': 'Tamil', '2': 67},
-    const {'1': 'Telugu', '2': 68},
-    const {'1': 'Thai', '2': 69},
-    const {'1': 'Turkish', '2': 70},
-    const {'1': 'Ukrainian', '2': 71},
-    const {'1': 'Urdu', '2': 72},
-    const {'1': 'Uzbek', '2': 73},
-    const {'1': 'Vietnamese', '2': 74},
-    const {'1': 'Welsh', '2': 75},
-  ],
-};
-
-/// Descriptor for `I18nLanguage`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List i18nLanguageDescriptor = $convert.base64Decode('CgxJMThuTGFuZ3VhZ2USEgoOVU5TRVRfTEFOR1VBR0UQABINCglBZnJpa2FhbnMQARIMCghBbGJhbmlhbhACEgsKB0FtaGFyaWMQAxIKCgZBcmFiaWMQBBIMCghBcm1lbmlhbhAFEg8KC0F6ZXJiYWlqYW5pEAYSCwoHQmVuZ2FsaRAHEgsKB0Jvc25pYW4QCBINCglCdWxnYXJpYW4QCRILCgdDYXRhbGFuEAoSFgoSQ2hpbmVzZV9TaW1wbGlmaWVkEAsSFwoTQ2hpbmVzZV9UcmFkaXRpb25hbBAMEgwKCENyb2F0aWFuEA0SCQoFQ3plY2gQDhIKCgZEYW5pc2gQDxIICgREYXJpEBASCQoFRHV0Y2gQERILCgdFbmdsaXNoEBISDAoIRXN0b25pYW4QExIRCg1GYXJzaV9QZXJzaWFuEBQSFAoQRmlsaXBpbm9fVGFnYWxvZxAVEgsKB0Zpbm5pc2gQFhIKCgZGcmVuY2gQFxIRCg1GcmVuY2hfQ2FuYWRhEBgSDAoIR2VvcmdpYW4QGRIKCgZHZXJtYW4QGhIJCgVHcmVlaxAbEgwKCEd1amFyYXRpEBwSEgoOSGFpdGlhbl9DcmVvbGUQHRIJCgVIYXVzYRAeEgoKBkhlYnJldxAfEgkKBUhpbmRpECASDQoJSHVuZ2FyaWFuECESDQoJSWNlbGFuZGljECISDgoKSW5kb25lc2lhbhAjEgkKBUlyaXNoECQSCwoHSXRhbGlhbhAlEgwKCEphcGFuZXNlECYSCwoHS2FubmFkYRAnEgoKBkthemFraBAoEgoKBktvcmVhbhApEgsKB0xhdHZpYW4QKhIOCgpMaXRodWFuaWFuECsSDgoKTWFjZWRvbmlhbhAsEgkKBU1hbGF5EC0SDQoJTWFsYXlhbGFtEC4SCwoHTWFsdGVzZRAvEgsKB01hcmF0aGkQMBINCglNb25nb2xpYW4QMRIUChBOb3J3ZWdpYW5fQm9rbWFsEDISCgoGUGFzaHRvEDMSCgoGUG9saXNoEDQSFQoRUG9ydHVndWVzZV9CcmF6aWwQNRIXChNQb3J0dWd1ZXNlX1BvcnR1Z2FsEDYSCwoHUHVuamFiaRA3EgwKCFJvbWFuaWFuEDgSCwoHUnVzc2lhbhA5EgsKB1NlcmJpYW4QOhILCgdTaW5oYWxhEDsSCgoGU2xvdmFrEDwSDQoJU2xvdmVuaWFuED0SCgoGU29tYWxpED4SCwoHU3BhbmlzaBA/EhIKDlNwYW5pc2hfTWV4aWNvEEASCwoHU3dhaGlsaRBBEgsKB1N3ZWRpc2gQQhIJCgVUYW1pbBBDEgoKBlRlbHVndRBEEggKBFRoYWkQRRILCgdUdXJraXNoEEYSDQoJVWtyYWluaWFuEEcSCAoEVXJkdRBIEgkKBVV6YmVrEEkSDgoKVmlldG5hbWVzZRBKEgkKBVdlbHNoEEs=');
-@$core.Deprecated('Use encodingProtoDescriptor instead')
-const EncodingProto$json = const {
-  '1': 'EncodingProto',
-  '2': const [
-    const {'1': 'PROTOBUF', '2': 0},
-    const {'1': 'JSON', '2': 1},
-  ],
-};
-
-/// Descriptor for `EncodingProto`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List encodingProtoDescriptor = $convert.base64Decode('Cg1FbmNvZGluZ1Byb3RvEgwKCFBST1RPQlVGEAASCAoESlNPThAB');
 @$core.Deprecated('Use responseCodeDescriptor instead')
 const ResponseCode$json = const {
   '1': 'ResponseCode',
@@ -155,6 +59,12 @@ const WebsocketCustomCloseCode$json = const {
   '1': 'WebsocketCustomCloseCode',
   '2': const [
     const {'1': 'CloseCodeZero', '2': 0},
+    const {'1': 'CloseCodeNormalClose', '2': 1000},
+    const {'1': 'CloseCodeGoingAway', '2': 1001},
+    const {'1': 'CloseCodeProtocolError', '2': 1002},
+    const {'1': 'CloseCodeUnsupportedData', '2': 1003},
+    const {'1': 'CloseCodeNoStatusReceived', '2': 1005},
+    const {'1': 'CloseCodeAbnormalClosure', '2': 1006},
     const {'1': 'CloseCodeAuthenticationFailed', '2': 4001},
     const {'1': 'CloseCodeDuplicateConnection', '2': 4002},
     const {'1': 'CloseCodeServerInternalError', '2': 4003},
@@ -163,7 +73,7 @@ const WebsocketCustomCloseCode$json = const {
 };
 
 /// Descriptor for `WebsocketCustomCloseCode`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List websocketCustomCloseCodeDescriptor = $convert.base64Decode('ChhXZWJzb2NrZXRDdXN0b21DbG9zZUNvZGUSEQoNQ2xvc2VDb2RlWmVybxAAEiIKHUNsb3NlQ29kZUF1dGhlbnRpY2F0aW9uRmFpbGVkEKEfEiEKHENsb3NlQ29kZUR1cGxpY2F0ZUNvbm5lY3Rpb24Qoh8SIQocQ2xvc2VDb2RlU2VydmVySW50ZXJuYWxFcnJvchCjHxIeChlDbG9zZUNvZGVIZWFydGJlYXRUaW1lb3V0EKQf');
+final $typed_data.Uint8List websocketCustomCloseCodeDescriptor = $convert.base64Decode('ChhXZWJzb2NrZXRDdXN0b21DbG9zZUNvZGUSEQoNQ2xvc2VDb2RlWmVybxAAEhkKFENsb3NlQ29kZU5vcm1hbENsb3NlEOgHEhcKEkNsb3NlQ29kZUdvaW5nQXdheRDpBxIbChZDbG9zZUNvZGVQcm90b2NvbEVycm9yEOoHEh0KGENsb3NlQ29kZVVuc3VwcG9ydGVkRGF0YRDrBxIeChlDbG9zZUNvZGVOb1N0YXR1c1JlY2VpdmVkEO0HEh0KGENsb3NlQ29kZUFibm9ybWFsQ2xvc3VyZRDuBxIiCh1DbG9zZUNvZGVBdXRoZW50aWNhdGlvbkZhaWxlZBChHxIhChxDbG9zZUNvZGVEdXBsaWNhdGVDb25uZWN0aW9uEKIfEiEKHENsb3NlQ29kZVNlcnZlckludGVybmFsRXJyb3IQox8SHgoZQ2xvc2VDb2RlSGVhcnRiZWF0VGltZW91dBCkHw==');
 @$core.Deprecated('Use conversationTypeDescriptor instead')
 const ConversationType$json = const {
   '1': 'ConversationType',
@@ -226,23 +136,18 @@ const RequestHeader$json = const {
   '2': const [
     const {'1': 'appId', '3': 1, '4': 1, '5': 9, '10': 'appId'},
     const {'1': 'userId', '3': 2, '4': 1, '5': 9, '10': 'userId'},
-    const {'1': 'userToken', '3': 3, '4': 1, '5': 9, '10': 'userToken'},
-    const {'1': 'clientIp', '3': 4, '4': 1, '5': 9, '10': 'clientIp'},
-    const {'1': 'installId', '3': 5, '4': 1, '5': 9, '10': 'installId'},
-    const {'1': 'platform', '3': 6, '4': 1, '5': 14, '6': '.pb.Platform', '10': 'platform'},
-    const {'1': 'gatewayPodIp', '3': 7, '4': 1, '5': 9, '10': 'gatewayPodIp'},
-    const {'1': 'deviceModel', '3': 8, '4': 1, '5': 9, '10': 'deviceModel'},
-    const {'1': 'osVersion', '3': 9, '4': 1, '5': 9, '10': 'osVersion'},
-    const {'1': 'appVersion', '3': 10, '4': 1, '5': 9, '10': 'appVersion'},
-    const {'1': 'language', '3': 11, '4': 1, '5': 14, '6': '.pb.I18nLanguage', '10': 'language'},
-    const {'1': 'connectTime', '3': 12, '4': 1, '5': 3, '10': 'connectTime'},
-    const {'1': 'encoding', '3': 13, '4': 1, '5': 14, '6': '.pb.EncodingProto', '10': 'encoding'},
-    const {'1': 'extra', '3': 14, '4': 1, '5': 9, '10': 'extra'},
+    const {'1': 'clientIp', '3': 3, '4': 1, '5': 9, '10': 'clientIp'},
+    const {'1': 'installId', '3': 4, '4': 1, '5': 9, '10': 'installId'},
+    const {'1': 'platform', '3': 5, '4': 1, '5': 14, '6': '.pb.Platform', '10': 'platform'},
+    const {'1': 'deviceModel', '3': 6, '4': 1, '5': 9, '10': 'deviceModel'},
+    const {'1': 'osVersion', '3': 7, '4': 1, '5': 9, '10': 'osVersion'},
+    const {'1': 'appVersion', '3': 8, '4': 1, '5': 9, '10': 'appVersion'},
+    const {'1': 'extra', '3': 9, '4': 1, '5': 9, '10': 'extra'},
   ],
 };
 
 /// Descriptor for `RequestHeader`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List requestHeaderDescriptor = $convert.base64Decode('Cg1SZXF1ZXN0SGVhZGVyEhQKBWFwcElkGAEgASgJUgVhcHBJZBIWCgZ1c2VySWQYAiABKAlSBnVzZXJJZBIcCgl1c2VyVG9rZW4YAyABKAlSCXVzZXJUb2tlbhIaCghjbGllbnRJcBgEIAEoCVIIY2xpZW50SXASHAoJaW5zdGFsbElkGAUgASgJUglpbnN0YWxsSWQSKAoIcGxhdGZvcm0YBiABKA4yDC5wYi5QbGF0Zm9ybVIIcGxhdGZvcm0SIgoMZ2F0ZXdheVBvZElwGAcgASgJUgxnYXRld2F5UG9kSXASIAoLZGV2aWNlTW9kZWwYCCABKAlSC2RldmljZU1vZGVsEhwKCW9zVmVyc2lvbhgJIAEoCVIJb3NWZXJzaW9uEh4KCmFwcFZlcnNpb24YCiABKAlSCmFwcFZlcnNpb24SLAoIbGFuZ3VhZ2UYCyABKA4yEC5wYi5JMThuTGFuZ3VhZ2VSCGxhbmd1YWdlEiAKC2Nvbm5lY3RUaW1lGAwgASgDUgtjb25uZWN0VGltZRItCghlbmNvZGluZxgNIAEoDjIRLnBiLkVuY29kaW5nUHJvdG9SCGVuY29kaW5nEhQKBWV4dHJhGA4gASgJUgVleHRyYQ==');
+final $typed_data.Uint8List requestHeaderDescriptor = $convert.base64Decode('Cg1SZXF1ZXN0SGVhZGVyEhQKBWFwcElkGAEgASgJUgVhcHBJZBIWCgZ1c2VySWQYAiABKAlSBnVzZXJJZBIaCghjbGllbnRJcBgDIAEoCVIIY2xpZW50SXASHAoJaW5zdGFsbElkGAQgASgJUglpbnN0YWxsSWQSKAoIcGxhdGZvcm0YBSABKA4yDC5wYi5QbGF0Zm9ybVIIcGxhdGZvcm0SIAoLZGV2aWNlTW9kZWwYBiABKAlSC2RldmljZU1vZGVsEhwKCW9zVmVyc2lvbhgHIAEoCVIJb3NWZXJzaW9uEh4KCmFwcFZlcnNpb24YCCABKAlSCmFwcFZlcnNpb24SFAoFZXh0cmEYCSABKAlSBWV4dHJh');
 @$core.Deprecated('Use toastActionDataDescriptor instead')
 const ToastActionData$json = const {
   '1': 'ToastActionData',

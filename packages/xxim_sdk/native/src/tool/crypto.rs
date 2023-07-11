@@ -1,3 +1,6 @@
+use std::sync::Arc;
+use aes::cipher::block_padding::UnpadError;
+use aes::cipher::inout::PadError;
 use cbc::cipher::{Block, BlockDecryptMut, BlockEncryptMut, KeyIvInit};
 use cbc::cipher::block_padding::Pkcs7;
 use p256::{EncodedPoint, PublicKey, NistP256};
@@ -18,7 +21,7 @@ pub fn unmarshal_public_key(pk: &[u8]) -> Result<PublicKey, String> {
     PublicKey::from_sec1_bytes(pk).map_err(|e| e.to_string())
 }
 
-pub fn generate_shared_secret(private_key: EphemeralSecret<NistP256>, public_key: Vec<u8>) -> Result<Vec<u8>, String> {
+pub fn generate_shared_secret(private_key: Arc<EphemeralSecret<NistP256>>, public_key: Vec<u8>) -> Result<Vec<u8>, String> {
     let bob_public = PublicKey::from_sec1_bytes(public_key.as_ref())
         .map_err(|e| e.to_string())?;
 
@@ -32,11 +35,19 @@ pub fn aes_encrypt(key: Vec<u8>, iv: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>, 
         return Err("new_from_slices error".to_string());
     }
     let aes256cbc_enc = aes256cbc_enc.unwrap();
-    let mut buf = [0u8; 48];
     let data_len = data.len();
+    let ct_len = ((data_len + 15)/16)*16;
+    let mut buf = vec![0u8; ct_len];
+
     buf[..data_len].copy_from_slice(&data);
-    let ct = aes256cbc_enc.encrypt_padded_b2b_mut::<Pkcs7>(&data, &mut buf).unwrap();
-    Ok(ct.to_vec())
+    match aes256cbc_enc.encrypt_padded_b2b_mut::<Pkcs7>(&data, &mut buf){
+        Ok(ct) => {
+            Ok(ct.to_vec())
+        }
+        Err(e) => {
+            Err(e.to_string())
+        }
+    }
 }
 
 pub fn aes_decrypt(key: Vec<u8>, iv: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>, String> {
@@ -45,11 +56,18 @@ pub fn aes_decrypt(key: Vec<u8>, iv: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>, 
         return Err("new_from_slices error".to_string());
     }
     let aes256cbc_dec = aes256cbc_dec.unwrap();
-    let mut buf = [0u8; 48];
     let data_len = data.len();
+    let ct_len = ((data_len + 15)/16)*16;
+    let mut buf = vec![0u8; ct_len];
     buf[..data_len].copy_from_slice(&data);
-    let ct = aes256cbc_dec.decrypt_padded_b2b_mut::<Pkcs7>(&data, &mut buf).unwrap();
-    Ok(ct.to_vec())
+    match aes256cbc_dec.decrypt_padded_b2b_mut::<Pkcs7>(&data, &mut buf) {
+        Ok(ct) => {
+            Ok(ct.to_vec())
+        }
+        Err(e) => {
+            Err(e.to_string())
+        }
+    }
 }
 
 #[cfg(test)]
@@ -67,7 +85,7 @@ mod tests {
         let input_public_key: Vec<u8> = hex::decode(input_public_key).unwrap();
         let public_key = unmarshal_public_key(&input_public_key).unwrap();
 
-        let alice_shared = generate_shared_secret(alice_secret, input_public_key).unwrap();
+        let alice_shared = generate_shared_secret(Arc::new(alice_secret), input_public_key).unwrap();
         let alice_shared = hex::encode(alice_shared);
         println!("alice_shared: {:?}", alice_shared);
     }

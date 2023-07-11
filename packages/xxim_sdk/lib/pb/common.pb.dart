@@ -18,18 +18,13 @@ class RequestHeader extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'RequestHeader', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'appId', protoName: 'appId')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userId', protoName: 'userId')
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userToken', protoName: 'userToken')
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'clientIp', protoName: 'clientIp')
-    ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'installId', protoName: 'installId')
-    ..e<Platform>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'platform', $pb.PbFieldType.OE, defaultOrMaker: Platform.IOS, valueOf: Platform.valueOf, enumValues: Platform.values)
-    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gatewayPodIp', protoName: 'gatewayPodIp')
-    ..aOS(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deviceModel', protoName: 'deviceModel')
-    ..aOS(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'osVersion', protoName: 'osVersion')
-    ..aOS(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'appVersion', protoName: 'appVersion')
-    ..e<I18nLanguage>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'language', $pb.PbFieldType.OE, defaultOrMaker: I18nLanguage.UNSET_LANGUAGE, valueOf: I18nLanguage.valueOf, enumValues: I18nLanguage.values)
-    ..aInt64(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connectTime', protoName: 'connectTime')
-    ..e<EncodingProto>(13, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'encoding', $pb.PbFieldType.OE, defaultOrMaker: EncodingProto.PROTOBUF, valueOf: EncodingProto.valueOf, enumValues: EncodingProto.values)
-    ..aOS(14, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'extra')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'clientIp', protoName: 'clientIp')
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'installId', protoName: 'installId')
+    ..e<Platform>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'platform', $pb.PbFieldType.OE, defaultOrMaker: Platform.IOS, valueOf: Platform.valueOf, enumValues: Platform.values)
+    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deviceModel', protoName: 'deviceModel')
+    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'osVersion', protoName: 'osVersion')
+    ..aOS(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'appVersion', protoName: 'appVersion')
+    ..aOS(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'extra')
     ..hasRequiredFields = false
   ;
 
@@ -37,17 +32,12 @@ class RequestHeader extends $pb.GeneratedMessage {
   factory RequestHeader({
     $core.String? appId,
     $core.String? userId,
-    $core.String? userToken,
     $core.String? clientIp,
     $core.String? installId,
     Platform? platform,
-    $core.String? gatewayPodIp,
     $core.String? deviceModel,
     $core.String? osVersion,
     $core.String? appVersion,
-    I18nLanguage? language,
-    $fixnum.Int64? connectTime,
-    EncodingProto? encoding,
     $core.String? extra,
   }) {
     final _result = create();
@@ -56,9 +46,6 @@ class RequestHeader extends $pb.GeneratedMessage {
     }
     if (userId != null) {
       _result.userId = userId;
-    }
-    if (userToken != null) {
-      _result.userToken = userToken;
     }
     if (clientIp != null) {
       _result.clientIp = clientIp;
@@ -69,9 +56,6 @@ class RequestHeader extends $pb.GeneratedMessage {
     if (platform != null) {
       _result.platform = platform;
     }
-    if (gatewayPodIp != null) {
-      _result.gatewayPodIp = gatewayPodIp;
-    }
     if (deviceModel != null) {
       _result.deviceModel = deviceModel;
     }
@@ -80,15 +64,6 @@ class RequestHeader extends $pb.GeneratedMessage {
     }
     if (appVersion != null) {
       _result.appVersion = appVersion;
-    }
-    if (language != null) {
-      _result.language = language;
-    }
-    if (connectTime != null) {
-      _result.connectTime = connectTime;
-    }
-    if (encoding != null) {
-      _result.encoding = encoding;
     }
     if (extra != null) {
       _result.extra = extra;
@@ -135,112 +110,67 @@ class RequestHeader extends $pb.GeneratedMessage {
   void clearUserId() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get userToken => $_getSZ(2);
+  $core.String get clientIp => $_getSZ(2);
   @$pb.TagNumber(3)
-  set userToken($core.String v) { $_setString(2, v); }
+  set clientIp($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasUserToken() => $_has(2);
+  $core.bool hasClientIp() => $_has(2);
   @$pb.TagNumber(3)
-  void clearUserToken() => clearField(3);
+  void clearClientIp() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get clientIp => $_getSZ(3);
+  $core.String get installId => $_getSZ(3);
   @$pb.TagNumber(4)
-  set clientIp($core.String v) { $_setString(3, v); }
+  set installId($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasClientIp() => $_has(3);
+  $core.bool hasInstallId() => $_has(3);
   @$pb.TagNumber(4)
-  void clearClientIp() => clearField(4);
+  void clearInstallId() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get installId => $_getSZ(4);
+  Platform get platform => $_getN(4);
   @$pb.TagNumber(5)
-  set installId($core.String v) { $_setString(4, v); }
+  set platform(Platform v) { setField(5, v); }
   @$pb.TagNumber(5)
-  $core.bool hasInstallId() => $_has(4);
+  $core.bool hasPlatform() => $_has(4);
   @$pb.TagNumber(5)
-  void clearInstallId() => clearField(5);
+  void clearPlatform() => clearField(5);
 
   @$pb.TagNumber(6)
-  Platform get platform => $_getN(5);
+  $core.String get deviceModel => $_getSZ(5);
   @$pb.TagNumber(6)
-  set platform(Platform v) { setField(6, v); }
+  set deviceModel($core.String v) { $_setString(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasPlatform() => $_has(5);
+  $core.bool hasDeviceModel() => $_has(5);
   @$pb.TagNumber(6)
-  void clearPlatform() => clearField(6);
+  void clearDeviceModel() => clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get gatewayPodIp => $_getSZ(6);
+  $core.String get osVersion => $_getSZ(6);
   @$pb.TagNumber(7)
-  set gatewayPodIp($core.String v) { $_setString(6, v); }
+  set osVersion($core.String v) { $_setString(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasGatewayPodIp() => $_has(6);
+  $core.bool hasOsVersion() => $_has(6);
   @$pb.TagNumber(7)
-  void clearGatewayPodIp() => clearField(7);
+  void clearOsVersion() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get deviceModel => $_getSZ(7);
+  $core.String get appVersion => $_getSZ(7);
   @$pb.TagNumber(8)
-  set deviceModel($core.String v) { $_setString(7, v); }
+  set appVersion($core.String v) { $_setString(7, v); }
   @$pb.TagNumber(8)
-  $core.bool hasDeviceModel() => $_has(7);
+  $core.bool hasAppVersion() => $_has(7);
   @$pb.TagNumber(8)
-  void clearDeviceModel() => clearField(8);
+  void clearAppVersion() => clearField(8);
 
   @$pb.TagNumber(9)
-  $core.String get osVersion => $_getSZ(8);
+  $core.String get extra => $_getSZ(8);
   @$pb.TagNumber(9)
-  set osVersion($core.String v) { $_setString(8, v); }
+  set extra($core.String v) { $_setString(8, v); }
   @$pb.TagNumber(9)
-  $core.bool hasOsVersion() => $_has(8);
+  $core.bool hasExtra() => $_has(8);
   @$pb.TagNumber(9)
-  void clearOsVersion() => clearField(9);
-
-  @$pb.TagNumber(10)
-  $core.String get appVersion => $_getSZ(9);
-  @$pb.TagNumber(10)
-  set appVersion($core.String v) { $_setString(9, v); }
-  @$pb.TagNumber(10)
-  $core.bool hasAppVersion() => $_has(9);
-  @$pb.TagNumber(10)
-  void clearAppVersion() => clearField(10);
-
-  @$pb.TagNumber(11)
-  I18nLanguage get language => $_getN(10);
-  @$pb.TagNumber(11)
-  set language(I18nLanguage v) { setField(11, v); }
-  @$pb.TagNumber(11)
-  $core.bool hasLanguage() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearLanguage() => clearField(11);
-
-  @$pb.TagNumber(12)
-  $fixnum.Int64 get connectTime => $_getI64(11);
-  @$pb.TagNumber(12)
-  set connectTime($fixnum.Int64 v) { $_setInt64(11, v); }
-  @$pb.TagNumber(12)
-  $core.bool hasConnectTime() => $_has(11);
-  @$pb.TagNumber(12)
-  void clearConnectTime() => clearField(12);
-
-  @$pb.TagNumber(13)
-  EncodingProto get encoding => $_getN(12);
-  @$pb.TagNumber(13)
-  set encoding(EncodingProto v) { setField(13, v); }
-  @$pb.TagNumber(13)
-  $core.bool hasEncoding() => $_has(12);
-  @$pb.TagNumber(13)
-  void clearEncoding() => clearField(13);
-
-  @$pb.TagNumber(14)
-  $core.String get extra => $_getSZ(13);
-  @$pb.TagNumber(14)
-  set extra($core.String v) { $_setString(13, v); }
-  @$pb.TagNumber(14)
-  $core.bool hasExtra() => $_has(13);
-  @$pb.TagNumber(14)
-  void clearExtra() => clearField(14);
+  void clearExtra() => clearField(9);
 }
 
 class ToastActionData extends $pb.GeneratedMessage {

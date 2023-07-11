@@ -25,7 +25,6 @@ impl SdkApi {
         platform: i32,
         device_model: String,
         os_version: String,
-        language: i32,
         request_timeout_millisecond: i32,
         db_dir: String,
         custom_header: Option<String>,
@@ -64,7 +63,6 @@ impl SdkApi {
             platform,
             device_model,
             os_version,
-            language,
             request_timeout_millisecond,
             user_token: None,
             user_id: None,
@@ -93,7 +91,7 @@ impl SdkApi {
         }
     }
 
-    pub fn unset_login_info(&self) {
+    pub fn unset_login_info(&self) -> String {
         log::info("unset_user_token");
         let mut map = CONFIG_INSTANCE_MAP.write().unwrap();
         let config_lock = map.get_mut(&self.instance_id).unwrap();
@@ -106,10 +104,10 @@ impl SdkApi {
         drop(map);
         // TODO: 断开连接
         // WsClient::close_connect(self.instance_id.clone());
-        MeshClient::reset_header(self.instance_id.clone());
         Sqlite::sqlite_close(db_path.clone());
         Sqlite::sqlite_destroy(db_path);
         Sqlite::sqlite_all_debug();
+        MeshClient::reset_user_id(self.instance_id.clone())
     }
 
     pub fn preset_stream(&self, stream: StreamSink<Vec<u8>>) {
@@ -148,7 +146,7 @@ impl SdkApi {
         return "ok".to_string();
     }
 
-    pub fn set_login_info(&self, token: String, user_id: String) {
+    pub fn set_login_info(&self, token: String, user_id: String) -> String {
         log::info(format!("set_user_token: {}, {}", token, user_id).as_str());
         let instance_id = self.instance_id.clone();
         let instance_id_clone = self.instance_id.clone();
@@ -162,10 +160,9 @@ impl SdkApi {
         let db_path = format!("{}{}-{}.db", config.db_dir, config.user_id.as_ref().unwrap(), config.app_id);
         drop(config);
         drop(map);
-        MeshClient::reset_header(instance_id_clone.clone());
         Sqlite::get_connection(db_path, USER_INIT_SQL);
-        // WsClient::loop_reconnect(instance_id_clone.clone());
         Sqlite::sqlite_all_debug();
+        MeshClient::reset_user_id(instance_id_clone.clone())
     }
 }
 

@@ -218,6 +218,7 @@ message UserAfterOnlineResp {
 //UserAfterOfflineReq 用户下线回调请求
 message UserAfterOfflineReq {
   RequestHeader header = 1;
+  string userId = 2; // 用户id 唯一
 }
 
 //UserAfterOfflineResp 用户下线回调响应
@@ -230,6 +231,8 @@ message UserAfterOfflineResp {
 //UserBeforeConnectReq 服务端连接前的回调
 message UserBeforeConnectReq {
   RequestHeader header = 1;
+  string userId = 2; // 用户id 唯一
+  string token = 3; // 用户token
 }
 
 //UserBeforeConnectResp 服务端连接前的回调

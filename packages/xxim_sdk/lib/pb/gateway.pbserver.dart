@@ -23,6 +23,8 @@ abstract class gatewayServiceBase extends $pb.GeneratedService {
   $async.Future<$2.GatewayWriteDataToWsResp> gatewayWriteDataToWsWrapper($pb.ServerContext ctx, $2.GatewayWriteDataToWsWrapperReq request);
   $async.Future<$2.GatewayKickWsResp> gatewayKickWs($pb.ServerContext ctx, $2.GatewayKickWsReq request);
   $async.Future<$2.GatewayKeepAliveResp> gatewayKeepAlive($pb.ServerContext ctx, $2.GatewayKeepAliveReq request);
+  $async.Future<$2.VerifyConnectionResp> verifyConnection($pb.ServerContext ctx, $2.VerifyConnectionReq request);
+  $async.Future<$2.AuthenticationConnectionResp> authenticationConnection($pb.ServerContext ctx, $2.AuthenticationConnectionReq request);
 
   $pb.GeneratedMessage createRequest($core.String method) {
     switch (method) {
@@ -33,6 +35,8 @@ abstract class gatewayServiceBase extends $pb.GeneratedService {
       case 'GatewayWriteDataToWsWrapper': return $2.GatewayWriteDataToWsWrapperReq();
       case 'GatewayKickWs': return $2.GatewayKickWsReq();
       case 'GatewayKeepAlive': return $2.GatewayKeepAliveReq();
+      case 'VerifyConnection': return $2.VerifyConnectionReq();
+      case 'AuthenticationConnection': return $2.AuthenticationConnectionReq();
       default: throw $core.ArgumentError('Unknown method: $method');
     }
   }
@@ -46,6 +50,8 @@ abstract class gatewayServiceBase extends $pb.GeneratedService {
       case 'GatewayWriteDataToWsWrapper': return this.gatewayWriteDataToWsWrapper(ctx, request as $2.GatewayWriteDataToWsWrapperReq);
       case 'GatewayKickWs': return this.gatewayKickWs(ctx, request as $2.GatewayKickWsReq);
       case 'GatewayKeepAlive': return this.gatewayKeepAlive(ctx, request as $2.GatewayKeepAliveReq);
+      case 'VerifyConnection': return this.verifyConnection(ctx, request as $2.VerifyConnectionReq);
+      case 'AuthenticationConnection': return this.authenticationConnection(ctx, request as $2.AuthenticationConnectionReq);
       default: throw $core.ArgumentError('Unknown method: $method');
     }
   }

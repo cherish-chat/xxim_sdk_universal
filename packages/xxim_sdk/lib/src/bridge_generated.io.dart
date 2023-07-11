@@ -174,7 +174,6 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
     int platform,
     ffi.Pointer<wire_uint_8_list> device_model,
     ffi.Pointer<wire_uint_8_list> os_version,
-    int language,
     int request_timeout_millisecond,
     ffi.Pointer<wire_uint_8_list> db_dir,
     ffi.Pointer<wire_uint_8_list> custom_header,
@@ -194,7 +193,6 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
       platform,
       device_model,
       os_version,
-      language,
       request_timeout_millisecond,
       db_dir,
       custom_header,
@@ -203,8 +201,8 @@ class XximSdkWire implements FlutterRustBridgeWireBase {
     );
   }
 
-  late final _wire_init_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, ffi.Uint16, ffi.Bool, ffi.Pointer<wire_StringList>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32)>>('wire_init_instance');
-  late final _wire_init_instance = _wire_init_instancePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, int, bool, ffi.Pointer<wire_StringList>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int)>();
+  late final _wire_init_instancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, ffi.Uint16, ffi.Bool, ffi.Pointer<wire_StringList>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, ffi.Int32, ffi.Int32)>>('wire_init_instance');
+  late final _wire_init_instance = _wire_init_instancePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<ffi.Int32>, ffi.Pointer<wire_uint_8_list>, int, bool, ffi.Pointer<wire_StringList>, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>, int, int)>();
 
   void wire_preset_stream(
     int port_,

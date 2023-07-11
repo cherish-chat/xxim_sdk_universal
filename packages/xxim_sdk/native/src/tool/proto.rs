@@ -50,17 +50,12 @@ mod tests {
         let mut msg = RequestHeader{
             appId: "".to_string(),
             userId: "".to_string(),
-            userToken: "".to_string(),
             clientIp: "".to_string(),
             installId: "".to_string(),
             platform: Default::default(),
-            gatewayPodIp: "".to_string(),
             deviceModel: "".to_string(),
             osVersion: "".to_string(),
             appVersion: "".to_string(),
-            language: Default::default(),
-            connectTime: 0,
-            encoding: Default::default(),
             extra: "".to_string(),
             special_fields: Default::default()
         };

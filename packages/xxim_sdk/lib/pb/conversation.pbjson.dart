@@ -467,6 +467,27 @@ const SubscriptionAfterOnlineResp$json = const {
 
 /// Descriptor for `SubscriptionAfterOnlineResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List subscriptionAfterOnlineRespDescriptor = $convert.base64Decode('ChtTdWJzY3JpcHRpb25BZnRlck9ubGluZVJlc3ASKgoGaGVhZGVyGAEgASgLMhIucGIuUmVzcG9uc2VIZWFkZXJSBmhlYWRlcg==');
+@$core.Deprecated('Use subscriptionAfterOfflineReqDescriptor instead')
+const SubscriptionAfterOfflineReq$json = const {
+  '1': 'SubscriptionAfterOfflineReq',
+  '2': const [
+    const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.RequestHeader', '10': 'header'},
+    const {'1': 'userId', '3': 2, '4': 1, '5': 9, '10': 'userId'},
+  ],
+};
+
+/// Descriptor for `SubscriptionAfterOfflineReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List subscriptionAfterOfflineReqDescriptor = $convert.base64Decode('ChtTdWJzY3JpcHRpb25BZnRlck9mZmxpbmVSZXESKQoGaGVhZGVyGAEgASgLMhEucGIuUmVxdWVzdEhlYWRlclIGaGVhZGVyEhYKBnVzZXJJZBgCIAEoCVIGdXNlcklk');
+@$core.Deprecated('Use subscriptionAfterOfflineRespDescriptor instead')
+const SubscriptionAfterOfflineResp$json = const {
+  '1': 'SubscriptionAfterOfflineResp',
+  '2': const [
+    const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
+  ],
+};
+
+/// Descriptor for `SubscriptionAfterOfflineResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List subscriptionAfterOfflineRespDescriptor = $convert.base64Decode('ChxTdWJzY3JpcHRpb25BZnRlck9mZmxpbmVSZXNwEioKBmhlYWRlchgBIAEoCzISLnBiLlJlc3BvbnNlSGVhZGVyUgZoZWFkZXI=');
 @$core.Deprecated('Use userSubscriptionDescriptor instead')
 const UserSubscription$json = const {
   '1': 'UserSubscription',
@@ -677,6 +698,7 @@ const $core.Map<$core.String, $core.dynamic> subscriptionServiceBase$json = cons
   '2': const [
     const {'1': 'SubscriptionSubscribe', '2': '.pb.SubscriptionSubscribeReq', '3': '.pb.SubscriptionSubscribeResp', '4': const {}},
     const {'1': 'SubscriptionAfterOnline', '2': '.pb.SubscriptionAfterOnlineReq', '3': '.pb.SubscriptionAfterOnlineResp', '4': const {}},
+    const {'1': 'SubscriptionAfterOffline', '2': '.pb.SubscriptionAfterOfflineReq', '3': '.pb.SubscriptionAfterOfflineResp', '4': const {}},
     const {'1': 'UpsertUserSubscription', '2': '.pb.UpsertUserSubscriptionReq', '3': '.pb.UpsertUserSubscriptionResp', '4': const {}},
     const {'1': 'DeleteUserSubscription', '2': '.pb.DeleteUserSubscriptionReq', '3': '.pb.DeleteUserSubscriptionResp', '4': const {}},
     const {'1': 'ListSubscriptionSubscribers', '2': '.pb.ListSubscriptionSubscribersReq', '3': '.pb.ListSubscriptionSubscribersResp', '4': const {}},
@@ -691,6 +713,8 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> subscripti
   '.pb.ResponseHeader': $0.ResponseHeader$json,
   '.pb.SubscriptionAfterOnlineReq': SubscriptionAfterOnlineReq$json,
   '.pb.SubscriptionAfterOnlineResp': SubscriptionAfterOnlineResp$json,
+  '.pb.SubscriptionAfterOfflineReq': SubscriptionAfterOfflineReq$json,
+  '.pb.SubscriptionAfterOfflineResp': SubscriptionAfterOfflineResp$json,
   '.pb.UpsertUserSubscriptionReq': UpsertUserSubscriptionReq$json,
   '.pb.UserSubscription': UserSubscription$json,
   '.pb.UserSubscription.ExtraMapEntry': UserSubscription_ExtraMapEntry$json,
@@ -705,4 +729,4 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> subscripti
 };
 
 /// Descriptor for `subscriptionService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
-final $typed_data.Uint8List subscriptionServiceDescriptor = $convert.base64Decode('ChNzdWJzY3JpcHRpb25TZXJ2aWNlElYKFVN1YnNjcmlwdGlvblN1YnNjcmliZRIcLnBiLlN1YnNjcmlwdGlvblN1YnNjcmliZVJlcRodLnBiLlN1YnNjcmlwdGlvblN1YnNjcmliZVJlc3AiABJcChdTdWJzY3JpcHRpb25BZnRlck9ubGluZRIeLnBiLlN1YnNjcmlwdGlvbkFmdGVyT25saW5lUmVxGh8ucGIuU3Vic2NyaXB0aW9uQWZ0ZXJPbmxpbmVSZXNwIgASWQoWVXBzZXJ0VXNlclN1YnNjcmlwdGlvbhIdLnBiLlVwc2VydFVzZXJTdWJzY3JpcHRpb25SZXEaHi5wYi5VcHNlcnRVc2VyU3Vic2NyaXB0aW9uUmVzcCIAElkKFkRlbGV0ZVVzZXJTdWJzY3JpcHRpb24SHS5wYi5EZWxldGVVc2VyU3Vic2NyaXB0aW9uUmVxGh4ucGIuRGVsZXRlVXNlclN1YnNjcmlwdGlvblJlc3AiABJoChtMaXN0U3Vic2NyaXB0aW9uU3Vic2NyaWJlcnMSIi5wYi5MaXN0U3Vic2NyaXB0aW9uU3Vic2NyaWJlcnNSZXEaIy5wYi5MaXN0U3Vic2NyaXB0aW9uU3Vic2NyaWJlcnNSZXNwIgA=');
+final $typed_data.Uint8List subscriptionServiceDescriptor = $convert.base64Decode('ChNzdWJzY3JpcHRpb25TZXJ2aWNlElYKFVN1YnNjcmlwdGlvblN1YnNjcmliZRIcLnBiLlN1YnNjcmlwdGlvblN1YnNjcmliZVJlcRodLnBiLlN1YnNjcmlwdGlvblN1YnNjcmliZVJlc3AiABJcChdTdWJzY3JpcHRpb25BZnRlck9ubGluZRIeLnBiLlN1YnNjcmlwdGlvbkFmdGVyT25saW5lUmVxGh8ucGIuU3Vic2NyaXB0aW9uQWZ0ZXJPbmxpbmVSZXNwIgASXwoYU3Vic2NyaXB0aW9uQWZ0ZXJPZmZsaW5lEh8ucGIuU3Vic2NyaXB0aW9uQWZ0ZXJPZmZsaW5lUmVxGiAucGIuU3Vic2NyaXB0aW9uQWZ0ZXJPZmZsaW5lUmVzcCIAElkKFlVwc2VydFVzZXJTdWJzY3JpcHRpb24SHS5wYi5VcHNlcnRVc2VyU3Vic2NyaXB0aW9uUmVxGh4ucGIuVXBzZXJ0VXNlclN1YnNjcmlwdGlvblJlc3AiABJZChZEZWxldGVVc2VyU3Vic2NyaXB0aW9uEh0ucGIuRGVsZXRlVXNlclN1YnNjcmlwdGlvblJlcRoeLnBiLkRlbGV0ZVVzZXJTdWJzY3JpcHRpb25SZXNwIgASaAobTGlzdFN1YnNjcmlwdGlvblN1YnNjcmliZXJzEiIucGIuTGlzdFN1YnNjcmlwdGlvblN1YnNjcmliZXJzUmVxGiMucGIuTGlzdFN1YnNjcmlwdGlvblN1YnNjcmliZXJzUmVzcCIA');

@@ -295,67 +295,81 @@ class GatewayWriteDataContent extends $pb.GeneratedMessage {
   $0.Notice ensureNotice() => $_ensure(3);
 }
 
-class WsConnection extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'WsConnection', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
-    ..aOM<$0.RequestHeader>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.RequestHeader.create)
+class LongConnection extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'LongConnection', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
+    ..aOM<$0.RequestHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.RequestHeader.create)
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'podIp', protoName: 'podIp')
+    ..aInt64(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connectTime', protoName: 'connectTime')
     ..hasRequiredFields = false
   ;
 
-  WsConnection._() : super();
-  factory WsConnection({
-    $fixnum.Int64? id,
+  LongConnection._() : super();
+  factory LongConnection({
     $0.RequestHeader? header,
+    $core.String? podIp,
+    $fixnum.Int64? connectTime,
   }) {
     final _result = create();
-    if (id != null) {
-      _result.id = id;
-    }
     if (header != null) {
       _result.header = header;
     }
+    if (podIp != null) {
+      _result.podIp = podIp;
+    }
+    if (connectTime != null) {
+      _result.connectTime = connectTime;
+    }
     return _result;
   }
-  factory WsConnection.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory WsConnection.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory LongConnection.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory LongConnection.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  WsConnection clone() => WsConnection()..mergeFromMessage(this);
+  LongConnection clone() => LongConnection()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  WsConnection copyWith(void Function(WsConnection) updates) => super.copyWith((message) => updates(message as WsConnection)) as WsConnection; // ignore: deprecated_member_use
+  LongConnection copyWith(void Function(LongConnection) updates) => super.copyWith((message) => updates(message as LongConnection)) as LongConnection; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static WsConnection create() => WsConnection._();
-  WsConnection createEmptyInstance() => create();
-  static $pb.PbList<WsConnection> createRepeated() => $pb.PbList<WsConnection>();
+  static LongConnection create() => LongConnection._();
+  LongConnection createEmptyInstance() => create();
+  static $pb.PbList<LongConnection> createRepeated() => $pb.PbList<LongConnection>();
   @$core.pragma('dart2js:noInline')
-  static WsConnection getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WsConnection>(create);
-  static WsConnection? _defaultInstance;
+  static LongConnection getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LongConnection>(create);
+  static LongConnection? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $fixnum.Int64 get id => $_getI64(0);
+  $0.RequestHeader get header => $_getN(0);
   @$pb.TagNumber(1)
-  set id($fixnum.Int64 v) { $_setInt64(0, v); }
+  set header($0.RequestHeader v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasHeader() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => clearField(1);
+  void clearHeader() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.RequestHeader ensureHeader() => $_ensure(0);
 
-  @$pb.TagNumber(2)
-  $0.RequestHeader get header => $_getN(1);
-  @$pb.TagNumber(2)
-  set header($0.RequestHeader v) { setField(2, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasHeader() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearHeader() => clearField(2);
-  @$pb.TagNumber(2)
-  $0.RequestHeader ensureHeader() => $_ensure(1);
+  @$pb.TagNumber(3)
+  $core.String get podIp => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set podIp($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasPodIp() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearPodIp() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get connectTime => $_getI64(2);
+  @$pb.TagNumber(4)
+  set connectTime($fixnum.Int64 v) { $_setInt64(2, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasConnectTime() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearConnectTime() => clearField(4);
 }
 
 class GatewayGetUserConnectionReq extends $pb.GeneratedMessage {
@@ -424,14 +438,14 @@ class GatewayGetUserConnectionReq extends $pb.GeneratedMessage {
 class GatewayGetUserConnectionResp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GatewayGetUserConnectionResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
-    ..pc<WsConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connections', $pb.PbFieldType.PM, subBuilder: WsConnection.create)
+    ..pc<LongConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connections', $pb.PbFieldType.PM, subBuilder: LongConnection.create)
     ..hasRequiredFields = false
   ;
 
   GatewayGetUserConnectionResp._() : super();
   factory GatewayGetUserConnectionResp({
     $0.ResponseHeader? header,
-    $core.Iterable<WsConnection>? connections,
+    $core.Iterable<LongConnection>? connections,
   }) {
     final _result = create();
     if (header != null) {
@@ -475,7 +489,7 @@ class GatewayGetUserConnectionResp extends $pb.GeneratedMessage {
   $0.ResponseHeader ensureHeader() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<WsConnection> get connections => $_getList(1);
+  $core.List<LongConnection> get connections => $_getList(1);
 }
 
 class GatewayBatchGetUserConnectionReq extends $pb.GeneratedMessage {
@@ -538,14 +552,14 @@ class GatewayBatchGetUserConnectionReq extends $pb.GeneratedMessage {
 class GatewayBatchGetUserConnectionResp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GatewayBatchGetUserConnectionResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
-    ..pc<WsConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connections', $pb.PbFieldType.PM, subBuilder: WsConnection.create)
+    ..pc<LongConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connections', $pb.PbFieldType.PM, subBuilder: LongConnection.create)
     ..hasRequiredFields = false
   ;
 
   GatewayBatchGetUserConnectionResp._() : super();
   factory GatewayBatchGetUserConnectionResp({
     $0.ResponseHeader? header,
-    $core.Iterable<WsConnection>? connections,
+    $core.Iterable<LongConnection>? connections,
   }) {
     final _result = create();
     if (header != null) {
@@ -589,7 +603,7 @@ class GatewayBatchGetUserConnectionResp extends $pb.GeneratedMessage {
   $0.ResponseHeader ensureHeader() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<WsConnection> get connections => $_getList(1);
+  $core.List<LongConnection> get connections => $_getList(1);
 }
 
 class GatewayGetConnectionFilter extends $pb.GeneratedMessage {
@@ -701,14 +715,14 @@ class GatewayGetConnectionByFilterReq extends $pb.GeneratedMessage {
 class GatewayGetConnectionByFilterResp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GatewayGetConnectionByFilterResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
-    ..pc<WsConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connections', $pb.PbFieldType.PM, subBuilder: WsConnection.create)
+    ..pc<LongConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connections', $pb.PbFieldType.PM, subBuilder: LongConnection.create)
     ..hasRequiredFields = false
   ;
 
   GatewayGetConnectionByFilterResp._() : super();
   factory GatewayGetConnectionByFilterResp({
     $0.ResponseHeader? header,
-    $core.Iterable<WsConnection>? connections,
+    $core.Iterable<LongConnection>? connections,
   }) {
     final _result = create();
     if (header != null) {
@@ -752,7 +766,7 @@ class GatewayGetConnectionByFilterResp extends $pb.GeneratedMessage {
   $0.ResponseHeader ensureHeader() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<WsConnection> get connections => $_getList(1);
+  $core.List<LongConnection> get connections => $_getList(1);
 }
 
 class GatewayWriteDataToWsReq extends $pb.GeneratedMessage {
@@ -839,14 +853,14 @@ class GatewayWriteDataToWsReq extends $pb.GeneratedMessage {
 class GatewayWriteDataToWsResp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GatewayWriteDataToWsResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
-    ..pc<WsConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'successConnections', $pb.PbFieldType.PM, protoName: 'successConnections', subBuilder: WsConnection.create)
+    ..pc<LongConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'successConnections', $pb.PbFieldType.PM, protoName: 'successConnections', subBuilder: LongConnection.create)
     ..hasRequiredFields = false
   ;
 
   GatewayWriteDataToWsResp._() : super();
   factory GatewayWriteDataToWsResp({
     $0.ResponseHeader? header,
-    $core.Iterable<WsConnection>? successConnections,
+    $core.Iterable<LongConnection>? successConnections,
   }) {
     final _result = create();
     if (header != null) {
@@ -890,7 +904,7 @@ class GatewayWriteDataToWsResp extends $pb.GeneratedMessage {
   $0.ResponseHeader ensureHeader() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<WsConnection> get successConnections => $_getList(1);
+  $core.List<LongConnection> get successConnections => $_getList(1);
 }
 
 class GatewayWriteDataToWsWrapperReq extends $pb.GeneratedMessage {
@@ -1070,14 +1084,14 @@ class GatewayKickWsReq extends $pb.GeneratedMessage {
 class GatewayKickWsResp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GatewayKickWsResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
-    ..pc<WsConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'successConnections', $pb.PbFieldType.PM, protoName: 'successConnections', subBuilder: WsConnection.create)
+    ..pc<LongConnection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'successConnections', $pb.PbFieldType.PM, protoName: 'successConnections', subBuilder: LongConnection.create)
     ..hasRequiredFields = false
   ;
 
   GatewayKickWsResp._() : super();
   factory GatewayKickWsResp({
     $0.ResponseHeader? header,
-    $core.Iterable<WsConnection>? successConnections,
+    $core.Iterable<LongConnection>? successConnections,
   }) {
     final _result = create();
     if (header != null) {
@@ -1121,7 +1135,7 @@ class GatewayKickWsResp extends $pb.GeneratedMessage {
   $0.ResponseHeader ensureHeader() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<WsConnection> get successConnections => $_getList(1);
+  $core.List<LongConnection> get successConnections => $_getList(1);
 }
 
 class GatewayKeepAliveReq extends $pb.GeneratedMessage {
@@ -1222,6 +1236,272 @@ class GatewayKeepAliveResp extends $pb.GeneratedMessage {
   $0.ResponseHeader ensureHeader() => $_ensure(0);
 }
 
+class VerifyConnectionReq extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VerifyConnectionReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
+    ..aOM<$0.RequestHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.RequestHeader.create)
+    ..a<$core.List<$core.int>>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'publicKey', $pb.PbFieldType.OY, protoName: 'publicKey')
+    ..hasRequiredFields = false
+  ;
+
+  VerifyConnectionReq._() : super();
+  factory VerifyConnectionReq({
+    $0.RequestHeader? header,
+    $core.List<$core.int>? publicKey,
+  }) {
+    final _result = create();
+    if (header != null) {
+      _result.header = header;
+    }
+    if (publicKey != null) {
+      _result.publicKey = publicKey;
+    }
+    return _result;
+  }
+  factory VerifyConnectionReq.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory VerifyConnectionReq.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  VerifyConnectionReq clone() => VerifyConnectionReq()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  VerifyConnectionReq copyWith(void Function(VerifyConnectionReq) updates) => super.copyWith((message) => updates(message as VerifyConnectionReq)) as VerifyConnectionReq; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static VerifyConnectionReq create() => VerifyConnectionReq._();
+  VerifyConnectionReq createEmptyInstance() => create();
+  static $pb.PbList<VerifyConnectionReq> createRepeated() => $pb.PbList<VerifyConnectionReq>();
+  @$core.pragma('dart2js:noInline')
+  static VerifyConnectionReq getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VerifyConnectionReq>(create);
+  static VerifyConnectionReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.RequestHeader get header => $_getN(0);
+  @$pb.TagNumber(1)
+  set header($0.RequestHeader v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasHeader() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHeader() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.RequestHeader ensureHeader() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get publicKey => $_getN(1);
+  @$pb.TagNumber(2)
+  set publicKey($core.List<$core.int> v) { $_setBytes(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPublicKey() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPublicKey() => clearField(2);
+}
+
+class VerifyConnectionResp extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VerifyConnectionResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
+    ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
+    ..a<$core.List<$core.int>>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'publicKey', $pb.PbFieldType.OY, protoName: 'publicKey')
+    ..hasRequiredFields = false
+  ;
+
+  VerifyConnectionResp._() : super();
+  factory VerifyConnectionResp({
+    $0.ResponseHeader? header,
+    $core.List<$core.int>? publicKey,
+  }) {
+    final _result = create();
+    if (header != null) {
+      _result.header = header;
+    }
+    if (publicKey != null) {
+      _result.publicKey = publicKey;
+    }
+    return _result;
+  }
+  factory VerifyConnectionResp.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory VerifyConnectionResp.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  VerifyConnectionResp clone() => VerifyConnectionResp()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  VerifyConnectionResp copyWith(void Function(VerifyConnectionResp) updates) => super.copyWith((message) => updates(message as VerifyConnectionResp)) as VerifyConnectionResp; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static VerifyConnectionResp create() => VerifyConnectionResp._();
+  VerifyConnectionResp createEmptyInstance() => create();
+  static $pb.PbList<VerifyConnectionResp> createRepeated() => $pb.PbList<VerifyConnectionResp>();
+  @$core.pragma('dart2js:noInline')
+  static VerifyConnectionResp getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VerifyConnectionResp>(create);
+  static VerifyConnectionResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.ResponseHeader get header => $_getN(0);
+  @$pb.TagNumber(1)
+  set header($0.ResponseHeader v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasHeader() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHeader() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.ResponseHeader ensureHeader() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get publicKey => $_getN(1);
+  @$pb.TagNumber(2)
+  set publicKey($core.List<$core.int> v) { $_setBytes(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPublicKey() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPublicKey() => clearField(2);
+}
+
+class AuthenticationConnectionReq extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthenticationConnectionReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
+    ..aOM<$0.RequestHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.RequestHeader.create)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userId', protoName: 'userId')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token')
+    ..hasRequiredFields = false
+  ;
+
+  AuthenticationConnectionReq._() : super();
+  factory AuthenticationConnectionReq({
+    $0.RequestHeader? header,
+    $core.String? userId,
+    $core.String? token,
+  }) {
+    final _result = create();
+    if (header != null) {
+      _result.header = header;
+    }
+    if (userId != null) {
+      _result.userId = userId;
+    }
+    if (token != null) {
+      _result.token = token;
+    }
+    return _result;
+  }
+  factory AuthenticationConnectionReq.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AuthenticationConnectionReq.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AuthenticationConnectionReq clone() => AuthenticationConnectionReq()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AuthenticationConnectionReq copyWith(void Function(AuthenticationConnectionReq) updates) => super.copyWith((message) => updates(message as AuthenticationConnectionReq)) as AuthenticationConnectionReq; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static AuthenticationConnectionReq create() => AuthenticationConnectionReq._();
+  AuthenticationConnectionReq createEmptyInstance() => create();
+  static $pb.PbList<AuthenticationConnectionReq> createRepeated() => $pb.PbList<AuthenticationConnectionReq>();
+  @$core.pragma('dart2js:noInline')
+  static AuthenticationConnectionReq getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthenticationConnectionReq>(create);
+  static AuthenticationConnectionReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.RequestHeader get header => $_getN(0);
+  @$pb.TagNumber(1)
+  set header($0.RequestHeader v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasHeader() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHeader() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.RequestHeader ensureHeader() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get userId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set userId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasUserId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUserId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get token => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set token($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasToken() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearToken() => clearField(3);
+}
+
+class AuthenticationConnectionResp extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthenticationConnectionResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
+    ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
+    ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'success')
+    ..hasRequiredFields = false
+  ;
+
+  AuthenticationConnectionResp._() : super();
+  factory AuthenticationConnectionResp({
+    $0.ResponseHeader? header,
+    $core.bool? success,
+  }) {
+    final _result = create();
+    if (header != null) {
+      _result.header = header;
+    }
+    if (success != null) {
+      _result.success = success;
+    }
+    return _result;
+  }
+  factory AuthenticationConnectionResp.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AuthenticationConnectionResp.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AuthenticationConnectionResp clone() => AuthenticationConnectionResp()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AuthenticationConnectionResp copyWith(void Function(AuthenticationConnectionResp) updates) => super.copyWith((message) => updates(message as AuthenticationConnectionResp)) as AuthenticationConnectionResp; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static AuthenticationConnectionResp create() => AuthenticationConnectionResp._();
+  AuthenticationConnectionResp createEmptyInstance() => create();
+  static $pb.PbList<AuthenticationConnectionResp> createRepeated() => $pb.PbList<AuthenticationConnectionResp>();
+  @$core.pragma('dart2js:noInline')
+  static AuthenticationConnectionResp getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthenticationConnectionResp>(create);
+  static AuthenticationConnectionResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.ResponseHeader get header => $_getN(0);
+  @$pb.TagNumber(1)
+  set header($0.ResponseHeader v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasHeader() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHeader() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.ResponseHeader ensureHeader() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.bool get success => $_getBF(1);
+  @$pb.TagNumber(2)
+  set success($core.bool v) { $_setBool(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasSuccess() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSuccess() => clearField(2);
+}
+
 class gatewayServiceApi {
   $pb.RpcClient _client;
   gatewayServiceApi(this._client);
@@ -1253,6 +1533,14 @@ class gatewayServiceApi {
   $async.Future<GatewayKeepAliveResp> gatewayKeepAlive($pb.ClientContext? ctx, GatewayKeepAliveReq request) {
     var emptyResponse = GatewayKeepAliveResp();
     return _client.invoke<GatewayKeepAliveResp>(ctx, 'gatewayService', 'GatewayKeepAlive', request, emptyResponse);
+  }
+  $async.Future<VerifyConnectionResp> verifyConnection($pb.ClientContext? ctx, VerifyConnectionReq request) {
+    var emptyResponse = VerifyConnectionResp();
+    return _client.invoke<VerifyConnectionResp>(ctx, 'gatewayService', 'VerifyConnection', request, emptyResponse);
+  }
+  $async.Future<AuthenticationConnectionResp> authenticationConnection($pb.ClientContext? ctx, AuthenticationConnectionReq request) {
+    var emptyResponse = AuthenticationConnectionResp();
+    return _client.invoke<AuthenticationConnectionResp>(ctx, 'gatewayService', 'AuthenticationConnection', request, emptyResponse);
   }
 }
 

@@ -2379,6 +2379,118 @@ class SubscriptionAfterOnlineResp extends $pb.GeneratedMessage {
   $0.ResponseHeader ensureHeader() => $_ensure(0);
 }
 
+class SubscriptionAfterOfflineReq extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'SubscriptionAfterOfflineReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
+    ..aOM<$0.RequestHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.RequestHeader.create)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userId', protoName: 'userId')
+    ..hasRequiredFields = false
+  ;
+
+  SubscriptionAfterOfflineReq._() : super();
+  factory SubscriptionAfterOfflineReq({
+    $0.RequestHeader? header,
+    $core.String? userId,
+  }) {
+    final _result = create();
+    if (header != null) {
+      _result.header = header;
+    }
+    if (userId != null) {
+      _result.userId = userId;
+    }
+    return _result;
+  }
+  factory SubscriptionAfterOfflineReq.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SubscriptionAfterOfflineReq.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  SubscriptionAfterOfflineReq clone() => SubscriptionAfterOfflineReq()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SubscriptionAfterOfflineReq copyWith(void Function(SubscriptionAfterOfflineReq) updates) => super.copyWith((message) => updates(message as SubscriptionAfterOfflineReq)) as SubscriptionAfterOfflineReq; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static SubscriptionAfterOfflineReq create() => SubscriptionAfterOfflineReq._();
+  SubscriptionAfterOfflineReq createEmptyInstance() => create();
+  static $pb.PbList<SubscriptionAfterOfflineReq> createRepeated() => $pb.PbList<SubscriptionAfterOfflineReq>();
+  @$core.pragma('dart2js:noInline')
+  static SubscriptionAfterOfflineReq getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SubscriptionAfterOfflineReq>(create);
+  static SubscriptionAfterOfflineReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.RequestHeader get header => $_getN(0);
+  @$pb.TagNumber(1)
+  set header($0.RequestHeader v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasHeader() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHeader() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.RequestHeader ensureHeader() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get userId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set userId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasUserId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUserId() => clearField(2);
+}
+
+class SubscriptionAfterOfflineResp extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'SubscriptionAfterOfflineResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
+    ..aOM<$0.ResponseHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.ResponseHeader.create)
+    ..hasRequiredFields = false
+  ;
+
+  SubscriptionAfterOfflineResp._() : super();
+  factory SubscriptionAfterOfflineResp({
+    $0.ResponseHeader? header,
+  }) {
+    final _result = create();
+    if (header != null) {
+      _result.header = header;
+    }
+    return _result;
+  }
+  factory SubscriptionAfterOfflineResp.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SubscriptionAfterOfflineResp.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  SubscriptionAfterOfflineResp clone() => SubscriptionAfterOfflineResp()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SubscriptionAfterOfflineResp copyWith(void Function(SubscriptionAfterOfflineResp) updates) => super.copyWith((message) => updates(message as SubscriptionAfterOfflineResp)) as SubscriptionAfterOfflineResp; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static SubscriptionAfterOfflineResp create() => SubscriptionAfterOfflineResp._();
+  SubscriptionAfterOfflineResp createEmptyInstance() => create();
+  static $pb.PbList<SubscriptionAfterOfflineResp> createRepeated() => $pb.PbList<SubscriptionAfterOfflineResp>();
+  @$core.pragma('dart2js:noInline')
+  static SubscriptionAfterOfflineResp getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SubscriptionAfterOfflineResp>(create);
+  static SubscriptionAfterOfflineResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.ResponseHeader get header => $_getN(0);
+  @$pb.TagNumber(1)
+  set header($0.ResponseHeader v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasHeader() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHeader() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.ResponseHeader ensureHeader() => $_ensure(0);
+}
+
 class UserSubscription extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UserSubscription', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'subscriptionId', protoName: 'subscriptionId')
@@ -3092,6 +3204,10 @@ class subscriptionServiceApi {
   $async.Future<SubscriptionAfterOnlineResp> subscriptionAfterOnline($pb.ClientContext? ctx, SubscriptionAfterOnlineReq request) {
     var emptyResponse = SubscriptionAfterOnlineResp();
     return _client.invoke<SubscriptionAfterOnlineResp>(ctx, 'subscriptionService', 'SubscriptionAfterOnline', request, emptyResponse);
+  }
+  $async.Future<SubscriptionAfterOfflineResp> subscriptionAfterOffline($pb.ClientContext? ctx, SubscriptionAfterOfflineReq request) {
+    var emptyResponse = SubscriptionAfterOfflineResp();
+    return _client.invoke<SubscriptionAfterOfflineResp>(ctx, 'subscriptionService', 'SubscriptionAfterOffline', request, emptyResponse);
   }
   $async.Future<UpsertUserSubscriptionResp> upsertUserSubscription($pb.ClientContext? ctx, UpsertUserSubscriptionReq request) {
     var emptyResponse = UpsertUserSubscriptionResp();

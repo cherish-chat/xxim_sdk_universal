@@ -41,21 +41,20 @@ Future<void> main() async {
 
   var initResult = ApiResult.fromString(await lib.initInstance(
     instanceId: instanceId,
-    net: 0, // 0是传统ws 1是p2p mesh 目前还在写
-    host: '127.0.0.1',
-    port: 34500,
-    ssl: false,
-    // net: 1,
-    // // 0是传统ws 1是p2p mesh 目前还在写
-    // host: 'imcloudx.cherish.chat',
-    // port: 80,
+    // net: 0, // 0是传统ws 1是p2p mesh 目前还在写
+    // host: '127.0.0.1',
+    // port: 34500,
     // ssl: false,
+    net: 1,
+    // 0是传统ws 1是p2p mesh 目前还在写
+    host: 'imcloudx.cherish.chat',
+    port: 80,
+    ssl: false,
     appId: '1',
 
     platform: 0,
     deviceModel: 'Macos',
     osVersion: '10.15.7',
-    language: 0,
     requestTimeoutMillisecond: 2000,
     dbDir: './db/',
     keepAliveSecond: 5,

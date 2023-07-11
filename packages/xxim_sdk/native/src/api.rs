@@ -49,7 +49,6 @@ pub fn init_instance(
     platform: i32,
     device_model: String,
     os_version: String,
-    language: i32,
     request_timeout_millisecond: i32,
     db_dir: String,
     custom_header: Option<String>,
@@ -60,7 +59,7 @@ pub fn init_instance(
     let ok = SdkApi::instance(instance_id).write().unwrap().new(
         net, ice_servers,
         host, port, ssl,
-        app_id, install_id, platform, device_model, os_version, language,
+        app_id, install_id, platform, device_model, os_version,
         request_timeout_millisecond, db_dir, custom_header, keep_alive_second, log_level,
     );
     return json::marshal(&ApiResult::success(ok.to_string().as_str()));
@@ -87,8 +86,8 @@ pub fn wait_stream_ready(instance_id: String) -> String {
 pub fn set_login_info(instance_id: String, token: String, user_id: String) -> String {
     let api = SdkApi::instance(instance_id);
     let api = api.read().unwrap();
-    api.set_login_info(token, user_id);
-    return json::marshal(&ApiResult::success(""));
+    let res = api.set_login_info(token, user_id);
+    return json::marshal(&ApiResult::success(res.as_str()));
 }
 
 /// unset_login_info: 取消登录信息 一般用于app退出登录后调用
@@ -96,8 +95,8 @@ pub fn set_login_info(instance_id: String, token: String, user_id: String) -> St
 pub fn unset_login_info(instance_id: String) -> String {
     let api = SdkApi::instance(instance_id);
     let api = api.read().unwrap();
-    api.unset_login_info();
-    return json::marshal(&ApiResult::success(""));
+    let res = api.unset_login_info();
+    return json::marshal(&ApiResult::success(res.as_str()));
 }
 
 /// 下面是 user 相关 api /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///  /// ///

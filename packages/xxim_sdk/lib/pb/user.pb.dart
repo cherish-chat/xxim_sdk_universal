@@ -1731,16 +1731,21 @@ class UserAfterOnlineResp extends $pb.GeneratedMessage {
 class UserAfterOfflineReq extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UserAfterOfflineReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOM<$0.RequestHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.RequestHeader.create)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userId', protoName: 'userId')
     ..hasRequiredFields = false
   ;
 
   UserAfterOfflineReq._() : super();
   factory UserAfterOfflineReq({
     $0.RequestHeader? header,
+    $core.String? userId,
   }) {
     final _result = create();
     if (header != null) {
       _result.header = header;
+    }
+    if (userId != null) {
+      _result.userId = userId;
     }
     return _result;
   }
@@ -1775,6 +1780,15 @@ class UserAfterOfflineReq extends $pb.GeneratedMessage {
   void clearHeader() => clearField(1);
   @$pb.TagNumber(1)
   $0.RequestHeader ensureHeader() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get userId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set userId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasUserId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUserId() => clearField(2);
 }
 
 class UserAfterOfflineResp extends $pb.GeneratedMessage {
@@ -1829,16 +1843,26 @@ class UserAfterOfflineResp extends $pb.GeneratedMessage {
 class UserBeforeConnectReq extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UserBeforeConnectReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'pb'), createEmptyInstance: create)
     ..aOM<$0.RequestHeader>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'header', subBuilder: $0.RequestHeader.create)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userId', protoName: 'userId')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token')
     ..hasRequiredFields = false
   ;
 
   UserBeforeConnectReq._() : super();
   factory UserBeforeConnectReq({
     $0.RequestHeader? header,
+    $core.String? userId,
+    $core.String? token,
   }) {
     final _result = create();
     if (header != null) {
       _result.header = header;
+    }
+    if (userId != null) {
+      _result.userId = userId;
+    }
+    if (token != null) {
+      _result.token = token;
     }
     return _result;
   }
@@ -1873,6 +1897,24 @@ class UserBeforeConnectReq extends $pb.GeneratedMessage {
   void clearHeader() => clearField(1);
   @$pb.TagNumber(1)
   $0.RequestHeader ensureHeader() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get userId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set userId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasUserId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUserId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get token => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set token($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasToken() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearToken() => clearField(3);
 }
 
 class UserBeforeConnectResp extends $pb.GeneratedMessage {

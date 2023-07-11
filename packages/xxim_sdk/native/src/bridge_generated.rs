@@ -60,7 +60,6 @@ fn wire_init_instance_impl(
     platform: impl Wire2Api<i32> + UnwindSafe,
     device_model: impl Wire2Api<String> + UnwindSafe,
     os_version: impl Wire2Api<String> + UnwindSafe,
-    language: impl Wire2Api<i32> + UnwindSafe,
     request_timeout_millisecond: impl Wire2Api<i32> + UnwindSafe,
     db_dir: impl Wire2Api<String> + UnwindSafe,
     custom_header: impl Wire2Api<Option<String>> + UnwindSafe,
@@ -85,7 +84,6 @@ fn wire_init_instance_impl(
             let api_platform = platform.wire2api();
             let api_device_model = device_model.wire2api();
             let api_os_version = os_version.wire2api();
-            let api_language = language.wire2api();
             let api_request_timeout_millisecond = request_timeout_millisecond.wire2api();
             let api_db_dir = db_dir.wire2api();
             let api_custom_header = custom_header.wire2api();
@@ -104,7 +102,6 @@ fn wire_init_instance_impl(
                     api_platform,
                     api_device_model,
                     api_os_version,
-                    api_language,
                     api_request_timeout_millisecond,
                     api_db_dir,
                     api_custom_header,
@@ -495,7 +492,6 @@ mod web {
         platform: i32,
         device_model: String,
         os_version: String,
-        language: i32,
         request_timeout_millisecond: i32,
         db_dir: String,
         custom_header: Option<String>,
@@ -515,7 +511,6 @@ mod web {
             platform,
             device_model,
             os_version,
-            language,
             request_timeout_millisecond,
             db_dir,
             custom_header,
@@ -739,7 +734,6 @@ mod io {
         platform: i32,
         device_model: *mut wire_uint_8_list,
         os_version: *mut wire_uint_8_list,
-        language: i32,
         request_timeout_millisecond: i32,
         db_dir: *mut wire_uint_8_list,
         custom_header: *mut wire_uint_8_list,
@@ -759,7 +753,6 @@ mod io {
             platform,
             device_model,
             os_version,
-            language,
             request_timeout_millisecond,
             db_dir,
             custom_header,

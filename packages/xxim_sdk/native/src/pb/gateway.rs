@@ -565,54 +565,61 @@ impl ::protobuf::reflect::ProtobufValue for GatewayWriteDataContent {
     type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
-/// WsConnection ws连接
+/// LongConnection ws连接
 #[derive(PartialEq,Clone,Default,Debug)]
-// @@protoc_insertion_point(message:pb.WsConnection)
-pub struct WsConnection {
+// @@protoc_insertion_point(message:pb.LongConnection)
+pub struct LongConnection {
     // message fields
-    // @@protoc_insertion_point(field:pb.WsConnection.id)
-    pub id: i64,
-    // @@protoc_insertion_point(field:pb.WsConnection.header)
+    // @@protoc_insertion_point(field:pb.LongConnection.header)
     pub header: ::protobuf::MessageField<super::common::RequestHeader>,
+    // @@protoc_insertion_point(field:pb.LongConnection.podIp)
+    pub podIp: ::std::string::String,
+    // @@protoc_insertion_point(field:pb.LongConnection.connectTime)
+    pub connectTime: i64,
     // special fields
-    // @@protoc_insertion_point(special_field:pb.WsConnection.special_fields)
+    // @@protoc_insertion_point(special_field:pb.LongConnection.special_fields)
     pub special_fields: ::protobuf::SpecialFields,
 }
 
-impl<'a> ::std::default::Default for &'a WsConnection {
-    fn default() -> &'a WsConnection {
-        <WsConnection as ::protobuf::Message>::default_instance()
+impl<'a> ::std::default::Default for &'a LongConnection {
+    fn default() -> &'a LongConnection {
+        <LongConnection as ::protobuf::Message>::default_instance()
     }
 }
 
-impl WsConnection {
-    pub fn new() -> WsConnection {
+impl LongConnection {
+    pub fn new() -> LongConnection {
         ::std::default::Default::default()
     }
 
     fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
-        let mut fields = ::std::vec::Vec::with_capacity(2);
+        let mut fields = ::std::vec::Vec::with_capacity(3);
         let mut oneofs = ::std::vec::Vec::with_capacity(0);
-        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
-            "id",
-            |m: &WsConnection| { &m.id },
-            |m: &mut WsConnection| { &mut m.id },
-        ));
         fields.push(::protobuf::reflect::rt::v2::make_message_field_accessor::<_, super::common::RequestHeader>(
             "header",
-            |m: &WsConnection| { &m.header },
-            |m: &mut WsConnection| { &mut m.header },
+            |m: &LongConnection| { &m.header },
+            |m: &mut LongConnection| { &mut m.header },
         ));
-        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<WsConnection>(
-            "WsConnection",
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "podIp",
+            |m: &LongConnection| { &m.podIp },
+            |m: &mut LongConnection| { &mut m.podIp },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "connectTime",
+            |m: &LongConnection| { &m.connectTime },
+            |m: &mut LongConnection| { &mut m.connectTime },
+        ));
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<LongConnection>(
+            "LongConnection",
             fields,
             oneofs,
         )
     }
 }
 
-impl ::protobuf::Message for WsConnection {
-    const NAME: &'static str = "WsConnection";
+impl ::protobuf::Message for LongConnection {
+    const NAME: &'static str = "LongConnection";
 
     fn is_initialized(&self) -> bool {
         true
@@ -621,11 +628,14 @@ impl ::protobuf::Message for WsConnection {
     fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
         while let Some(tag) = is.read_raw_tag_or_eof()? {
             match tag {
-                8 => {
-                    self.id = is.read_int64()?;
-                },
-                18 => {
+                10 => {
                     ::protobuf::rt::read_singular_message_into_field(is, &mut self.header)?;
+                },
+                26 => {
+                    self.podIp = is.read_string()?;
+                },
+                32 => {
+                    self.connectTime = is.read_int64()?;
                 },
                 tag => {
                     ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
@@ -639,12 +649,15 @@ impl ::protobuf::Message for WsConnection {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u64 {
         let mut my_size = 0;
-        if self.id != 0 {
-            my_size += ::protobuf::rt::int64_size(1, self.id);
-        }
         if let Some(v) = self.header.as_ref() {
             let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
+        }
+        if !self.podIp.is_empty() {
+            my_size += ::protobuf::rt::string_size(3, &self.podIp);
+        }
+        if self.connectTime != 0 {
+            my_size += ::protobuf::rt::int64_size(4, self.connectTime);
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
         self.special_fields.cached_size().set(my_size as u32);
@@ -652,11 +665,14 @@ impl ::protobuf::Message for WsConnection {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
-        if self.id != 0 {
-            os.write_int64(1, self.id)?;
-        }
         if let Some(v) = self.header.as_ref() {
-            ::protobuf::rt::write_message_field_with_cached_size(2, v, os)?;
+            ::protobuf::rt::write_message_field_with_cached_size(1, v, os)?;
+        }
+        if !self.podIp.is_empty() {
+            os.write_string(3, &self.podIp)?;
+        }
+        if self.connectTime != 0 {
+            os.write_int64(4, self.connectTime)?;
         }
         os.write_unknown_fields(self.special_fields.unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -670,40 +686,42 @@ impl ::protobuf::Message for WsConnection {
         &mut self.special_fields
     }
 
-    fn new() -> WsConnection {
-        WsConnection::new()
+    fn new() -> LongConnection {
+        LongConnection::new()
     }
 
     fn clear(&mut self) {
-        self.id = 0;
         self.header.clear();
+        self.podIp.clear();
+        self.connectTime = 0;
         self.special_fields.clear();
     }
 
-    fn default_instance() -> &'static WsConnection {
-        static instance: WsConnection = WsConnection {
-            id: 0,
+    fn default_instance() -> &'static LongConnection {
+        static instance: LongConnection = LongConnection {
             header: ::protobuf::MessageField::none(),
+            podIp: ::std::string::String::new(),
+            connectTime: 0,
             special_fields: ::protobuf::SpecialFields::new(),
         };
         &instance
     }
 }
 
-impl ::protobuf::MessageFull for WsConnection {
+impl ::protobuf::MessageFull for LongConnection {
     fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
         static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
-        descriptor.get(|| file_descriptor().message_by_package_relative_name("WsConnection").unwrap()).clone()
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("LongConnection").unwrap()).clone()
     }
 }
 
-impl ::std::fmt::Display for WsConnection {
+impl ::std::fmt::Display for LongConnection {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
 
-impl ::protobuf::reflect::ProtobufValue for WsConnection {
+impl ::protobuf::reflect::ProtobufValue for LongConnection {
     type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
@@ -856,7 +874,7 @@ pub struct GatewayGetUserConnectionResp {
     // @@protoc_insertion_point(field:pb.GatewayGetUserConnectionResp.header)
     pub header: ::protobuf::MessageField<super::common::ResponseHeader>,
     // @@protoc_insertion_point(field:pb.GatewayGetUserConnectionResp.connections)
-    pub connections: ::std::vec::Vec<WsConnection>,
+    pub connections: ::std::vec::Vec<LongConnection>,
     // special fields
     // @@protoc_insertion_point(special_field:pb.GatewayGetUserConnectionResp.special_fields)
     pub special_fields: ::protobuf::SpecialFields,
@@ -1140,7 +1158,7 @@ pub struct GatewayBatchGetUserConnectionResp {
     // @@protoc_insertion_point(field:pb.GatewayBatchGetUserConnectionResp.header)
     pub header: ::protobuf::MessageField<super::common::ResponseHeader>,
     // @@protoc_insertion_point(field:pb.GatewayBatchGetUserConnectionResp.connections)
-    pub connections: ::std::vec::Vec<WsConnection>,
+    pub connections: ::std::vec::Vec<LongConnection>,
     // special fields
     // @@protoc_insertion_point(special_field:pb.GatewayBatchGetUserConnectionResp.special_fields)
     pub special_fields: ::protobuf::SpecialFields,
@@ -1547,7 +1565,7 @@ pub struct GatewayGetConnectionByFilterResp {
     // @@protoc_insertion_point(field:pb.GatewayGetConnectionByFilterResp.header)
     pub header: ::protobuf::MessageField<super::common::ResponseHeader>,
     // @@protoc_insertion_point(field:pb.GatewayGetConnectionByFilterResp.connections)
-    pub connections: ::std::vec::Vec<WsConnection>,
+    pub connections: ::std::vec::Vec<LongConnection>,
     // special fields
     // @@protoc_insertion_point(special_field:pb.GatewayGetConnectionByFilterResp.special_fields)
     pub special_fields: ::protobuf::SpecialFields,
@@ -1851,7 +1869,7 @@ pub struct GatewayWriteDataToWsResp {
     // @@protoc_insertion_point(field:pb.GatewayWriteDataToWsResp.header)
     pub header: ::protobuf::MessageField<super::common::ResponseHeader>,
     // @@protoc_insertion_point(field:pb.GatewayWriteDataToWsResp.successConnections)
-    pub successConnections: ::std::vec::Vec<WsConnection>,
+    pub successConnections: ::std::vec::Vec<LongConnection>,
     // special fields
     // @@protoc_insertion_point(special_field:pb.GatewayWriteDataToWsResp.special_fields)
     pub special_fields: ::protobuf::SpecialFields,
@@ -2334,7 +2352,7 @@ pub struct GatewayKickWsResp {
     // @@protoc_insertion_point(field:pb.GatewayKickWsResp.header)
     pub header: ::protobuf::MessageField<super::common::ResponseHeader>,
     // @@protoc_insertion_point(field:pb.GatewayKickWsResp.successConnections)
-    pub successConnections: ::std::vec::Vec<WsConnection>,
+    pub successConnections: ::std::vec::Vec<LongConnection>,
     // special fields
     // @@protoc_insertion_point(special_field:pb.GatewayKickWsResp.special_fields)
     pub special_fields: ::protobuf::SpecialFields,
@@ -2716,6 +2734,590 @@ impl ::protobuf::reflect::ProtobufValue for GatewayKeepAliveResp {
     type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
+/// VerifyConnectionReq 验证连接 客户端拿着自己的公钥，请求网关，网关返回自己的公钥
+#[derive(PartialEq,Clone,Default,Debug)]
+// @@protoc_insertion_point(message:pb.VerifyConnectionReq)
+pub struct VerifyConnectionReq {
+    // message fields
+    // @@protoc_insertion_point(field:pb.VerifyConnectionReq.header)
+    pub header: ::protobuf::MessageField<super::common::RequestHeader>,
+    // @@protoc_insertion_point(field:pb.VerifyConnectionReq.publicKey)
+    pub publicKey: ::std::vec::Vec<u8>,
+    // special fields
+    // @@protoc_insertion_point(special_field:pb.VerifyConnectionReq.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a VerifyConnectionReq {
+    fn default() -> &'a VerifyConnectionReq {
+        <VerifyConnectionReq as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl VerifyConnectionReq {
+    pub fn new() -> VerifyConnectionReq {
+        ::std::default::Default::default()
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(2);
+        let mut oneofs = ::std::vec::Vec::with_capacity(0);
+        fields.push(::protobuf::reflect::rt::v2::make_message_field_accessor::<_, super::common::RequestHeader>(
+            "header",
+            |m: &VerifyConnectionReq| { &m.header },
+            |m: &mut VerifyConnectionReq| { &mut m.header },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "publicKey",
+            |m: &VerifyConnectionReq| { &m.publicKey },
+            |m: &mut VerifyConnectionReq| { &mut m.publicKey },
+        ));
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<VerifyConnectionReq>(
+            "VerifyConnectionReq",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for VerifyConnectionReq {
+    const NAME: &'static str = "VerifyConnectionReq";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                10 => {
+                    ::protobuf::rt::read_singular_message_into_field(is, &mut self.header)?;
+                },
+                18 => {
+                    self.publicKey = is.read_bytes()?;
+                },
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        if let Some(v) = self.header.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
+        }
+        if !self.publicKey.is_empty() {
+            my_size += ::protobuf::rt::bytes_size(2, &self.publicKey);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        if let Some(v) = self.header.as_ref() {
+            ::protobuf::rt::write_message_field_with_cached_size(1, v, os)?;
+        }
+        if !self.publicKey.is_empty() {
+            os.write_bytes(2, &self.publicKey)?;
+        }
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> VerifyConnectionReq {
+        VerifyConnectionReq::new()
+    }
+
+    fn clear(&mut self) {
+        self.header.clear();
+        self.publicKey.clear();
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static VerifyConnectionReq {
+        static instance: VerifyConnectionReq = VerifyConnectionReq {
+            header: ::protobuf::MessageField::none(),
+            publicKey: ::std::vec::Vec::new(),
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for VerifyConnectionReq {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("VerifyConnectionReq").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for VerifyConnectionReq {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for VerifyConnectionReq {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
+#[derive(PartialEq,Clone,Default,Debug)]
+// @@protoc_insertion_point(message:pb.VerifyConnectionResp)
+pub struct VerifyConnectionResp {
+    // message fields
+    // @@protoc_insertion_point(field:pb.VerifyConnectionResp.header)
+    pub header: ::protobuf::MessageField<super::common::ResponseHeader>,
+    // @@protoc_insertion_point(field:pb.VerifyConnectionResp.publicKey)
+    pub publicKey: ::std::vec::Vec<u8>,
+    // special fields
+    // @@protoc_insertion_point(special_field:pb.VerifyConnectionResp.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a VerifyConnectionResp {
+    fn default() -> &'a VerifyConnectionResp {
+        <VerifyConnectionResp as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl VerifyConnectionResp {
+    pub fn new() -> VerifyConnectionResp {
+        ::std::default::Default::default()
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(2);
+        let mut oneofs = ::std::vec::Vec::with_capacity(0);
+        fields.push(::protobuf::reflect::rt::v2::make_message_field_accessor::<_, super::common::ResponseHeader>(
+            "header",
+            |m: &VerifyConnectionResp| { &m.header },
+            |m: &mut VerifyConnectionResp| { &mut m.header },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "publicKey",
+            |m: &VerifyConnectionResp| { &m.publicKey },
+            |m: &mut VerifyConnectionResp| { &mut m.publicKey },
+        ));
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<VerifyConnectionResp>(
+            "VerifyConnectionResp",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for VerifyConnectionResp {
+    const NAME: &'static str = "VerifyConnectionResp";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                10 => {
+                    ::protobuf::rt::read_singular_message_into_field(is, &mut self.header)?;
+                },
+                18 => {
+                    self.publicKey = is.read_bytes()?;
+                },
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        if let Some(v) = self.header.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
+        }
+        if !self.publicKey.is_empty() {
+            my_size += ::protobuf::rt::bytes_size(2, &self.publicKey);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        if let Some(v) = self.header.as_ref() {
+            ::protobuf::rt::write_message_field_with_cached_size(1, v, os)?;
+        }
+        if !self.publicKey.is_empty() {
+            os.write_bytes(2, &self.publicKey)?;
+        }
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> VerifyConnectionResp {
+        VerifyConnectionResp::new()
+    }
+
+    fn clear(&mut self) {
+        self.header.clear();
+        self.publicKey.clear();
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static VerifyConnectionResp {
+        static instance: VerifyConnectionResp = VerifyConnectionResp {
+            header: ::protobuf::MessageField::none(),
+            publicKey: ::std::vec::Vec::new(),
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for VerifyConnectionResp {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("VerifyConnectionResp").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for VerifyConnectionResp {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for VerifyConnectionResp {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
+/// AuthenticationConnectionReq 验证连接 客户端拿着userId token，鉴权连接
+#[derive(PartialEq,Clone,Default,Debug)]
+// @@protoc_insertion_point(message:pb.AuthenticationConnectionReq)
+pub struct AuthenticationConnectionReq {
+    // message fields
+    // @@protoc_insertion_point(field:pb.AuthenticationConnectionReq.header)
+    pub header: ::protobuf::MessageField<super::common::RequestHeader>,
+    // @@protoc_insertion_point(field:pb.AuthenticationConnectionReq.userId)
+    pub userId: ::std::string::String,
+    // @@protoc_insertion_point(field:pb.AuthenticationConnectionReq.token)
+    pub token: ::std::string::String,
+    // special fields
+    // @@protoc_insertion_point(special_field:pb.AuthenticationConnectionReq.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a AuthenticationConnectionReq {
+    fn default() -> &'a AuthenticationConnectionReq {
+        <AuthenticationConnectionReq as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl AuthenticationConnectionReq {
+    pub fn new() -> AuthenticationConnectionReq {
+        ::std::default::Default::default()
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(3);
+        let mut oneofs = ::std::vec::Vec::with_capacity(0);
+        fields.push(::protobuf::reflect::rt::v2::make_message_field_accessor::<_, super::common::RequestHeader>(
+            "header",
+            |m: &AuthenticationConnectionReq| { &m.header },
+            |m: &mut AuthenticationConnectionReq| { &mut m.header },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "userId",
+            |m: &AuthenticationConnectionReq| { &m.userId },
+            |m: &mut AuthenticationConnectionReq| { &mut m.userId },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "token",
+            |m: &AuthenticationConnectionReq| { &m.token },
+            |m: &mut AuthenticationConnectionReq| { &mut m.token },
+        ));
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<AuthenticationConnectionReq>(
+            "AuthenticationConnectionReq",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for AuthenticationConnectionReq {
+    const NAME: &'static str = "AuthenticationConnectionReq";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                10 => {
+                    ::protobuf::rt::read_singular_message_into_field(is, &mut self.header)?;
+                },
+                18 => {
+                    self.userId = is.read_string()?;
+                },
+                26 => {
+                    self.token = is.read_string()?;
+                },
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        if let Some(v) = self.header.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
+        }
+        if !self.userId.is_empty() {
+            my_size += ::protobuf::rt::string_size(2, &self.userId);
+        }
+        if !self.token.is_empty() {
+            my_size += ::protobuf::rt::string_size(3, &self.token);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        if let Some(v) = self.header.as_ref() {
+            ::protobuf::rt::write_message_field_with_cached_size(1, v, os)?;
+        }
+        if !self.userId.is_empty() {
+            os.write_string(2, &self.userId)?;
+        }
+        if !self.token.is_empty() {
+            os.write_string(3, &self.token)?;
+        }
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> AuthenticationConnectionReq {
+        AuthenticationConnectionReq::new()
+    }
+
+    fn clear(&mut self) {
+        self.header.clear();
+        self.userId.clear();
+        self.token.clear();
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static AuthenticationConnectionReq {
+        static instance: AuthenticationConnectionReq = AuthenticationConnectionReq {
+            header: ::protobuf::MessageField::none(),
+            userId: ::std::string::String::new(),
+            token: ::std::string::String::new(),
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for AuthenticationConnectionReq {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("AuthenticationConnectionReq").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for AuthenticationConnectionReq {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for AuthenticationConnectionReq {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
+#[derive(PartialEq,Clone,Default,Debug)]
+// @@protoc_insertion_point(message:pb.AuthenticationConnectionResp)
+pub struct AuthenticationConnectionResp {
+    // message fields
+    // @@protoc_insertion_point(field:pb.AuthenticationConnectionResp.header)
+    pub header: ::protobuf::MessageField<super::common::ResponseHeader>,
+    // @@protoc_insertion_point(field:pb.AuthenticationConnectionResp.success)
+    pub success: bool,
+    // special fields
+    // @@protoc_insertion_point(special_field:pb.AuthenticationConnectionResp.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a AuthenticationConnectionResp {
+    fn default() -> &'a AuthenticationConnectionResp {
+        <AuthenticationConnectionResp as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl AuthenticationConnectionResp {
+    pub fn new() -> AuthenticationConnectionResp {
+        ::std::default::Default::default()
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(2);
+        let mut oneofs = ::std::vec::Vec::with_capacity(0);
+        fields.push(::protobuf::reflect::rt::v2::make_message_field_accessor::<_, super::common::ResponseHeader>(
+            "header",
+            |m: &AuthenticationConnectionResp| { &m.header },
+            |m: &mut AuthenticationConnectionResp| { &mut m.header },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "success",
+            |m: &AuthenticationConnectionResp| { &m.success },
+            |m: &mut AuthenticationConnectionResp| { &mut m.success },
+        ));
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<AuthenticationConnectionResp>(
+            "AuthenticationConnectionResp",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for AuthenticationConnectionResp {
+    const NAME: &'static str = "AuthenticationConnectionResp";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                10 => {
+                    ::protobuf::rt::read_singular_message_into_field(is, &mut self.header)?;
+                },
+                16 => {
+                    self.success = is.read_bool()?;
+                },
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        if let Some(v) = self.header.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
+        }
+        if self.success != false {
+            my_size += 1 + 1;
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        if let Some(v) = self.header.as_ref() {
+            ::protobuf::rt::write_message_field_with_cached_size(1, v, os)?;
+        }
+        if self.success != false {
+            os.write_bool(2, self.success)?;
+        }
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> AuthenticationConnectionResp {
+        AuthenticationConnectionResp::new()
+    }
+
+    fn clear(&mut self) {
+        self.header.clear();
+        self.success = false;
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static AuthenticationConnectionResp {
+        static instance: AuthenticationConnectionResp = AuthenticationConnectionResp {
+            header: ::protobuf::MessageField::none(),
+            success: false,
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for AuthenticationConnectionResp {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("AuthenticationConnectionResp").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for AuthenticationConnectionResp {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for AuthenticationConnectionResp {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
 /// GatewayWriteDataType 写入数据类型
 #[derive(Clone,Copy,PartialEq,Eq,Debug,Hash)]
 // @@protoc_insertion_point(enum:pb.GatewayWriteDataType)
@@ -2789,33 +3391,34 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     pb.GatewayApiResponseH\0R\x08response\x88\x01\x01\x12*\n\x07message\x18\
     \x03\x20\x01(\x0b2\x0b.pb.MessageH\x01R\x07message\x88\x01\x01\x12'\n\
     \x06notice\x18\x04\x20\x01(\x0b2\n.pb.NoticeH\x02R\x06notice\x88\x01\x01\
-    B\x0b\n\t_responseB\n\n\x08_messageB\t\n\x07_notice\"I\n\x0cWsConnection\
-    \x12\x0e\n\x02id\x18\x01\x20\x01(\x03R\x02id\x12)\n\x06header\x18\x02\
-    \x20\x01(\x0b2\x11.pb.RequestHeaderR\x06header\"`\n\x1bGatewayGetUserCon\
-    nectionReq\x12)\n\x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\
-    \x06header\x12\x16\n\x06userId\x18\x02\x20\x01(\tR\x06userId\"~\n\x1cGat\
-    ewayGetUserConnectionResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.\
-    ResponseHeaderR\x06header\x122\n\x0bconnections\x18\x02\x20\x03(\x0b2\
-    \x10.pb.WsConnectionR\x0bconnections\"g\n\x20GatewayBatchGetUserConnecti\
-    onReq\x12)\n\x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06he\
-    ader\x12\x18\n\x07userIds\x18\x02\x20\x03(\tR\x07userIds\"\x83\x01\n!Gat\
-    ewayBatchGetUserConnectionResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\
-    \x12.pb.ResponseHeaderR\x06header\x122\n\x0bconnections\x18\x02\x20\x03(\
-    \x0b2\x10.pb.WsConnectionR\x0bconnections\"6\n\x1aGatewayGetConnectionFi\
-    lter\x12\x18\n\x07userIds\x18\x01\x20\x03(\tR\x07userIds\"\x84\x01\n\x1f\
-    GatewayGetConnectionByFilterReq\x12)\n\x06header\x18\x01\x20\x01(\x0b2\
-    \x11.pb.RequestHeaderR\x06header\x126\n\x06filter\x18\x02\x20\x01(\x0b2\
-    \x1e.pb.GatewayGetConnectionFilterR\x06filter\"\x82\x01\n\x20GatewayGetC\
-    onnectionByFilterResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.Resp\
-    onseHeaderR\x06header\x122\n\x0bconnections\x18\x02\x20\x03(\x0b2\x10.pb\
-    .WsConnectionR\x0bconnections\"\xad\x01\n\x17GatewayWriteDataToWsReq\x12\
-    )\n\x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06header\x126\
-    \n\x06filter\x18\x02\x20\x01(\x0b2\x1e.pb.GatewayGetConnectionFilterR\
-    \x06filter\x12/\n\x04data\x18\x03\x20\x01(\x0b2\x1b.pb.GatewayWriteDataC\
-    ontentR\x04data\"\x88\x01\n\x18GatewayWriteDataToWsResp\x12*\n\x06header\
-    \x18\x01\x20\x01(\x0b2\x12.pb.ResponseHeaderR\x06header\x12@\n\x12succes\
-    sConnections\x18\x02\x20\x03(\x0b2\x10.pb.WsConnectionR\x12successConnec\
-    tions\"\xb4\x01\n\x1eGatewayWriteDataToWsWrapperReq\x12)\n\x06header\x18\
+    B\x0b\n\t_responseB\n\n\x08_messageB\t\n\x07_notice\"s\n\x0eLongConnecti\
+    on\x12)\n\x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06heade\
+    r\x12\x14\n\x05podIp\x18\x03\x20\x01(\tR\x05podIp\x12\x20\n\x0bconnectTi\
+    me\x18\x04\x20\x01(\x03R\x0bconnectTime\"`\n\x1bGatewayGetUserConnection\
+    Req\x12)\n\x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06head\
+    er\x12\x16\n\x06userId\x18\x02\x20\x01(\tR\x06userId\"\x80\x01\n\x1cGate\
+    wayGetUserConnectionResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.R\
+    esponseHeaderR\x06header\x124\n\x0bconnections\x18\x02\x20\x03(\x0b2\x12\
+    .pb.LongConnectionR\x0bconnections\"g\n\x20GatewayBatchGetUserConnection\
+    Req\x12)\n\x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06head\
+    er\x12\x18\n\x07userIds\x18\x02\x20\x03(\tR\x07userIds\"\x85\x01\n!Gatew\
+    ayBatchGetUserConnectionResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.\
+    pb.ResponseHeaderR\x06header\x124\n\x0bconnections\x18\x02\x20\x03(\x0b2\
+    \x12.pb.LongConnectionR\x0bconnections\"6\n\x1aGatewayGetConnectionFilte\
+    r\x12\x18\n\x07userIds\x18\x01\x20\x03(\tR\x07userIds\"\x84\x01\n\x1fGat\
+    ewayGetConnectionByFilterReq\x12)\n\x06header\x18\x01\x20\x01(\x0b2\x11.\
+    pb.RequestHeaderR\x06header\x126\n\x06filter\x18\x02\x20\x01(\x0b2\x1e.p\
+    b.GatewayGetConnectionFilterR\x06filter\"\x84\x01\n\x20GatewayGetConnect\
+    ionByFilterResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.ResponseHe\
+    aderR\x06header\x124\n\x0bconnections\x18\x02\x20\x03(\x0b2\x12.pb.LongC\
+    onnectionR\x0bconnections\"\xad\x01\n\x17GatewayWriteDataToWsReq\x12)\n\
+    \x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06header\x126\n\
+    \x06filter\x18\x02\x20\x01(\x0b2\x1e.pb.GatewayGetConnectionFilterR\x06f\
+    ilter\x12/\n\x04data\x18\x03\x20\x01(\x0b2\x1b.pb.GatewayWriteDataConten\
+    tR\x04data\"\x8a\x01\n\x18GatewayWriteDataToWsResp\x12*\n\x06header\x18\
+    \x01\x20\x01(\x0b2\x12.pb.ResponseHeaderR\x06header\x12B\n\x12successCon\
+    nections\x18\x02\x20\x03(\x0b2\x12.pb.LongConnectionR\x12successConnecti\
+    ons\"\xb4\x01\n\x1eGatewayWriteDataToWsWrapperReq\x12)\n\x06header\x18\
     \x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06header\x126\n\x06filter\x18\
     \x02\x20\x01(\x0b2\x1e.pb.GatewayGetConnectionFilterR\x06filter\x12/\n\
     \x04data\x18\x03\x20\x01(\x0b2\x1b.pb.GatewayWriteDataContentR\x04data\"\
@@ -2823,236 +3426,292 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x11.pb.RequestHeaderR\x06header\x126\n\x06filter\x18\x02\x20\x01(\x0b2\
     \x1e.pb.GatewayGetConnectionFilterR\x06filter\x12:\n\tcloseCode\x18\x03\
     \x20\x01(\x0e2\x1c.pb.WebsocketCustomCloseCodeR\tcloseCode\x12\x20\n\x0b\
-    closeReason\x18\x04\x20\x01(\tR\x0bcloseReason\"\x81\x01\n\x11GatewayKic\
+    closeReason\x18\x04\x20\x01(\tR\x0bcloseReason\"\x83\x01\n\x11GatewayKic\
     kWsResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.ResponseHeaderR\
-    \x06header\x12@\n\x12successConnections\x18\x02\x20\x03(\x0b2\x10.pb.WsC\
-    onnectionR\x12successConnections\"@\n\x13GatewayKeepAliveReq\x12)\n\x06h\
-    eader\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06header\"B\n\x14Gate\
-    wayKeepAliveResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.ResponseH\
-    eaderR\x06header*E\n\x14GatewayWriteDataType\x12\x0c\n\x08Response\x10\0\
-    \x12\x0f\n\x0bPushMessage\x10\x01\x12\x0e\n\nPushNotice\x10\x022\x81\x05\
-    \n\x0egatewayService\x12]\n\x18GatewayGetUserConnection\x12\x1f.pb.Gatew\
-    ayGetUserConnectionReq\x1a\x20.pb.GatewayGetUserConnectionResp\x12l\n\
-    \x1dGatewayBatchGetUserConnection\x12$.pb.GatewayBatchGetUserConnectionR\
-    eq\x1a%.pb.GatewayBatchGetUserConnectionResp\x12i\n\x1cGatewayGetConnect\
-    ionByFilter\x12#.pb.GatewayGetConnectionByFilterReq\x1a$.pb.GatewayGetCo\
-    nnectionByFilterResp\x12Q\n\x14GatewayWriteDataToWs\x12\x1b.pb.GatewayWr\
-    iteDataToWsReq\x1a\x1c.pb.GatewayWriteDataToWsResp\x12_\n\x1bGatewayWrit\
-    eDataToWsWrapper\x12\".pb.GatewayWriteDataToWsWrapperReq\x1a\x1c.pb.Gate\
-    wayWriteDataToWsResp\x12<\n\rGatewayKickWs\x12\x14.pb.GatewayKickWsReq\
-    \x1a\x15.pb.GatewayKickWsResp\x12E\n\x10GatewayKeepAlive\x12\x17.pb.Gate\
-    wayKeepAliveReq\x1a\x18.pb.GatewayKeepAliveRespB\x06Z\x04./pbJ\xa9(\n\
-    \x07\x12\x05\0\0\x97\x01\x01\n\x08\n\x01\x0c\x12\x03\0\0\x12\n\x08\n\x01\
-    \x02\x12\x03\x01\0\x0b\n\x08\n\x01\x08\x12\x03\x02\0\x1b\n\t\n\x02\x08\
-    \x0b\x12\x03\x02\0\x1b\n\t\n\x02\x03\0\x12\x03\x03\0\x16\n7\n\x02\x04\0\
-    \x12\x04\x06\0\x0b\x01\x1a+GatewayApiRequest\x20http/\xe7\xa7\x81\xe6\
-    \x9c\x89\xe5\x8d\x8f\xe8\xae\xae\x20\xe8\xaf\xb7\xe6\xb1\x82\n\n\n\n\x03\
-    \x04\0\x01\x12\x03\x06\x08\x19\n\x0b\n\x04\x04\0\x02\0\x12\x03\x07\x02\
-    \x1b\n\x0c\n\x05\x04\0\x02\0\x06\x12\x03\x07\x02\x0f\n\x0c\n\x05\x04\0\
-    \x02\0\x01\x12\x03\x07\x10\x16\n\x0c\n\x05\x04\0\x02\0\x03\x12\x03\x07\
-    \x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\x08\x02\x17\n\x0c\n\x05\x04\0\
-    \x02\x01\x05\x12\x03\x08\x02\x08\n\x0c\n\x05\x04\0\x02\x01\x01\x12\x03\
-    \x08\t\x12\n\x0c\n\x05\x04\0\x02\x01\x03\x12\x03\x08\x15\x16\n\x0b\n\x04\
-    \x04\0\x02\x02\x12\x03\t\x02\x12\n\x0c\n\x05\x04\0\x02\x02\x05\x12\x03\t\
-    \x02\x08\n\x0c\n\x05\x04\0\x02\x02\x01\x12\x03\t\t\r\n\x0c\n\x05\x04\0\
-    \x02\x02\x03\x12\x03\t\x10\x11\n\x0b\n\x04\x04\0\x02\x03\x12\x03\n\x02\
-    \x11\n\x0c\n\x05\x04\0\x02\x03\x05\x12\x03\n\x02\x07\n\x0c\n\x05\x04\0\
-    \x02\x03\x01\x12\x03\n\x08\x0c\n\x0c\n\x05\x04\0\x02\x03\x03\x12\x03\n\
-    \x0f\x10\n8\n\x02\x04\x01\x12\x04\x0e\0\x13\x01\x1a,GatewayApiResponse\
-    \x20http/\xe7\xa7\x81\xe6\x9c\x89\xe5\x8d\x8f\xe8\xae\xae\x20\xe5\x93\
-    \x8d\xe5\xba\x94\n\n\n\n\x03\x04\x01\x01\x12\x03\x0e\x08\x1a\n\x0b\n\x04\
-    \x04\x01\x02\0\x12\x03\x0f\x02\x1c\n\x0c\n\x05\x04\x01\x02\0\x06\x12\x03\
-    \x0f\x02\x10\n\x0c\n\x05\x04\x01\x02\0\x01\x12\x03\x0f\x11\x17\n\x0c\n\
-    \x05\x04\x01\x02\0\x03\x12\x03\x0f\x1a\x1b\n\x0b\n\x04\x04\x01\x02\x01\
-    \x12\x03\x10\x02\x17\n\x0c\n\x05\x04\x01\x02\x01\x05\x12\x03\x10\x02\x08\
-    \n\x0c\n\x05\x04\x01\x02\x01\x01\x12\x03\x10\t\x12\n\x0c\n\x05\x04\x01\
-    \x02\x01\x03\x12\x03\x10\x15\x16\n\x0b\n\x04\x04\x01\x02\x02\x12\x03\x11\
-    \x02\x12\n\x0c\n\x05\x04\x01\x02\x02\x05\x12\x03\x11\x02\x08\n\x0c\n\x05\
-    \x04\x01\x02\x02\x01\x12\x03\x11\t\r\n\x0c\n\x05\x04\x01\x02\x02\x03\x12\
-    \x03\x11\x10\x11\n\x0b\n\x04\x04\x01\x02\x03\x12\x03\x12\x02\x11\n\x0c\n\
-    \x05\x04\x01\x02\x03\x05\x12\x03\x12\x02\x07\n\x0c\n\x05\x04\x01\x02\x03\
-    \x01\x12\x03\x12\x08\x0c\n\x0c\n\x05\x04\x01\x02\x03\x03\x12\x03\x12\x0f\
-    \x10\n4\n\x02\x05\0\x12\x04\x16\0\x1d\x01\x1a(GatewayWriteDataType\x20\
-    \xe5\x86\x99\xe5\x85\xa5\xe6\x95\xb0\xe6\x8d\xae\xe7\xb1\xbb\xe5\x9e\x8b\
-    \n\n\n\n\x03\x05\0\x01\x12\x03\x16\x05\x19\n\x1a\n\x04\x05\0\x02\0\x12\
-    \x03\x18\x02\x0f\x1a\r\xe8\xbf\x94\xe5\x9b\x9e\xe5\x93\x8d\xe5\xba\x94\n\
-    \n\x0c\n\x05\x05\0\x02\0\x01\x12\x03\x18\x02\n\n\x0c\n\x05\x05\0\x02\0\
-    \x02\x12\x03\x18\r\x0e\n!\n\x04\x05\0\x02\x01\x12\x03\x1a\x02\x12\x1a\
-    \x14\xe4\xb8\xbb\xe5\x8a\xa8\xe6\x8e\xa8\xe9\x80\x81message\n\n\x0c\n\
-    \x05\x05\0\x02\x01\x01\x12\x03\x1a\x02\r\n\x0c\n\x05\x05\0\x02\x01\x02\
-    \x12\x03\x1a\x10\x11\n\x20\n\x04\x05\0\x02\x02\x12\x03\x1c\x02\x11\x1a\
-    \x13\xe4\xb8\xbb\xe5\x8a\xa8\xe6\x8e\xa8\xe9\x80\x81notice\n\n\x0c\n\x05\
-    \x05\0\x02\x02\x01\x12\x03\x1c\x02\x0c\n\x0c\n\x05\x05\0\x02\x02\x02\x12\
-    \x03\x1c\x0f\x10\n7\n\x02\x04\x02\x12\x04\x20\0)\x01\x1a+GatewayWriteDat\
-    aContent\x20\xe5\x86\x99\xe5\x85\xa5\xe6\x95\xb0\xe6\x8d\xae\xe5\x86\x85\
-    \xe5\xae\xb9\n\n\n\n\x03\x04\x02\x01\x12\x03\x20\x08\x1f\n\x20\n\x04\x04\
-    \x02\x02\0\x12\x03\"\x02$\x1a\x13\xe5\x86\x99\xe5\x85\xa5\xe6\x95\xb0\
-    \xe6\x8d\xae\xe7\xb1\xbb\xe5\x9e\x8b\n\n\x0c\n\x05\x04\x02\x02\0\x06\x12\
-    \x03\"\x02\x16\n\x0c\n\x05\x04\x02\x02\0\x01\x12\x03\"\x17\x1f\n\x0c\n\
-    \x05\x04\x02\x02\0\x03\x12\x03\"\"#\n\x14\n\x04\x04\x02\x02\x01\x12\x03$\
-    \x02+\x1a\x07\xe5\x93\x8d\xe5\xba\x94\n\n\x0c\n\x05\x04\x02\x02\x01\x04\
-    \x12\x03$\x02\n\n\x0c\n\x05\x04\x02\x02\x01\x06\x12\x03$\x0b\x1d\n\x0c\n\
-    \x05\x04\x02\x02\x01\x01\x12\x03$\x1e&\n\x0c\n\x05\x04\x02\x02\x01\x03\
-    \x12\x03$)*\n!\n\x04\x04\x02\x02\x02\x12\x03&\x02\x1f\x1a\x14\xe4\xb8\
-    \xbb\xe5\x8a\xa8\xe6\x8e\xa8\xe9\x80\x81message\n\n\x0c\n\x05\x04\x02\
-    \x02\x02\x04\x12\x03&\x02\n\n\x0c\n\x05\x04\x02\x02\x02\x06\x12\x03&\x0b\
-    \x12\n\x0c\n\x05\x04\x02\x02\x02\x01\x12\x03&\x13\x1a\n\x0c\n\x05\x04\
-    \x02\x02\x02\x03\x12\x03&\x1d\x1e\n\x20\n\x04\x04\x02\x02\x03\x12\x03(\
-    \x02\x1d\x1a\x13\xe4\xb8\xbb\xe5\x8a\xa8\xe6\x8e\xa8\xe9\x80\x81notice\n\
-    \n\x0c\n\x05\x04\x02\x02\x03\x04\x12\x03(\x02\n\n\x0c\n\x05\x04\x02\x02\
-    \x03\x06\x12\x03(\x0b\x11\n\x0c\n\x05\x04\x02\x02\x03\x01\x12\x03(\x12\
-    \x18\n\x0c\n\x05\x04\x02\x02\x03\x03\x12\x03(\x1b\x1c\n\"\n\x02\x04\x03\
-    \x12\x04,\0/\x01\x1a\x16WsConnection\x20ws\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\
-    \n\x03\x04\x03\x01\x12\x03,\x08\x14\n\x0b\n\x04\x04\x03\x02\0\x12\x03-\
-    \x02\x0f\n\x0c\n\x05\x04\x03\x02\0\x05\x12\x03-\x02\x07\n\x0c\n\x05\x04\
-    \x03\x02\0\x01\x12\x03-\x08\n\n\x0c\n\x05\x04\x03\x02\0\x03\x12\x03-\r\
-    \x0e\n\x0b\n\x04\x04\x03\x02\x01\x12\x03.\x02\x1b\n\x0c\n\x05\x04\x03\
-    \x02\x01\x06\x12\x03.\x02\x0f\n\x0c\n\x05\x04\x03\x02\x01\x01\x12\x03.\
-    \x10\x16\n\x0c\n\x05\x04\x03\x02\x01\x03\x12\x03.\x19\x1a\n>\n\x02\x04\
-    \x04\x12\x042\05\x01\x1a2GatewayGetUserConnectionReq\x20\xe8\x8e\xb7\xe5\
-    \x8f\x96\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\xe6\x8e\xa5\n\n\
-    \n\n\x03\x04\x04\x01\x12\x032\x08#\n\x0b\n\x04\x04\x04\x02\0\x12\x033\
-    \x02\x1b\n\x0c\n\x05\x04\x04\x02\0\x06\x12\x033\x02\x0f\n\x0c\n\x05\x04\
-    \x04\x02\0\x01\x12\x033\x10\x16\n\x0c\n\x05\x04\x04\x02\0\x03\x12\x033\
-    \x19\x1a\n\x0b\n\x04\x04\x04\x02\x01\x12\x034\x02\x14\n\x0c\n\x05\x04\
-    \x04\x02\x01\x05\x12\x034\x02\x08\n\x0c\n\x05\x04\x04\x02\x01\x01\x12\
-    \x034\t\x0f\n\x0c\n\x05\x04\x04\x02\x01\x03\x12\x034\x12\x13\n\n\n\x02\
-    \x04\x05\x12\x047\0:\x01\n\n\n\x03\x04\x05\x01\x12\x037\x08$\n\x0b\n\x04\
-    \x04\x05\x02\0\x12\x038\x02\x1c\n\x0c\n\x05\x04\x05\x02\0\x06\x12\x038\
-    \x02\x10\n\x0c\n\x05\x04\x05\x02\0\x01\x12\x038\x11\x17\n\x0c\n\x05\x04\
-    \x05\x02\0\x03\x12\x038\x1a\x1b\n\x0b\n\x04\x04\x05\x02\x01\x12\x039\x02\
-    (\n\x0c\n\x05\x04\x05\x02\x01\x04\x12\x039\x02\n\n\x0c\n\x05\x04\x05\x02\
-    \x01\x06\x12\x039\x0b\x17\n\x0c\n\x05\x04\x05\x02\x01\x01\x12\x039\x18#\
-    \n\x0c\n\x05\x04\x05\x02\x01\x03\x12\x039&'\nI\n\x02\x04\x06\x12\x04=\0@\
-    \x01\x1a=GatewayBatchGetUserConnectionReq\x20\xe6\x89\xb9\xe9\x87\x8f\
-    \xe8\x8e\xb7\xe5\x8f\x96\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\
-    \xe6\x8e\xa5\n\n\n\n\x03\x04\x06\x01\x12\x03=\x08(\n\x0b\n\x04\x04\x06\
-    \x02\0\x12\x03>\x02\x1b\n\x0c\n\x05\x04\x06\x02\0\x06\x12\x03>\x02\x0f\n\
-    \x0c\n\x05\x04\x06\x02\0\x01\x12\x03>\x10\x16\n\x0c\n\x05\x04\x06\x02\0\
-    \x03\x12\x03>\x19\x1a\n\x0b\n\x04\x04\x06\x02\x01\x12\x03?\x02\x1e\n\x0c\
-    \n\x05\x04\x06\x02\x01\x04\x12\x03?\x02\n\n\x0c\n\x05\x04\x06\x02\x01\
-    \x05\x12\x03?\x0b\x11\n\x0c\n\x05\x04\x06\x02\x01\x01\x12\x03?\x12\x19\n\
-    \x0c\n\x05\x04\x06\x02\x01\x03\x12\x03?\x1c\x1d\n\n\n\x02\x04\x07\x12\
-    \x04B\0E\x01\n\n\n\x03\x04\x07\x01\x12\x03B\x08)\n\x0b\n\x04\x04\x07\x02\
-    \0\x12\x03C\x02\x1c\n\x0c\n\x05\x04\x07\x02\0\x06\x12\x03C\x02\x10\n\x0c\
-    \n\x05\x04\x07\x02\0\x01\x12\x03C\x11\x17\n\x0c\n\x05\x04\x07\x02\0\x03\
-    \x12\x03C\x1a\x1b\n\x0b\n\x04\x04\x07\x02\x01\x12\x03D\x02(\n\x0c\n\x05\
-    \x04\x07\x02\x01\x04\x12\x03D\x02\n\n\x0c\n\x05\x04\x07\x02\x01\x06\x12\
-    \x03D\x0b\x17\n\x0c\n\x05\x04\x07\x02\x01\x01\x12\x03D\x18#\n\x0c\n\x05\
-    \x04\x07\x02\x01\x03\x12\x03D&'\n\n\n\x02\x04\x08\x12\x04G\0I\x01\n\n\n\
-    \x03\x04\x08\x01\x12\x03G\x08\"\n\x0b\n\x04\x04\x08\x02\0\x12\x03H\x02\
-    \x1e\n\x0c\n\x05\x04\x08\x02\0\x04\x12\x03H\x02\n\n\x0c\n\x05\x04\x08\
-    \x02\0\x05\x12\x03H\x0b\x11\n\x0c\n\x05\x04\x08\x02\0\x01\x12\x03H\x12\
-    \x19\n\x0c\n\x05\x04\x08\x02\0\x03\x12\x03H\x1c\x1d\nK\n\x02\x04\t\x12\
-    \x04L\0O\x01\x1a?GatewayGetConnectionByFilterReq\x20\xe6\xa0\xb9\xe6\x8d\
-    \xae\xe8\xbf\x87\xe6\xbb\xa4\xe6\x9d\xa1\xe4\xbb\xb6\xe8\x8e\xb7\xe5\x8f\
-    \x96\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\t\x01\x12\x03L\x08'\n\x0b\n\
-    \x04\x04\t\x02\0\x12\x03M\x02\x1b\n\x0c\n\x05\x04\t\x02\0\x06\x12\x03M\
-    \x02\x0f\n\x0c\n\x05\x04\t\x02\0\x01\x12\x03M\x10\x16\n\x0c\n\x05\x04\t\
-    \x02\0\x03\x12\x03M\x19\x1a\n\x0b\n\x04\x04\t\x02\x01\x12\x03N\x02(\n\
-    \x0c\n\x05\x04\t\x02\x01\x06\x12\x03N\x02\x1c\n\x0c\n\x05\x04\t\x02\x01\
-    \x01\x12\x03N\x1d#\n\x0c\n\x05\x04\t\x02\x01\x03\x12\x03N&'\n\n\n\x02\
-    \x04\n\x12\x04Q\0T\x01\n\n\n\x03\x04\n\x01\x12\x03Q\x08(\n\x0b\n\x04\x04\
-    \n\x02\0\x12\x03R\x02\x1c\n\x0c\n\x05\x04\n\x02\0\x06\x12\x03R\x02\x10\n\
-    \x0c\n\x05\x04\n\x02\0\x01\x12\x03R\x11\x17\n\x0c\n\x05\x04\n\x02\0\x03\
-    \x12\x03R\x1a\x1b\n\x0b\n\x04\x04\n\x02\x01\x12\x03S\x02(\n\x0c\n\x05\
-    \x04\n\x02\x01\x04\x12\x03S\x02\n\n\x0c\n\x05\x04\n\x02\x01\x06\x12\x03S\
-    \x0b\x17\n\x0c\n\x05\x04\n\x02\x01\x01\x12\x03S\x18#\n\x0c\n\x05\x04\n\
-    \x02\x01\x03\x12\x03S&'\n<\n\x02\x04\x0b\x12\x04W\0[\x01\x1a0GatewayWrit\
-    eDataToWsReq\x20\xe5\x86\x99\xe5\x85\xa5\xe6\x95\xb0\xe6\x8d\xae\xe5\x88\
-    \xb0ws\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\x0b\x01\x12\x03W\x08\x1f\
-    \n\x0b\n\x04\x04\x0b\x02\0\x12\x03X\x02\x1b\n\x0c\n\x05\x04\x0b\x02\0\
-    \x06\x12\x03X\x02\x0f\n\x0c\n\x05\x04\x0b\x02\0\x01\x12\x03X\x10\x16\n\
-    \x0c\n\x05\x04\x0b\x02\0\x03\x12\x03X\x19\x1a\n\x0b\n\x04\x04\x0b\x02\
-    \x01\x12\x03Y\x02(\n\x0c\n\x05\x04\x0b\x02\x01\x06\x12\x03Y\x02\x1c\n\
-    \x0c\n\x05\x04\x0b\x02\x01\x01\x12\x03Y\x1d#\n\x0c\n\x05\x04\x0b\x02\x01\
-    \x03\x12\x03Y&'\n\x0b\n\x04\x04\x0b\x02\x02\x12\x03Z\x02#\n\x0c\n\x05\
-    \x04\x0b\x02\x02\x06\x12\x03Z\x02\x19\n\x0c\n\x05\x04\x0b\x02\x02\x01\
-    \x12\x03Z\x1a\x1e\n\x0c\n\x05\x04\x0b\x02\x02\x03\x12\x03Z!\"\n\n\n\x02\
-    \x04\x0c\x12\x04]\0`\x01\n\n\n\x03\x04\x0c\x01\x12\x03]\x08\x20\n\x0b\n\
-    \x04\x04\x0c\x02\0\x12\x03^\x02\x1c\n\x0c\n\x05\x04\x0c\x02\0\x06\x12\
-    \x03^\x02\x10\n\x0c\n\x05\x04\x0c\x02\0\x01\x12\x03^\x11\x17\n\x0c\n\x05\
-    \x04\x0c\x02\0\x03\x12\x03^\x1a\x1b\n\x0b\n\x04\x04\x0c\x02\x01\x12\x03_\
-    \x02/\n\x0c\n\x05\x04\x0c\x02\x01\x04\x12\x03_\x02\n\n\x0c\n\x05\x04\x0c\
-    \x02\x01\x06\x12\x03_\x0b\x17\n\x0c\n\x05\x04\x0c\x02\x01\x01\x12\x03_\
-    \x18*\n\x0c\n\x05\x04\x0c\x02\x01\x03\x12\x03_-.\nC\n\x02\x04\r\x12\x04c\
-    \0g\x01\x1a7GatewayWriteDataToWsWrapperReq\x20\xe5\x86\x99\xe5\x85\xa5\
-    \xe6\x95\xb0\xe6\x8d\xae\xe5\x88\xb0ws\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\
-    \x03\x04\r\x01\x12\x03c\x08&\n\x0b\n\x04\x04\r\x02\0\x12\x03d\x02\x1b\n\
-    \x0c\n\x05\x04\r\x02\0\x06\x12\x03d\x02\x0f\n\x0c\n\x05\x04\r\x02\0\x01\
-    \x12\x03d\x10\x16\n\x0c\n\x05\x04\r\x02\0\x03\x12\x03d\x19\x1a\n\x0b\n\
-    \x04\x04\r\x02\x01\x12\x03e\x02(\n\x0c\n\x05\x04\r\x02\x01\x06\x12\x03e\
-    \x02\x1c\n\x0c\n\x05\x04\r\x02\x01\x01\x12\x03e\x1d#\n\x0c\n\x05\x04\r\
-    \x02\x01\x03\x12\x03e&'\n\x0b\n\x04\x04\r\x02\x02\x12\x03f\x02#\n\x0c\n\
-    \x05\x04\r\x02\x02\x06\x12\x03f\x02\x19\n\x0c\n\x05\x04\r\x02\x02\x01\
-    \x12\x03f\x1a\x1e\n\x0c\n\x05\x04\r\x02\x02\x03\x12\x03f!\"\n,\n\x02\x04\
-    \x0e\x12\x04j\0o\x01\x1a\x20GatewayKickWsReq\x20\xe8\xb8\xa2\xe5\x87\xba\
-    ws\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\x0e\x01\x12\x03j\x08\x18\n\
-    \x0b\n\x04\x04\x0e\x02\0\x12\x03k\x02\x1b\n\x0c\n\x05\x04\x0e\x02\0\x06\
-    \x12\x03k\x02\x0f\n\x0c\n\x05\x04\x0e\x02\0\x01\x12\x03k\x10\x16\n\x0c\n\
-    \x05\x04\x0e\x02\0\x03\x12\x03k\x19\x1a\n\x0b\n\x04\x04\x0e\x02\x01\x12\
-    \x03l\x02(\n\x0c\n\x05\x04\x0e\x02\x01\x06\x12\x03l\x02\x1c\n\x0c\n\x05\
-    \x04\x0e\x02\x01\x01\x12\x03l\x1d#\n\x0c\n\x05\x04\x0e\x02\x01\x03\x12\
-    \x03l&'\n\x0b\n\x04\x04\x0e\x02\x02\x12\x03m\x02)\n\x0c\n\x05\x04\x0e\
-    \x02\x02\x06\x12\x03m\x02\x1a\n\x0c\n\x05\x04\x0e\x02\x02\x01\x12\x03m\
-    \x1b$\n\x0c\n\x05\x04\x0e\x02\x02\x03\x12\x03m'(\n\x0b\n\x04\x04\x0e\x02\
-    \x03\x12\x03n\x02\x19\n\x0c\n\x05\x04\x0e\x02\x03\x05\x12\x03n\x02\x08\n\
-    \x0c\n\x05\x04\x0e\x02\x03\x01\x12\x03n\t\x14\n\x0c\n\x05\x04\x0e\x02\
-    \x03\x03\x12\x03n\x17\x18\n\n\n\x02\x04\x0f\x12\x04q\0t\x01\n\n\n\x03\
-    \x04\x0f\x01\x12\x03q\x08\x19\n\x0b\n\x04\x04\x0f\x02\0\x12\x03r\x02\x1c\
-    \n\x0c\n\x05\x04\x0f\x02\0\x06\x12\x03r\x02\x10\n\x0c\n\x05\x04\x0f\x02\
-    \0\x01\x12\x03r\x11\x17\n\x0c\n\x05\x04\x0f\x02\0\x03\x12\x03r\x1a\x1b\n\
-    \x0b\n\x04\x04\x0f\x02\x01\x12\x03s\x02/\n\x0c\n\x05\x04\x0f\x02\x01\x04\
-    \x12\x03s\x02\n\n\x0c\n\x05\x04\x0f\x02\x01\x06\x12\x03s\x0b\x17\n\x0c\n\
-    \x05\x04\x0f\x02\x01\x01\x12\x03s\x18*\n\x0c\n\x05\x04\x0f\x02\x01\x03\
-    \x12\x03s-.\n-\n\x02\x04\x10\x12\x04w\0y\x01\x1a!GatewayKeepAliveReq\x20\
-    \xe4\xbf\x9d\xe6\x8c\x81\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\x10\x01\
-    \x12\x03w\x08\x1b\n\x0b\n\x04\x04\x10\x02\0\x12\x03x\x02\x1b\n\x0c\n\x05\
-    \x04\x10\x02\0\x06\x12\x03x\x02\x0f\n\x0c\n\x05\x04\x10\x02\0\x01\x12\
-    \x03x\x10\x16\n\x0c\n\x05\x04\x10\x02\0\x03\x12\x03x\x19\x1a\n\n\n\x02\
-    \x04\x11\x12\x04{\0}\x01\n\n\n\x03\x04\x11\x01\x12\x03{\x08\x1c\n\x0b\n\
-    \x04\x04\x11\x02\0\x12\x03|\x02\x1c\n\x0c\n\x05\x04\x11\x02\0\x06\x12\
-    \x03|\x02\x10\n\x0c\n\x05\x04\x11\x02\0\x01\x12\x03|\x11\x17\n\x0c\n\x05\
-    \x04\x11\x02\0\x03\x12\x03|\x1a\x1b\n\x0b\n\x02\x06\0\x12\x05\x7f\0\x97\
-    \x01\x01\n\n\n\x03\x06\0\x01\x12\x03\x7f\x08\x16\nm\n\x04\x06\0\x02\0\
-    \x12\x04\x82\x01\x02c\x1a_\x20GatewayGetUserConnection\x20\xe8\x8e\xb7\
+    \x06header\x12B\n\x12successConnections\x18\x02\x20\x03(\x0b2\x12.pb.Lon\
+    gConnectionR\x12successConnections\"@\n\x13GatewayKeepAliveReq\x12)\n\
+    \x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06header\"B\n\
+    \x14GatewayKeepAliveResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.R\
+    esponseHeaderR\x06header\"^\n\x13VerifyConnectionReq\x12)\n\x06header\
+    \x18\x01\x20\x01(\x0b2\x11.pb.RequestHeaderR\x06header\x12\x1c\n\tpublic\
+    Key\x18\x02\x20\x01(\x0cR\tpublicKey\"`\n\x14VerifyConnectionResp\x12*\n\
+    \x06header\x18\x01\x20\x01(\x0b2\x12.pb.ResponseHeaderR\x06header\x12\
+    \x1c\n\tpublicKey\x18\x02\x20\x01(\x0cR\tpublicKey\"v\n\x1bAuthenticatio\
+    nConnectionReq\x12)\n\x06header\x18\x01\x20\x01(\x0b2\x11.pb.RequestHead\
+    erR\x06header\x12\x16\n\x06userId\x18\x02\x20\x01(\tR\x06userId\x12\x14\
+    \n\x05token\x18\x03\x20\x01(\tR\x05token\"d\n\x1cAuthenticationConnectio\
+    nResp\x12*\n\x06header\x18\x01\x20\x01(\x0b2\x12.pb.ResponseHeaderR\x06h\
+    eader\x12\x18\n\x07success\x18\x02\x20\x01(\x08R\x07success*E\n\x14Gatew\
+    ayWriteDataType\x12\x0c\n\x08Response\x10\0\x12\x0f\n\x0bPushMessage\x10\
+    \x01\x12\x0e\n\nPushNotice\x10\x022\xa7\x06\n\x0egatewayService\x12]\n\
+    \x18GatewayGetUserConnection\x12\x1f.pb.GatewayGetUserConnectionReq\x1a\
+    \x20.pb.GatewayGetUserConnectionResp\x12l\n\x1dGatewayBatchGetUserConnec\
+    tion\x12$.pb.GatewayBatchGetUserConnectionReq\x1a%.pb.GatewayBatchGetUse\
+    rConnectionResp\x12i\n\x1cGatewayGetConnectionByFilter\x12#.pb.GatewayGe\
+    tConnectionByFilterReq\x1a$.pb.GatewayGetConnectionByFilterResp\x12Q\n\
+    \x14GatewayWriteDataToWs\x12\x1b.pb.GatewayWriteDataToWsReq\x1a\x1c.pb.G\
+    atewayWriteDataToWsResp\x12_\n\x1bGatewayWriteDataToWsWrapper\x12\".pb.G\
+    atewayWriteDataToWsWrapperReq\x1a\x1c.pb.GatewayWriteDataToWsResp\x12<\n\
+    \rGatewayKickWs\x12\x14.pb.GatewayKickWsReq\x1a\x15.pb.GatewayKickWsResp\
+    \x12E\n\x10GatewayKeepAlive\x12\x17.pb.GatewayKeepAliveReq\x1a\x18.pb.Ga\
+    tewayKeepAliveResp\x12E\n\x10VerifyConnection\x12\x17.pb.VerifyConnectio\
+    nReq\x1a\x18.pb.VerifyConnectionResp\x12]\n\x18AuthenticationConnection\
+    \x12\x1f.pb.AuthenticationConnectionReq\x1a\x20.pb.AuthenticationConnect\
+    ionRespB\x06Z\x04./pbJ\xe11\n\x07\x12\x05\0\0\xb5\x01\x01\n\x08\n\x01\
+    \x0c\x12\x03\0\0\x12\n\x08\n\x01\x02\x12\x03\x01\0\x0b\n\x08\n\x01\x08\
+    \x12\x03\x02\0\x1b\n\t\n\x02\x08\x0b\x12\x03\x02\0\x1b\n\t\n\x02\x03\0\
+    \x12\x03\x03\0\x16\n7\n\x02\x04\0\x12\x04\x06\0\x0b\x01\x1a+GatewayApiRe\
+    quest\x20http/\xe7\xa7\x81\xe6\x9c\x89\xe5\x8d\x8f\xe8\xae\xae\x20\xe8\
+    \xaf\xb7\xe6\xb1\x82\n\n\n\n\x03\x04\0\x01\x12\x03\x06\x08\x19\n\x0b\n\
+    \x04\x04\0\x02\0\x12\x03\x07\x02\x1b\n\x0c\n\x05\x04\0\x02\0\x06\x12\x03\
+    \x07\x02\x0f\n\x0c\n\x05\x04\0\x02\0\x01\x12\x03\x07\x10\x16\n\x0c\n\x05\
+    \x04\0\x02\0\x03\x12\x03\x07\x19\x1a\n\x0b\n\x04\x04\0\x02\x01\x12\x03\
+    \x08\x02\x17\n\x0c\n\x05\x04\0\x02\x01\x05\x12\x03\x08\x02\x08\n\x0c\n\
+    \x05\x04\0\x02\x01\x01\x12\x03\x08\t\x12\n\x0c\n\x05\x04\0\x02\x01\x03\
+    \x12\x03\x08\x15\x16\n\x0b\n\x04\x04\0\x02\x02\x12\x03\t\x02\x12\n\x0c\n\
+    \x05\x04\0\x02\x02\x05\x12\x03\t\x02\x08\n\x0c\n\x05\x04\0\x02\x02\x01\
+    \x12\x03\t\t\r\n\x0c\n\x05\x04\0\x02\x02\x03\x12\x03\t\x10\x11\n\x0b\n\
+    \x04\x04\0\x02\x03\x12\x03\n\x02\x11\n\x0c\n\x05\x04\0\x02\x03\x05\x12\
+    \x03\n\x02\x07\n\x0c\n\x05\x04\0\x02\x03\x01\x12\x03\n\x08\x0c\n\x0c\n\
+    \x05\x04\0\x02\x03\x03\x12\x03\n\x0f\x10\n8\n\x02\x04\x01\x12\x04\x0e\0\
+    \x13\x01\x1a,GatewayApiResponse\x20http/\xe7\xa7\x81\xe6\x9c\x89\xe5\x8d\
+    \x8f\xe8\xae\xae\x20\xe5\x93\x8d\xe5\xba\x94\n\n\n\n\x03\x04\x01\x01\x12\
+    \x03\x0e\x08\x1a\n\x0b\n\x04\x04\x01\x02\0\x12\x03\x0f\x02\x1c\n\x0c\n\
+    \x05\x04\x01\x02\0\x06\x12\x03\x0f\x02\x10\n\x0c\n\x05\x04\x01\x02\0\x01\
+    \x12\x03\x0f\x11\x17\n\x0c\n\x05\x04\x01\x02\0\x03\x12\x03\x0f\x1a\x1b\n\
+    \x0b\n\x04\x04\x01\x02\x01\x12\x03\x10\x02\x17\n\x0c\n\x05\x04\x01\x02\
+    \x01\x05\x12\x03\x10\x02\x08\n\x0c\n\x05\x04\x01\x02\x01\x01\x12\x03\x10\
+    \t\x12\n\x0c\n\x05\x04\x01\x02\x01\x03\x12\x03\x10\x15\x16\n\x0b\n\x04\
+    \x04\x01\x02\x02\x12\x03\x11\x02\x12\n\x0c\n\x05\x04\x01\x02\x02\x05\x12\
+    \x03\x11\x02\x08\n\x0c\n\x05\x04\x01\x02\x02\x01\x12\x03\x11\t\r\n\x0c\n\
+    \x05\x04\x01\x02\x02\x03\x12\x03\x11\x10\x11\n\x0b\n\x04\x04\x01\x02\x03\
+    \x12\x03\x12\x02\x11\n\x0c\n\x05\x04\x01\x02\x03\x05\x12\x03\x12\x02\x07\
+    \n\x0c\n\x05\x04\x01\x02\x03\x01\x12\x03\x12\x08\x0c\n\x0c\n\x05\x04\x01\
+    \x02\x03\x03\x12\x03\x12\x0f\x10\n4\n\x02\x05\0\x12\x04\x16\0\x1d\x01\
+    \x1a(GatewayWriteDataType\x20\xe5\x86\x99\xe5\x85\xa5\xe6\x95\xb0\xe6\
+    \x8d\xae\xe7\xb1\xbb\xe5\x9e\x8b\n\n\n\n\x03\x05\0\x01\x12\x03\x16\x05\
+    \x19\n\x1a\n\x04\x05\0\x02\0\x12\x03\x18\x02\x0f\x1a\r\xe8\xbf\x94\xe5\
+    \x9b\x9e\xe5\x93\x8d\xe5\xba\x94\n\n\x0c\n\x05\x05\0\x02\0\x01\x12\x03\
+    \x18\x02\n\n\x0c\n\x05\x05\0\x02\0\x02\x12\x03\x18\r\x0e\n!\n\x04\x05\0\
+    \x02\x01\x12\x03\x1a\x02\x12\x1a\x14\xe4\xb8\xbb\xe5\x8a\xa8\xe6\x8e\xa8\
+    \xe9\x80\x81message\n\n\x0c\n\x05\x05\0\x02\x01\x01\x12\x03\x1a\x02\r\n\
+    \x0c\n\x05\x05\0\x02\x01\x02\x12\x03\x1a\x10\x11\n\x20\n\x04\x05\0\x02\
+    \x02\x12\x03\x1c\x02\x11\x1a\x13\xe4\xb8\xbb\xe5\x8a\xa8\xe6\x8e\xa8\xe9\
+    \x80\x81notice\n\n\x0c\n\x05\x05\0\x02\x02\x01\x12\x03\x1c\x02\x0c\n\x0c\
+    \n\x05\x05\0\x02\x02\x02\x12\x03\x1c\x0f\x10\n7\n\x02\x04\x02\x12\x04\
+    \x20\0)\x01\x1a+GatewayWriteDataContent\x20\xe5\x86\x99\xe5\x85\xa5\xe6\
+    \x95\xb0\xe6\x8d\xae\xe5\x86\x85\xe5\xae\xb9\n\n\n\n\x03\x04\x02\x01\x12\
+    \x03\x20\x08\x1f\n\x20\n\x04\x04\x02\x02\0\x12\x03\"\x02$\x1a\x13\xe5\
+    \x86\x99\xe5\x85\xa5\xe6\x95\xb0\xe6\x8d\xae\xe7\xb1\xbb\xe5\x9e\x8b\n\n\
+    \x0c\n\x05\x04\x02\x02\0\x06\x12\x03\"\x02\x16\n\x0c\n\x05\x04\x02\x02\0\
+    \x01\x12\x03\"\x17\x1f\n\x0c\n\x05\x04\x02\x02\0\x03\x12\x03\"\"#\n\x14\
+    \n\x04\x04\x02\x02\x01\x12\x03$\x02+\x1a\x07\xe5\x93\x8d\xe5\xba\x94\n\n\
+    \x0c\n\x05\x04\x02\x02\x01\x04\x12\x03$\x02\n\n\x0c\n\x05\x04\x02\x02\
+    \x01\x06\x12\x03$\x0b\x1d\n\x0c\n\x05\x04\x02\x02\x01\x01\x12\x03$\x1e&\
+    \n\x0c\n\x05\x04\x02\x02\x01\x03\x12\x03$)*\n!\n\x04\x04\x02\x02\x02\x12\
+    \x03&\x02\x1f\x1a\x14\xe4\xb8\xbb\xe5\x8a\xa8\xe6\x8e\xa8\xe9\x80\x81mes\
+    sage\n\n\x0c\n\x05\x04\x02\x02\x02\x04\x12\x03&\x02\n\n\x0c\n\x05\x04\
+    \x02\x02\x02\x06\x12\x03&\x0b\x12\n\x0c\n\x05\x04\x02\x02\x02\x01\x12\
+    \x03&\x13\x1a\n\x0c\n\x05\x04\x02\x02\x02\x03\x12\x03&\x1d\x1e\n\x20\n\
+    \x04\x04\x02\x02\x03\x12\x03(\x02\x1d\x1a\x13\xe4\xb8\xbb\xe5\x8a\xa8\
+    \xe6\x8e\xa8\xe9\x80\x81notice\n\n\x0c\n\x05\x04\x02\x02\x03\x04\x12\x03\
+    (\x02\n\n\x0c\n\x05\x04\x02\x02\x03\x06\x12\x03(\x0b\x11\n\x0c\n\x05\x04\
+    \x02\x02\x03\x01\x12\x03(\x12\x18\n\x0c\n\x05\x04\x02\x02\x03\x03\x12\
+    \x03(\x1b\x1c\n$\n\x02\x04\x03\x12\x04,\00\x01\x1a\x18LongConnection\x20\
+    ws\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\x03\x01\x12\x03,\x08\x16\n\
+    \x0b\n\x04\x04\x03\x02\0\x12\x03-\x02\x1b\n\x0c\n\x05\x04\x03\x02\0\x06\
+    \x12\x03-\x02\x0f\n\x0c\n\x05\x04\x03\x02\0\x01\x12\x03-\x10\x16\n\x0c\n\
+    \x05\x04\x03\x02\0\x03\x12\x03-\x19\x1a\n\x0b\n\x04\x04\x03\x02\x01\x12\
+    \x03.\x02\x13\n\x0c\n\x05\x04\x03\x02\x01\x05\x12\x03.\x02\x08\n\x0c\n\
+    \x05\x04\x03\x02\x01\x01\x12\x03.\t\x0e\n\x0c\n\x05\x04\x03\x02\x01\x03\
+    \x12\x03.\x11\x12\n\x0b\n\x04\x04\x03\x02\x02\x12\x03/\x02\x18\n\x0c\n\
+    \x05\x04\x03\x02\x02\x05\x12\x03/\x02\x07\n\x0c\n\x05\x04\x03\x02\x02\
+    \x01\x12\x03/\x08\x13\n\x0c\n\x05\x04\x03\x02\x02\x03\x12\x03/\x16\x17\n\
+    >\n\x02\x04\x04\x12\x043\06\x01\x1a2GatewayGetUserConnectionReq\x20\xe8\
+    \x8e\xb7\xe5\x8f\x96\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\xe6\
+    \x8e\xa5\n\n\n\n\x03\x04\x04\x01\x12\x033\x08#\n\x0b\n\x04\x04\x04\x02\0\
+    \x12\x034\x02\x1b\n\x0c\n\x05\x04\x04\x02\0\x06\x12\x034\x02\x0f\n\x0c\n\
+    \x05\x04\x04\x02\0\x01\x12\x034\x10\x16\n\x0c\n\x05\x04\x04\x02\0\x03\
+    \x12\x034\x19\x1a\n\x0b\n\x04\x04\x04\x02\x01\x12\x035\x02\x14\n\x0c\n\
+    \x05\x04\x04\x02\x01\x05\x12\x035\x02\x08\n\x0c\n\x05\x04\x04\x02\x01\
+    \x01\x12\x035\t\x0f\n\x0c\n\x05\x04\x04\x02\x01\x03\x12\x035\x12\x13\n\n\
+    \n\x02\x04\x05\x12\x048\0;\x01\n\n\n\x03\x04\x05\x01\x12\x038\x08$\n\x0b\
+    \n\x04\x04\x05\x02\0\x12\x039\x02\x1c\n\x0c\n\x05\x04\x05\x02\0\x06\x12\
+    \x039\x02\x10\n\x0c\n\x05\x04\x05\x02\0\x01\x12\x039\x11\x17\n\x0c\n\x05\
+    \x04\x05\x02\0\x03\x12\x039\x1a\x1b\n\x0b\n\x04\x04\x05\x02\x01\x12\x03:\
+    \x02*\n\x0c\n\x05\x04\x05\x02\x01\x04\x12\x03:\x02\n\n\x0c\n\x05\x04\x05\
+    \x02\x01\x06\x12\x03:\x0b\x19\n\x0c\n\x05\x04\x05\x02\x01\x01\x12\x03:\
+    \x1a%\n\x0c\n\x05\x04\x05\x02\x01\x03\x12\x03:()\nI\n\x02\x04\x06\x12\
+    \x04>\0A\x01\x1a=GatewayBatchGetUserConnectionReq\x20\xe6\x89\xb9\xe9\
+    \x87\x8f\xe8\x8e\xb7\xe5\x8f\x96\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\
+    \xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\x06\x01\x12\x03>\x08(\n\x0b\n\x04\
+    \x04\x06\x02\0\x12\x03?\x02\x1b\n\x0c\n\x05\x04\x06\x02\0\x06\x12\x03?\
+    \x02\x0f\n\x0c\n\x05\x04\x06\x02\0\x01\x12\x03?\x10\x16\n\x0c\n\x05\x04\
+    \x06\x02\0\x03\x12\x03?\x19\x1a\n\x0b\n\x04\x04\x06\x02\x01\x12\x03@\x02\
+    \x1e\n\x0c\n\x05\x04\x06\x02\x01\x04\x12\x03@\x02\n\n\x0c\n\x05\x04\x06\
+    \x02\x01\x05\x12\x03@\x0b\x11\n\x0c\n\x05\x04\x06\x02\x01\x01\x12\x03@\
+    \x12\x19\n\x0c\n\x05\x04\x06\x02\x01\x03\x12\x03@\x1c\x1d\n\n\n\x02\x04\
+    \x07\x12\x04C\0F\x01\n\n\n\x03\x04\x07\x01\x12\x03C\x08)\n\x0b\n\x04\x04\
+    \x07\x02\0\x12\x03D\x02\x1c\n\x0c\n\x05\x04\x07\x02\0\x06\x12\x03D\x02\
+    \x10\n\x0c\n\x05\x04\x07\x02\0\x01\x12\x03D\x11\x17\n\x0c\n\x05\x04\x07\
+    \x02\0\x03\x12\x03D\x1a\x1b\n\x0b\n\x04\x04\x07\x02\x01\x12\x03E\x02*\n\
+    \x0c\n\x05\x04\x07\x02\x01\x04\x12\x03E\x02\n\n\x0c\n\x05\x04\x07\x02\
+    \x01\x06\x12\x03E\x0b\x19\n\x0c\n\x05\x04\x07\x02\x01\x01\x12\x03E\x1a%\
+    \n\x0c\n\x05\x04\x07\x02\x01\x03\x12\x03E()\n\n\n\x02\x04\x08\x12\x04H\0\
+    J\x01\n\n\n\x03\x04\x08\x01\x12\x03H\x08\"\n\x0b\n\x04\x04\x08\x02\0\x12\
+    \x03I\x02\x1e\n\x0c\n\x05\x04\x08\x02\0\x04\x12\x03I\x02\n\n\x0c\n\x05\
+    \x04\x08\x02\0\x05\x12\x03I\x0b\x11\n\x0c\n\x05\x04\x08\x02\0\x01\x12\
+    \x03I\x12\x19\n\x0c\n\x05\x04\x08\x02\0\x03\x12\x03I\x1c\x1d\nK\n\x02\
+    \x04\t\x12\x04M\0P\x01\x1a?GatewayGetConnectionByFilterReq\x20\xe6\xa0\
+    \xb9\xe6\x8d\xae\xe8\xbf\x87\xe6\xbb\xa4\xe6\x9d\xa1\xe4\xbb\xb6\xe8\x8e\
+    \xb7\xe5\x8f\x96\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\t\x01\x12\x03M\
+    \x08'\n\x0b\n\x04\x04\t\x02\0\x12\x03N\x02\x1b\n\x0c\n\x05\x04\t\x02\0\
+    \x06\x12\x03N\x02\x0f\n\x0c\n\x05\x04\t\x02\0\x01\x12\x03N\x10\x16\n\x0c\
+    \n\x05\x04\t\x02\0\x03\x12\x03N\x19\x1a\n\x0b\n\x04\x04\t\x02\x01\x12\
+    \x03O\x02(\n\x0c\n\x05\x04\t\x02\x01\x06\x12\x03O\x02\x1c\n\x0c\n\x05\
+    \x04\t\x02\x01\x01\x12\x03O\x1d#\n\x0c\n\x05\x04\t\x02\x01\x03\x12\x03O&\
+    '\n\n\n\x02\x04\n\x12\x04R\0U\x01\n\n\n\x03\x04\n\x01\x12\x03R\x08(\n\
+    \x0b\n\x04\x04\n\x02\0\x12\x03S\x02\x1c\n\x0c\n\x05\x04\n\x02\0\x06\x12\
+    \x03S\x02\x10\n\x0c\n\x05\x04\n\x02\0\x01\x12\x03S\x11\x17\n\x0c\n\x05\
+    \x04\n\x02\0\x03\x12\x03S\x1a\x1b\n\x0b\n\x04\x04\n\x02\x01\x12\x03T\x02\
+    *\n\x0c\n\x05\x04\n\x02\x01\x04\x12\x03T\x02\n\n\x0c\n\x05\x04\n\x02\x01\
+    \x06\x12\x03T\x0b\x19\n\x0c\n\x05\x04\n\x02\x01\x01\x12\x03T\x1a%\n\x0c\
+    \n\x05\x04\n\x02\x01\x03\x12\x03T()\n<\n\x02\x04\x0b\x12\x04X\0\\\x01\
+    \x1a0GatewayWriteDataToWsReq\x20\xe5\x86\x99\xe5\x85\xa5\xe6\x95\xb0\xe6\
+    \x8d\xae\xe5\x88\xb0ws\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\x0b\x01\
+    \x12\x03X\x08\x1f\n\x0b\n\x04\x04\x0b\x02\0\x12\x03Y\x02\x1b\n\x0c\n\x05\
+    \x04\x0b\x02\0\x06\x12\x03Y\x02\x0f\n\x0c\n\x05\x04\x0b\x02\0\x01\x12\
+    \x03Y\x10\x16\n\x0c\n\x05\x04\x0b\x02\0\x03\x12\x03Y\x19\x1a\n\x0b\n\x04\
+    \x04\x0b\x02\x01\x12\x03Z\x02(\n\x0c\n\x05\x04\x0b\x02\x01\x06\x12\x03Z\
+    \x02\x1c\n\x0c\n\x05\x04\x0b\x02\x01\x01\x12\x03Z\x1d#\n\x0c\n\x05\x04\
+    \x0b\x02\x01\x03\x12\x03Z&'\n\x0b\n\x04\x04\x0b\x02\x02\x12\x03[\x02#\n\
+    \x0c\n\x05\x04\x0b\x02\x02\x06\x12\x03[\x02\x19\n\x0c\n\x05\x04\x0b\x02\
+    \x02\x01\x12\x03[\x1a\x1e\n\x0c\n\x05\x04\x0b\x02\x02\x03\x12\x03[!\"\n\
+    \n\n\x02\x04\x0c\x12\x04^\0a\x01\n\n\n\x03\x04\x0c\x01\x12\x03^\x08\x20\
+    \n\x0b\n\x04\x04\x0c\x02\0\x12\x03_\x02\x1c\n\x0c\n\x05\x04\x0c\x02\0\
+    \x06\x12\x03_\x02\x10\n\x0c\n\x05\x04\x0c\x02\0\x01\x12\x03_\x11\x17\n\
+    \x0c\n\x05\x04\x0c\x02\0\x03\x12\x03_\x1a\x1b\n\x0b\n\x04\x04\x0c\x02\
+    \x01\x12\x03`\x021\n\x0c\n\x05\x04\x0c\x02\x01\x04\x12\x03`\x02\n\n\x0c\
+    \n\x05\x04\x0c\x02\x01\x06\x12\x03`\x0b\x19\n\x0c\n\x05\x04\x0c\x02\x01\
+    \x01\x12\x03`\x1a,\n\x0c\n\x05\x04\x0c\x02\x01\x03\x12\x03`/0\nC\n\x02\
+    \x04\r\x12\x04d\0h\x01\x1a7GatewayWriteDataToWsWrapperReq\x20\xe5\x86\
+    \x99\xe5\x85\xa5\xe6\x95\xb0\xe6\x8d\xae\xe5\x88\xb0ws\xe8\xbf\x9e\xe6\
+    \x8e\xa5\n\n\n\n\x03\x04\r\x01\x12\x03d\x08&\n\x0b\n\x04\x04\r\x02\0\x12\
+    \x03e\x02\x1b\n\x0c\n\x05\x04\r\x02\0\x06\x12\x03e\x02\x0f\n\x0c\n\x05\
+    \x04\r\x02\0\x01\x12\x03e\x10\x16\n\x0c\n\x05\x04\r\x02\0\x03\x12\x03e\
+    \x19\x1a\n\x0b\n\x04\x04\r\x02\x01\x12\x03f\x02(\n\x0c\n\x05\x04\r\x02\
+    \x01\x06\x12\x03f\x02\x1c\n\x0c\n\x05\x04\r\x02\x01\x01\x12\x03f\x1d#\n\
+    \x0c\n\x05\x04\r\x02\x01\x03\x12\x03f&'\n\x0b\n\x04\x04\r\x02\x02\x12\
+    \x03g\x02#\n\x0c\n\x05\x04\r\x02\x02\x06\x12\x03g\x02\x19\n\x0c\n\x05\
+    \x04\r\x02\x02\x01\x12\x03g\x1a\x1e\n\x0c\n\x05\x04\r\x02\x02\x03\x12\
+    \x03g!\"\n,\n\x02\x04\x0e\x12\x04k\0p\x01\x1a\x20GatewayKickWsReq\x20\
+    \xe8\xb8\xa2\xe5\x87\xbaws\xe8\xbf\x9e\xe6\x8e\xa5\n\n\n\n\x03\x04\x0e\
+    \x01\x12\x03k\x08\x18\n\x0b\n\x04\x04\x0e\x02\0\x12\x03l\x02\x1b\n\x0c\n\
+    \x05\x04\x0e\x02\0\x06\x12\x03l\x02\x0f\n\x0c\n\x05\x04\x0e\x02\0\x01\
+    \x12\x03l\x10\x16\n\x0c\n\x05\x04\x0e\x02\0\x03\x12\x03l\x19\x1a\n\x0b\n\
+    \x04\x04\x0e\x02\x01\x12\x03m\x02(\n\x0c\n\x05\x04\x0e\x02\x01\x06\x12\
+    \x03m\x02\x1c\n\x0c\n\x05\x04\x0e\x02\x01\x01\x12\x03m\x1d#\n\x0c\n\x05\
+    \x04\x0e\x02\x01\x03\x12\x03m&'\n\x0b\n\x04\x04\x0e\x02\x02\x12\x03n\x02\
+    )\n\x0c\n\x05\x04\x0e\x02\x02\x06\x12\x03n\x02\x1a\n\x0c\n\x05\x04\x0e\
+    \x02\x02\x01\x12\x03n\x1b$\n\x0c\n\x05\x04\x0e\x02\x02\x03\x12\x03n'(\n\
+    \x0b\n\x04\x04\x0e\x02\x03\x12\x03o\x02\x19\n\x0c\n\x05\x04\x0e\x02\x03\
+    \x05\x12\x03o\x02\x08\n\x0c\n\x05\x04\x0e\x02\x03\x01\x12\x03o\t\x14\n\
+    \x0c\n\x05\x04\x0e\x02\x03\x03\x12\x03o\x17\x18\n\n\n\x02\x04\x0f\x12\
+    \x04r\0u\x01\n\n\n\x03\x04\x0f\x01\x12\x03r\x08\x19\n\x0b\n\x04\x04\x0f\
+    \x02\0\x12\x03s\x02\x1c\n\x0c\n\x05\x04\x0f\x02\0\x06\x12\x03s\x02\x10\n\
+    \x0c\n\x05\x04\x0f\x02\0\x01\x12\x03s\x11\x17\n\x0c\n\x05\x04\x0f\x02\0\
+    \x03\x12\x03s\x1a\x1b\n\x0b\n\x04\x04\x0f\x02\x01\x12\x03t\x021\n\x0c\n\
+    \x05\x04\x0f\x02\x01\x04\x12\x03t\x02\n\n\x0c\n\x05\x04\x0f\x02\x01\x06\
+    \x12\x03t\x0b\x19\n\x0c\n\x05\x04\x0f\x02\x01\x01\x12\x03t\x1a,\n\x0c\n\
+    \x05\x04\x0f\x02\x01\x03\x12\x03t/0\n-\n\x02\x04\x10\x12\x04x\0z\x01\x1a\
+    !GatewayKeepAliveReq\x20\xe4\xbf\x9d\xe6\x8c\x81\xe8\xbf\x9e\xe6\x8e\xa5\
+    \n\n\n\n\x03\x04\x10\x01\x12\x03x\x08\x1b\n\x0b\n\x04\x04\x10\x02\0\x12\
+    \x03y\x02\x1b\n\x0c\n\x05\x04\x10\x02\0\x06\x12\x03y\x02\x0f\n\x0c\n\x05\
+    \x04\x10\x02\0\x01\x12\x03y\x10\x16\n\x0c\n\x05\x04\x10\x02\0\x03\x12\
+    \x03y\x19\x1a\n\n\n\x02\x04\x11\x12\x04|\0~\x01\n\n\n\x03\x04\x11\x01\
+    \x12\x03|\x08\x1c\n\x0b\n\x04\x04\x11\x02\0\x12\x03}\x02\x1c\n\x0c\n\x05\
+    \x04\x11\x02\0\x06\x12\x03}\x02\x10\n\x0c\n\x05\x04\x11\x02\0\x01\x12\
+    \x03}\x11\x17\n\x0c\n\x05\x04\x11\x02\0\x03\x12\x03}\x1a\x1b\n{\n\x02\
+    \x04\x12\x12\x06\x81\x01\0\x84\x01\x01\x1amVerifyConnectionReq\x20\xe9\
+    \xaa\x8c\xe8\xaf\x81\xe8\xbf\x9e\xe6\x8e\xa5\x20\xe5\xae\xa2\xe6\x88\xb7\
+    \xe7\xab\xaf\xe6\x8b\xbf\xe7\x9d\x80\xe8\x87\xaa\xe5\xb7\xb1\xe7\x9a\x84\
+    \xe5\x85\xac\xe9\x92\xa5\xef\xbc\x8c\xe8\xaf\xb7\xe6\xb1\x82\xe7\xbd\x91\
+    \xe5\x85\xb3\xef\xbc\x8c\xe7\xbd\x91\xe5\x85\xb3\xe8\xbf\x94\xe5\x9b\x9e\
+    \xe8\x87\xaa\xe5\xb7\xb1\xe7\x9a\x84\xe5\x85\xac\xe9\x92\xa5\n\n\x0b\n\
+    \x03\x04\x12\x01\x12\x04\x81\x01\x08\x1b\n\x0c\n\x04\x04\x12\x02\0\x12\
+    \x04\x82\x01\x02\x1b\n\r\n\x05\x04\x12\x02\0\x06\x12\x04\x82\x01\x02\x0f\
+    \n\r\n\x05\x04\x12\x02\0\x01\x12\x04\x82\x01\x10\x16\n\r\n\x05\x04\x12\
+    \x02\0\x03\x12\x04\x82\x01\x19\x1a\n\x0c\n\x04\x04\x12\x02\x01\x12\x04\
+    \x83\x01\x02\x16\n\r\n\x05\x04\x12\x02\x01\x05\x12\x04\x83\x01\x02\x07\n\
+    \r\n\x05\x04\x12\x02\x01\x01\x12\x04\x83\x01\x08\x11\n\r\n\x05\x04\x12\
+    \x02\x01\x03\x12\x04\x83\x01\x14\x15\n\x0c\n\x02\x04\x13\x12\x06\x86\x01\
+    \0\x89\x01\x01\n\x0b\n\x03\x04\x13\x01\x12\x04\x86\x01\x08\x1c\n\x0c\n\
+    \x04\x04\x13\x02\0\x12\x04\x87\x01\x02\x1c\n\r\n\x05\x04\x13\x02\0\x06\
+    \x12\x04\x87\x01\x02\x10\n\r\n\x05\x04\x13\x02\0\x01\x12\x04\x87\x01\x11\
+    \x17\n\r\n\x05\x04\x13\x02\0\x03\x12\x04\x87\x01\x1a\x1b\n\x0c\n\x04\x04\
+    \x13\x02\x01\x12\x04\x88\x01\x02\x16\n\r\n\x05\x04\x13\x02\x01\x05\x12\
+    \x04\x88\x01\x02\x07\n\r\n\x05\x04\x13\x02\x01\x01\x12\x04\x88\x01\x08\
+    \x11\n\r\n\x05\x04\x13\x02\x01\x03\x12\x04\x88\x01\x14\x15\nb\n\x02\x04\
+    \x14\x12\x06\x8c\x01\0\x90\x01\x01\x1aTAuthenticationConnectionReq\x20\
+    \xe9\xaa\x8c\xe8\xaf\x81\xe8\xbf\x9e\xe6\x8e\xa5\x20\xe5\xae\xa2\xe6\x88\
+    \xb7\xe7\xab\xaf\xe6\x8b\xbf\xe7\x9d\x80userId\x20token\xef\xbc\x8c\xe9\
+    \x89\xb4\xe6\x9d\x83\xe8\xbf\x9e\xe6\x8e\xa5\n\n\x0b\n\x03\x04\x14\x01\
+    \x12\x04\x8c\x01\x08#\n\x0c\n\x04\x04\x14\x02\0\x12\x04\x8d\x01\x02\x1b\
+    \n\r\n\x05\x04\x14\x02\0\x06\x12\x04\x8d\x01\x02\x0f\n\r\n\x05\x04\x14\
+    \x02\0\x01\x12\x04\x8d\x01\x10\x16\n\r\n\x05\x04\x14\x02\0\x03\x12\x04\
+    \x8d\x01\x19\x1a\n\x0c\n\x04\x04\x14\x02\x01\x12\x04\x8e\x01\x02\x14\n\r\
+    \n\x05\x04\x14\x02\x01\x05\x12\x04\x8e\x01\x02\x08\n\r\n\x05\x04\x14\x02\
+    \x01\x01\x12\x04\x8e\x01\t\x0f\n\r\n\x05\x04\x14\x02\x01\x03\x12\x04\x8e\
+    \x01\x12\x13\n\x0c\n\x04\x04\x14\x02\x02\x12\x04\x8f\x01\x02\x13\n\r\n\
+    \x05\x04\x14\x02\x02\x05\x12\x04\x8f\x01\x02\x08\n\r\n\x05\x04\x14\x02\
+    \x02\x01\x12\x04\x8f\x01\t\x0e\n\r\n\x05\x04\x14\x02\x02\x03\x12\x04\x8f\
+    \x01\x11\x12\n\x0c\n\x02\x04\x15\x12\x06\x92\x01\0\x95\x01\x01\n\x0b\n\
+    \x03\x04\x15\x01\x12\x04\x92\x01\x08$\n\x0c\n\x04\x04\x15\x02\0\x12\x04\
+    \x93\x01\x02\x1c\n\r\n\x05\x04\x15\x02\0\x06\x12\x04\x93\x01\x02\x10\n\r\
+    \n\x05\x04\x15\x02\0\x01\x12\x04\x93\x01\x11\x17\n\r\n\x05\x04\x15\x02\0\
+    \x03\x12\x04\x93\x01\x1a\x1b\n\x0c\n\x04\x04\x15\x02\x01\x12\x04\x94\x01\
+    \x02\x13\n\r\n\x05\x04\x15\x02\x01\x05\x12\x04\x94\x01\x02\x06\n\r\n\x05\
+    \x04\x15\x02\x01\x01\x12\x04\x94\x01\x07\x0e\n\r\n\x05\x04\x15\x02\x01\
+    \x03\x12\x04\x94\x01\x11\x12\n\x0c\n\x02\x06\0\x12\x06\x97\x01\0\xb5\x01\
+    \x01\n\x0b\n\x03\x06\0\x01\x12\x04\x97\x01\x08\x16\nm\n\x04\x06\0\x02\0\
+    \x12\x04\x9a\x01\x02c\x1a_\x20GatewayGetUserConnection\x20\xe8\x8e\xb7\
     \xe5\x8f\x96\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\xe6\x8e\xa5\
     \n\x20\xe4\xba\x8c\xe6\xac\xa1\xe5\xbc\x80\xe5\x8f\x91\xe4\xba\xba\xe5\
     \x91\x98\xe4\xb8\x8d\xe5\xbb\xba\xe8\xae\xae\xe4\xbf\xae\xe6\x94\xb9\xe6\
     \xad\xa4\xe5\xa4\x84\xe9\x80\xbb\xe8\xbe\x91\n\n\r\n\x05\x06\0\x02\0\x01\
-    \x12\x04\x82\x01\x06\x1e\n\r\n\x05\x06\0\x02\0\x02\x12\x04\x82\x01\x1f:\
-    \n\r\n\x05\x06\0\x02\0\x03\x12\x04\x82\x01Ea\nx\n\x04\x06\0\x02\x01\x12\
-    \x04\x85\x01\x02r\x1aj\x20GatewayBatchGetUserConnection\x20\xe6\x89\xb9\
+    \x12\x04\x9a\x01\x06\x1e\n\r\n\x05\x06\0\x02\0\x02\x12\x04\x9a\x01\x1f:\
+    \n\r\n\x05\x06\0\x02\0\x03\x12\x04\x9a\x01Ea\nx\n\x04\x06\0\x02\x01\x12\
+    \x04\x9d\x01\x02r\x1aj\x20GatewayBatchGetUserConnection\x20\xe6\x89\xb9\
     \xe9\x87\x8f\xe8\x8e\xb7\xe5\x8f\x96\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\
     \xe8\xbf\x9e\xe6\x8e\xa5\n\x20\xe4\xba\x8c\xe6\xac\xa1\xe5\xbc\x80\xe5\
     \x8f\x91\xe4\xba\xba\xe5\x91\x98\xe5\xbb\xba\xe8\xae\xae\xe4\xb8\x8d\xe4\
     \xbf\xae\xe6\x94\xb9\xe6\xad\xa4\xe5\xa4\x84\xe9\x80\xbb\xe8\xbe\x91\n\n\
-    \r\n\x05\x06\0\x02\x01\x01\x12\x04\x85\x01\x06#\n\r\n\x05\x06\0\x02\x01\
-    \x02\x12\x04\x85\x01$D\n\r\n\x05\x06\0\x02\x01\x03\x12\x04\x85\x01Op\nz\
-    \n\x04\x06\0\x02\x02\x12\x04\x88\x01\x02o\x1al\x20GatewayGetConnectionBy\
+    \r\n\x05\x06\0\x02\x01\x01\x12\x04\x9d\x01\x06#\n\r\n\x05\x06\0\x02\x01\
+    \x02\x12\x04\x9d\x01$D\n\r\n\x05\x06\0\x02\x01\x03\x12\x04\x9d\x01Op\nz\
+    \n\x04\x06\0\x02\x02\x12\x04\xa0\x01\x02o\x1al\x20GatewayGetConnectionBy\
     Filter\x20\xe9\x80\x9a\xe8\xbf\x87\xe6\x9d\xa1\xe4\xbb\xb6\xe8\x8e\xb7\
     \xe5\x8f\x96\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\xe6\x8e\xa5\
     \n\x20\xe4\xba\x8c\xe6\xac\xa1\xe5\xbc\x80\xe5\x8f\x91\xe4\xba\xba\xe5\
     \x91\x98\xe5\x8f\xaf\xe4\xbb\xa5\xe5\xa2\x9e\xe5\x8a\xa0\xe8\xbf\x87\xe6\
     \xbb\xa4\xe6\x9d\xa1\xe4\xbb\xb6\n\n\r\n\x05\x06\0\x02\x02\x01\x12\x04\
-    \x88\x01\x06\"\n\r\n\x05\x06\0\x02\x02\x02\x12\x04\x88\x01#B\n\r\n\x05\
-    \x06\0\x02\x02\x03\x12\x04\x88\x01Mm\nr\n\x04\x06\0\x02\x03\x12\x04\x8b\
+    \xa0\x01\x06\"\n\r\n\x05\x06\0\x02\x02\x02\x12\x04\xa0\x01#B\n\r\n\x05\
+    \x06\0\x02\x02\x03\x12\x04\xa0\x01Mm\nr\n\x04\x06\0\x02\x03\x12\x04\xa3\
     \x01\x02W\x1ad\x20GatewayWriteDataToWs\x20\xe5\x90\x91\xe7\x94\xa8\xe6\
     \x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\xe6\x8e\xa5\xe5\x86\x99\xe5\x85\xa5\xe6\
     \x95\xb0\xe6\x8d\xae\n\x20\xe4\xba\x8c\xe6\xac\xa1\xe5\xbc\x80\xe5\x8f\
     \x91\xe4\xba\xba\xe5\x91\x98\xe4\xb8\x8d\xe5\xbb\xba\xe8\xae\xae\xe4\xbf\
     \xae\xe6\x94\xb9\xe6\xad\xa4\xe5\xa4\x84\xe9\x80\xbb\xe8\xbe\x91\n\n\r\n\
-    \x05\x06\0\x02\x03\x01\x12\x04\x8b\x01\x06\x1a\n\r\n\x05\x06\0\x02\x03\
-    \x02\x12\x04\x8b\x01\x1b2\n\r\n\x05\x06\0\x02\x03\x03\x12\x04\x8b\x01=U\
-    \ny\n\x04\x06\0\x02\x04\x12\x04\x8e\x01\x02e\x1ak\x20GatewayWriteDataToW\
+    \x05\x06\0\x02\x03\x01\x12\x04\xa3\x01\x06\x1a\n\r\n\x05\x06\0\x02\x03\
+    \x02\x12\x04\xa3\x01\x1b2\n\r\n\x05\x06\0\x02\x03\x03\x12\x04\xa3\x01=U\
+    \ny\n\x04\x06\0\x02\x04\x12\x04\xa6\x01\x02e\x1ak\x20GatewayWriteDataToW\
     sWrapper\x20\xe5\x90\x91\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\
     \xe6\x8e\xa5\xe5\x86\x99\xe5\x85\xa5\xe6\x95\xb0\xe6\x8d\xae\n\x20\xe4\
     \xba\x8c\xe6\xac\xa1\xe5\xbc\x80\xe5\x8f\x91\xe4\xba\xba\xe5\x91\x98\xe4\
     \xb8\x8d\xe5\xbb\xba\xe8\xae\xae\xe4\xbf\xae\xe6\x94\xb9\xe6\xad\xa4\xe5\
     \xa4\x84\xe9\x80\xbb\xe8\xbe\x91\n\n\r\n\x05\x06\0\x02\x04\x01\x12\x04\
-    \x8e\x01\x06!\n\r\n\x05\x06\0\x02\x04\x02\x12\x04\x8e\x01\"@\n\r\n\x05\
-    \x06\0\x02\x04\x03\x12\x04\x8e\x01Kc\n\xb3\x01\n\x04\x06\0\x02\x05\x12\
-    \x04\x92\x01\x02B\x1a\xa4\x01\x20GatewayKickWs\x20\xe8\xb8\xa2\xe5\x87\
+    \xa6\x01\x06!\n\r\n\x05\x06\0\x02\x04\x02\x12\x04\xa6\x01\"@\n\r\n\x05\
+    \x06\0\x02\x04\x03\x12\x04\xa6\x01Kc\n\xb3\x01\n\x04\x06\0\x02\x05\x12\
+    \x04\xaa\x01\x02B\x1a\xa4\x01\x20GatewayKickWs\x20\xe8\xb8\xa2\xe5\x87\
     \xba\xe7\x94\xa8\xe6\x88\xb7\xe7\x9a\x84\xe8\xbf\x9e\xe6\x8e\xa5\n\x20\
     \xe4\xba\x8c\xe6\xac\xa1\xe5\xbc\x80\xe5\x8f\x91\xe4\xba\xba\xe5\x91\x98\
     \xe5\x8f\xaf\xe4\xbb\xa5\xe5\x9c\xa8\xe6\xad\xa4\xe5\xa4\x84\xe4\xbf\xae\
@@ -3061,9 +3720,9 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \xa6\x82\xe8\xb8\xa2\xe5\x87\xba\xe8\xbf\x9e\xe6\x8e\xa5\xe4\xb9\x8b\xe5\
     \x89\x8d\xef\xbc\x8c\xe5\x85\x88\xe7\xbb\x99\xe7\x94\xa8\xe6\x88\xb7\xe5\
     \x8f\x91\xe9\x80\x81\xe4\xb8\x80\xe6\x9d\xa1\xe6\xb6\x88\xe6\x81\xaf\n\n\
-    \r\n\x05\x06\0\x02\x05\x01\x12\x04\x92\x01\x06\x13\n\r\n\x05\x06\0\x02\
-    \x05\x02\x12\x04\x92\x01\x14$\n\r\n\x05\x06\0\x02\x05\x03\x12\x04\x92\
-    \x01/@\n\xce\x01\n\x04\x06\0\x02\x06\x12\x04\x96\x01\x02K\x1a\xbf\x01\
+    \r\n\x05\x06\0\x02\x05\x01\x12\x04\xaa\x01\x06\x13\n\r\n\x05\x06\0\x02\
+    \x05\x02\x12\x04\xaa\x01\x14$\n\r\n\x05\x06\0\x02\x05\x03\x12\x04\xaa\
+    \x01/@\n\xce\x01\n\x04\x06\0\x02\x06\x12\x04\xae\x01\x02K\x1a\xbf\x01\
     \x20KeepAlive\x20\xe4\xbf\x9d\xe6\x8c\x81\xe8\xbf\x9e\xe6\x8e\xa5\n\x20\
     \xe5\xae\xa2\xe6\x88\xb7\xe7\xab\xaf\xe5\xbf\x85\xe9\xa1\xbb\xe6\xaf\x8f\
     \xe9\x9a\x94\x20config.Websocket.KeepAliveSecond\x20\xe7\xa7\x92\xe5\x8f\
@@ -3073,9 +3732,23 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \xe4\xbf\xae\xe6\x94\xb9\xe9\x80\xbb\xe8\xbe\x91\xef\xbc\x8c\xe6\xaf\x94\
     \xe5\xa6\x82\xe4\xb8\x80\xe8\x87\xb4\xe6\x80\xa7\xe7\xae\x97\xe6\xb3\x95\
     \xe5\xae\x89\xe5\x85\xa8\xe6\xa0\xa1\xe9\xaa\x8c\xe7\xad\x89\n\n\r\n\x05\
-    \x06\0\x02\x06\x01\x12\x04\x96\x01\x06\x16\n\r\n\x05\x06\0\x02\x06\x02\
-    \x12\x04\x96\x01\x17*\n\r\n\x05\x06\0\x02\x06\x03\x12\x04\x96\x015Ib\x06\
-    proto3\
+    \x06\0\x02\x06\x01\x12\x04\xae\x01\x06\x16\n\r\n\x05\x06\0\x02\x06\x02\
+    \x12\x04\xae\x01\x17*\n\r\n\x05\x06\0\x02\x06\x03\x12\x04\xae\x015I\nz\n\
+    \x04\x06\0\x02\x07\x12\x04\xb1\x01\x02K\x1al\x20VerifyConnection\x20\xe9\
+    \xaa\x8c\xe8\xaf\x81\xe8\xbf\x9e\xe6\x8e\xa5\n\x20\xe5\xae\xa2\xe6\x88\
+    \xb7\xe7\xab\xaf\xe6\x8b\xbf\xe7\x9d\x80\xe8\x87\xaa\xe5\xb7\xb1\xe7\x9a\
+    \x84\xe5\x85\xac\xe9\x92\xa5\xef\xbc\x8c\xe8\xaf\xb7\xe6\xb1\x82\xe7\xbd\
+    \x91\xe5\x85\xb3\xef\xbc\x8c\xe7\xbd\x91\xe5\x85\xb3\xe8\xbf\x94\xe5\x9b\
+    \x9e\xe8\x87\xaa\xe5\xb7\xb1\xe7\x9a\x84\xe5\x85\xac\xe9\x92\xa5\n\n\r\n\
+    \x05\x06\0\x02\x07\x01\x12\x04\xb1\x01\x06\x16\n\r\n\x05\x06\0\x02\x07\
+    \x02\x12\x04\xb1\x01\x17*\n\r\n\x05\x06\0\x02\x07\x03\x12\x04\xb1\x015I\
+    \na\n\x04\x06\0\x02\x08\x12\x04\xb4\x01\x02c\x1aS\x20AuthenticationConne\
+    ction\x20\xe9\xaa\x8c\xe8\xaf\x81\xe8\xbf\x9e\xe6\x8e\xa5\n\x20\xe5\xae\
+    \xa2\xe6\x88\xb7\xe7\xab\xaf\xe6\x8b\xbf\xe7\x9d\x80userId\x20token\xef\
+    \xbc\x8c\xe9\x89\xb4\xe6\x9d\x83\xe8\xbf\x9e\xe6\x8e\xa5\n\n\r\n\x05\x06\
+    \0\x02\x08\x01\x12\x04\xb4\x01\x06\x1e\n\r\n\x05\x06\0\x02\x08\x02\x12\
+    \x04\xb4\x01\x1f:\n\r\n\x05\x06\0\x02\x08\x03\x12\x04\xb4\x01Eab\x06prot\
+    o3\
 ";
 
 /// `FileDescriptorProto` object which was a source for this generated file
@@ -3094,11 +3767,11 @@ pub fn file_descriptor() -> &'static ::protobuf::reflect::FileDescriptor {
         let generated_file_descriptor = generated_file_descriptor_lazy.get(|| {
             let mut deps = ::std::vec::Vec::with_capacity(1);
             deps.push(super::common::file_descriptor().clone());
-            let mut messages = ::std::vec::Vec::with_capacity(18);
+            let mut messages = ::std::vec::Vec::with_capacity(22);
             messages.push(GatewayApiRequest::generated_message_descriptor_data());
             messages.push(GatewayApiResponse::generated_message_descriptor_data());
             messages.push(GatewayWriteDataContent::generated_message_descriptor_data());
-            messages.push(WsConnection::generated_message_descriptor_data());
+            messages.push(LongConnection::generated_message_descriptor_data());
             messages.push(GatewayGetUserConnectionReq::generated_message_descriptor_data());
             messages.push(GatewayGetUserConnectionResp::generated_message_descriptor_data());
             messages.push(GatewayBatchGetUserConnectionReq::generated_message_descriptor_data());
@@ -3113,6 +3786,10 @@ pub fn file_descriptor() -> &'static ::protobuf::reflect::FileDescriptor {
             messages.push(GatewayKickWsResp::generated_message_descriptor_data());
             messages.push(GatewayKeepAliveReq::generated_message_descriptor_data());
             messages.push(GatewayKeepAliveResp::generated_message_descriptor_data());
+            messages.push(VerifyConnectionReq::generated_message_descriptor_data());
+            messages.push(VerifyConnectionResp::generated_message_descriptor_data());
+            messages.push(AuthenticationConnectionReq::generated_message_descriptor_data());
+            messages.push(AuthenticationConnectionResp::generated_message_descriptor_data());
             let mut enums = ::std::vec::Vec::with_capacity(1);
             enums.push(GatewayWriteDataType::generated_enum_descriptor_data());
             ::protobuf::reflect::GeneratedFileDescriptor::new_generated(

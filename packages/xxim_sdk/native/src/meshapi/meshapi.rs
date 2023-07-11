@@ -1,3 +1,4 @@
+use std::f32::consts::E;
 use std::sync::{Arc, RwLock};
 use std::thread::{sleep, spawn};
 use std::time::Duration;
@@ -13,9 +14,9 @@ use crate::pb::{common, gateway};
 use crate::store::api_response::APIResponse;
 use prost::bytes::Bytes;
 use crate::pb::common::RequestHeader;
-use crate::pb::gateway::GatewayKeepAliveResp;
+use crate::pb::gateway::{AuthenticationConnectionResp, GatewayKeepAliveResp, VerifyConnectionResp};
 use crate::store::api_handler::{Error, ErrorCode};
-use crate::tool::crypto::{aes_decrypt, generate_key};
+use crate::tool::crypto::{aes_decrypt, aes_encrypt, generate_key, generate_shared_secret};
 use crate::tool::uuid::uuid;
 
 
@@ -29,60 +30,6 @@ impl MeshClient {
         let body = proto::marshal_box(req);
         let api_request = gateway::GatewayApiRequest {
             header: protobuf::MessageField::none(),
-            requestId: request_id.clone(),
-            path: path.clone(),
-            body,
-            special_fields: Default::default(),
-        };
-        let timeout_mills = match Config::get_config_or_none(instance_id.clone()) {
-            None => {
-                10 as u64
-            }
-            Some(config) => {
-                let config = config.read().unwrap().clone();
-                config.request_timeout_millisecond.clone() as u64
-            }
-        };
-
-        let receiver = APIResponse::new(request_id.clone(), Duration::from_millis(timeout_mills));
-
-        log::info(format!("mesh request: {}", path.clone()).as_str());
-        let mesh_request = MeshRequest::request(instance_id.clone(), api_request);
-        if mesh_request.is_err() {
-            let err = mesh_request.err().unwrap();
-            log::warn(format!("mesh request error: {}", err.message.clone()).as_str());
-            return Err(err);
-        }
-
-        let recv_result = receiver.recv();
-        if recv_result.is_err() {
-            let err = recv_result.err().unwrap();
-            log::warn(format!("mesh request error: {}", err.clone()).as_str());
-            return Err(Error { code: ErrorCode::Timeout, message: err.to_string() });
-        }
-        let response = recv_result.unwrap();
-        let body = response.body;
-        let res: Result<P, String> = proto::unmarshal_or_err(Bytes::from(body));
-        if res.is_err() {
-            let err = res.err().unwrap().clone();
-            log::warn(format!("mesh request error: {}", err.clone()).as_str());
-            return Err(Error { code: ErrorCode::ResponseError, message: err });
-        }
-        let res = res.unwrap();
-        log::info(format!("mesh request success: {}", path.clone()).as_str());
-        Ok(Box::new(res))
-    }
-
-    pub fn request_sync_with_header<Q: protobuf::Message, P: protobuf::Message>(
-        instance_id: String,
-        path: String,
-        req: Box<Q>,
-        header: protobuf::MessageField<RequestHeader>,
-    ) -> Result<Box<P>, Error> {
-        let request_id = uuid();
-        let body = proto::marshal_box(req);
-        let api_request = gateway::GatewayApiRequest {
-            header,
             requestId: request_id.clone(),
             path: path.clone(),
             body,
@@ -143,28 +90,21 @@ impl MeshClient {
                 if conf.net != 1 {
                     return;
                 }
-                MeshClient::heartbeat(instance_id.clone(), None);
+                MeshClient::heartbeat(instance_id.clone());
                 sleep(Duration::from_secs(conf.keep_alive_second.clone() as u64));
                 continue;
             }
         });
     }
 
-    fn heartbeat(instance_id: String, header: Option<RequestHeader>) {
+    fn heartbeat(instance_id: String) {
         let mut retry_count = 0 as u64;
-        let header = match header {
-            None => { Default::default() }
-            Some(mut header) => {
-                header.extra = r#"{"resetHeader":"true"}"#.to_string();
-                protobuf::MessageField::some(header)
-            }
-        };
         loop {
             let req = gateway::GatewayKeepAliveReq {
-                header: header.clone(),
+                header: Default::default(),
                 special_fields: Default::default(),
             };
-            let result: Result<Box<GatewayKeepAliveResp>, Error> = MeshClient::request_sync_with_header(instance_id.clone(), "/v1/gateway/white/keepAlive".to_string(), Box::new(req), header.clone());
+            let result: Result<Box<GatewayKeepAliveResp>, Error> = MeshClient::request_sync(instance_id.clone(), "/v1/gateway/keepAlive".to_string(), Box::new(req));
             match result {
                 Ok(_) => {
                     log::info("mesh heartbeat success");
@@ -180,32 +120,84 @@ impl MeshClient {
         }
     }
 
-    pub fn reset_header(instance_id: String) {
+    pub fn reset_user_id(instance_id: String) -> String {
         let config = Config::get_config(instance_id.clone()).read().unwrap().clone();
         if config.net.clone() != 1 {
-            return;
+            panic!("mesh verify connection error: net is not mesh");
         }
         let conf = config.clone();
         drop(config);
-        log::debug("mesh reset header");
-        MeshClient::heartbeat(instance_id.clone(), Some(RequestHeader {
+        log::debug("mesh reset_header");
+        let user_id = conf.user_id.clone();
+        let user_token = conf.user_token.clone();
+        let req = gateway::AuthenticationConnectionReq {
+            header: Default::default(),
+            userId: user_id.unwrap_or_default(),
+            token: user_token.unwrap_or_default(),
+            special_fields: Default::default(),
+        };
+        let result: Result<Box<AuthenticationConnectionResp>, Error> = MeshClient::request_sync(instance_id.clone(), "/v1/gateway/white/authenticationConnection".to_string(), Box::new(req));
+        match result {
+            Ok(resp) => {
+                if resp.success {
+                    "true".to_string()
+                } else {
+                    "false".to_string()
+                }
+            }
+            Err(err) => {
+                log::error(err.message.as_str());
+                "false".to_string()
+            }
+        }
+    }
+
+    pub fn verify_connection(instance_id: String, long_connection_id: String) -> Result<Box<gateway::VerifyConnectionResp>, Error> {
+        let config = Config::get_config(instance_id.clone()).read().unwrap().clone();
+        if config.net.clone() != 1 {
+            panic!("mesh verify connection error: net is not mesh");
+        }
+        let conf = config.clone();
+        drop(config);
+        log::debug("mesh verify connection");
+        let header = RequestHeader {
             appId: conf.app_id.clone(),
             userId: conf.user_id.unwrap_or_default(),
-            userToken: conf.user_token.unwrap_or_default(),
             clientIp: "".to_string(),
             installId: conf.install_id.clone(),
             platform: protobuf::EnumOrUnknown::from_i32(conf.platform),
-            gatewayPodIp: "".to_string(),
             deviceModel: conf.device_model.to_string(),
             osVersion: conf.os_version.to_string(),
             appVersion: env!("CARGO_PKG_VERSION").to_string(),
-            language: protobuf::EnumOrUnknown::from_i32(conf.language),
-            connectTime: 0,
-            encoding: protobuf::EnumOrUnknown::from_i32(0),
             extra: conf.custom_header.to_string(),
             special_fields: Default::default(),
-        }));
-        log::info("mesh reset header success");
+        };
+        let map = LONG_CONNECTION_INSTANCE_MAP.read().unwrap();
+        let connection_id = long_connection_id.clone();
+        let connection_id = connection_id.as_str();
+        let long_connection = map.get(connection_id).unwrap();
+        let long_connection = long_connection.read().unwrap();
+        let public_key = long_connection.public_key.clone();
+        drop(long_connection);
+        drop(map);
+        let req = gateway::VerifyConnectionReq {
+            header: protobuf::MessageField::some(header),
+            publicKey: public_key,
+            special_fields: Default::default(),
+        };
+        let result: Result<Box<VerifyConnectionResp>, Error> = MeshClient::request_sync(instance_id.clone(), "/v1/gateway/white/verifyConnection".to_string(), Box::new(req));
+        match result {
+            Ok(resp) => {
+                if resp.publicKey.is_empty() {
+                    Err(Error { code: ErrorCode::ResponseError, message: "publicKey is empty".to_string() })
+                } else {
+                    Ok(resp)
+                }
+            }
+            Err(err) => {
+                Err(err)
+            }
+        }
     }
 }
 
@@ -246,9 +238,9 @@ impl MeshClient {
             let end_reason = MeshClient::reconnect(instance_id.clone());
             log::info(format!("mesh client {} end connect, reason: {}", instance_id.clone(), end_reason).as_str());
             reconnect_count += 1;
-            let after_seconds = reconnect_count.clone() % 10;
-            log::info(format!("mesh client {} reconnect after {} seconds", instance_id.clone(), after_seconds).as_str());
-            sleep(Duration::from_secs(after_seconds));
+            let after_seconds = reconnect_count.clone() % 20;
+            log::info(format!("mesh client {} reconnect after {} seconds", instance_id.clone(), after_seconds.clone()).as_str());
+            sleep(Duration::from_secs(after_seconds.clone()));
         }
     }
 
@@ -268,12 +260,12 @@ impl MeshClient {
         let long_connection = LongConnection {
             instance_id: instance_id.clone(),
             connection_id: long_connection_id.clone(),
-            private_key: p,
+            private_key: Arc::new(p),
             public_key: k,
             aes_key: None,
         };
         let mut map = LONG_CONNECTION_INSTANCE_MAP.write().unwrap();
-        map.insert(instance_id.clone(), Arc::new(RwLock::new(long_connection)));
+        map.insert(long_connection_id.clone(), Arc::new(RwLock::new(long_connection)));
         drop(map);
 
         let mut data_channel = peer_connection.create_data_channel("data", DataChannelListener {
@@ -385,7 +377,7 @@ impl MeshClient {
                                 let path = req.path.clone();
                                 let mut buf = proto::marshal(&req);
                                 // 是否加密
-                                log::debug("on_receive: websocket receive binary");
+                                log::debug("on_receive: mesh receive binary");
                                 let map = LONG_CONNECTION_INSTANCE_MAP.read().unwrap();
                                 let connection_id = long_connection_id.clone();
                                 let connection_id = connection_id.as_str();
@@ -398,7 +390,7 @@ impl MeshClient {
                                     let aes_key = aes_key.unwrap();
                                     // iv 取中间16位
                                     let iv: Vec<u8> = aes_key[8..24].to_vec();
-                                    match aes_decrypt(aes_key, iv, Vec::from(buf)) {
+                                    match aes_encrypt(aes_key, iv, Vec::from(buf)) {
                                         Ok(data) => {
                                             buf = data;
                                         }
@@ -407,6 +399,25 @@ impl MeshClient {
                                             break;
                                         }
                                     };
+                                } else {
+                                    if !req.path.clone().eq("/v1/gateway/white/verifyConnection") {
+                                        // 立刻返回错误 因为你必须等待握手成功
+                                        log::error(format!("mesh client {} receive data before handshake success", instance_id.clone()).as_str());
+                                        APIResponse::on_response(uuid.clone(), gateway::GatewayApiResponse {
+                                            header: protobuf::MessageField::some(common::ResponseHeader {
+                                                code: protobuf::EnumOrUnknown::from(common::ResponseCode::TIMEOUT),
+                                                actionType: Default::default(),
+                                                actionData: "".to_string(),
+                                                extra: "".to_string(),
+                                                special_fields: Default::default(),
+                                            }),
+                                            requestId: uuid.clone().to_string(),
+                                            path: path.to_string(),
+                                            body: vec![],
+                                            special_fields: Default::default(),
+                                        });
+                                        continue;
+                                    }
                                 }
                                 match data_channel.send(&buf) {
                                     Ok(_) => {}
@@ -434,6 +445,8 @@ impl MeshClient {
                             }
                         };
                     }
+                    drop(data_channel);
+                    drop(peer_connection);
                 }
                 Err(err) => {
                     log::error(format!("parse sdp error: {}", err.clone()).as_str());
@@ -507,45 +520,76 @@ struct DataChannelListener {
     long_connection_id: String,
 }
 
+impl DataChannelListener {
+    fn close(instance_id: String, long_connection_id: String) {
+        MeshRequest::remove_sender(instance_id.clone());
+        let mut map = LONG_CONNECTION_INSTANCE_MAP.write().unwrap();
+        let connection_id = long_connection_id.clone();
+        let connection_id = connection_id.as_str();
+        map.remove(connection_id);
+        drop(map);
+    }
+}
+
 impl DataChannelHandler for DataChannelListener {
     fn on_open(&mut self) {
         let instance_id = self.instance_id.clone();
+        let long_connection_id = self.long_connection_id.clone();
         spawn(move || {
-            log::info(format!("mesh client {} data channel open, reset header", instance_id.clone()).as_str());
-            MeshClient::reset_header(instance_id.clone());
-            log::info(format!("mesh client {} data channel open, reset header success", instance_id.clone()).as_str());
+            match MeshClient::verify_connection(instance_id.clone(), long_connection_id.clone()) {
+                Ok(resp) => {
+                    let mut map = LONG_CONNECTION_INSTANCE_MAP.write().unwrap();
+                    let connection_id = long_connection_id.clone();
+                    let connection_id = connection_id.as_str();
+                    let long_connection = map.get_mut(connection_id).unwrap();
+                    let mut long_connection = long_connection.write().unwrap();
+                    let secret = generate_shared_secret(long_connection.private_key.clone(), resp.publicKey).unwrap();
+                    long_connection.aes_key = Some(secret);
+                    drop(long_connection);
+                    drop(map);
+                }
+                Err(err) => {
+                    log::error(err.message.as_str());
+                    DataChannelListener::close(instance_id.clone(), long_connection_id.clone());
+                }
+            };
         });
     }
 
     fn on_closed(&mut self) {
         log::warn(format!("mesh client {} data channel closed", self.instance_id.clone()).as_str());
-        MeshRequest::remove_sender(self.instance_id.clone());
+        DataChannelListener::close(self.instance_id.clone(), self.long_connection_id.clone());
     }
     fn on_error(&mut self, _: &str) {}
     fn on_message(&mut self, data: &[u8]) {
-        log::debug("on_receive: websocket receive binary");
+        log::debug("on_message: mesh receive binary");
         let map = LONG_CONNECTION_INSTANCE_MAP.read().unwrap();
         let connection_id = self.long_connection_id.clone();
         let connection_id = connection_id.as_str();
-        let long_connection = map.get(connection_id).unwrap();
-        let long_connection = long_connection.read().unwrap();
-        let aes_key = long_connection.aes_key.clone();
-        drop(long_connection);
-        drop(map);
-        if aes_key.is_some() {
-            let aes_key = aes_key.unwrap();
-            // iv 取中间16位
-            let iv: Vec<u8> = aes_key[8..24].to_vec();
-            match aes_decrypt(aes_key, iv, Vec::from(data)) {
-                Ok(data) => {
-                    ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));
-                }
-                Err(err) => {
-                    log::error(err.as_str());
-                }
-            };
-        } else {
-            ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));
+        let long_connection = map.get(connection_id);
+        if long_connection.is_some() {
+            let long_connection = long_connection.unwrap();
+            let long_connection = long_connection.read().unwrap();
+            let aes_key = long_connection.aes_key.clone();
+            drop(long_connection);
+            drop(map);
+            if aes_key.is_some() {
+                log::debug("aes key exist, decrypt data");
+                let aes_key = aes_key.unwrap();
+                // iv 取中间16位
+                let iv: Vec<u8> = aes_key[8..24].to_vec();
+                match aes_decrypt(aes_key, iv, Vec::from(data)) {
+                    Ok(data) => {
+                        ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));
+                    }
+                    Err(err) => {
+                        log::error(err.as_str());
+                    }
+                };
+            } else {
+                log::debug("aes key not exist, use origin data");
+                ApiReader::on_receive(self.instance_id.clone(), Vec::from(data));
+            }
         }
     }
 }

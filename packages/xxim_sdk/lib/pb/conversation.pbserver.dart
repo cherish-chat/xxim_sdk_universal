@@ -105,6 +105,7 @@ abstract class conversationServiceBase extends $pb.GeneratedService {
 abstract class subscriptionServiceBase extends $pb.GeneratedService {
   $async.Future<$1.SubscriptionSubscribeResp> subscriptionSubscribe($pb.ServerContext ctx, $1.SubscriptionSubscribeReq request);
   $async.Future<$1.SubscriptionAfterOnlineResp> subscriptionAfterOnline($pb.ServerContext ctx, $1.SubscriptionAfterOnlineReq request);
+  $async.Future<$1.SubscriptionAfterOfflineResp> subscriptionAfterOffline($pb.ServerContext ctx, $1.SubscriptionAfterOfflineReq request);
   $async.Future<$1.UpsertUserSubscriptionResp> upsertUserSubscription($pb.ServerContext ctx, $1.UpsertUserSubscriptionReq request);
   $async.Future<$1.DeleteUserSubscriptionResp> deleteUserSubscription($pb.ServerContext ctx, $1.DeleteUserSubscriptionReq request);
   $async.Future<$1.ListSubscriptionSubscribersResp> listSubscriptionSubscribers($pb.ServerContext ctx, $1.ListSubscriptionSubscribersReq request);
@@ -113,6 +114,7 @@ abstract class subscriptionServiceBase extends $pb.GeneratedService {
     switch (method) {
       case 'SubscriptionSubscribe': return $1.SubscriptionSubscribeReq();
       case 'SubscriptionAfterOnline': return $1.SubscriptionAfterOnlineReq();
+      case 'SubscriptionAfterOffline': return $1.SubscriptionAfterOfflineReq();
       case 'UpsertUserSubscription': return $1.UpsertUserSubscriptionReq();
       case 'DeleteUserSubscription': return $1.DeleteUserSubscriptionReq();
       case 'ListSubscriptionSubscribers': return $1.ListSubscriptionSubscribersReq();
@@ -124,6 +126,7 @@ abstract class subscriptionServiceBase extends $pb.GeneratedService {
     switch (method) {
       case 'SubscriptionSubscribe': return this.subscriptionSubscribe(ctx, request as $1.SubscriptionSubscribeReq);
       case 'SubscriptionAfterOnline': return this.subscriptionAfterOnline(ctx, request as $1.SubscriptionAfterOnlineReq);
+      case 'SubscriptionAfterOffline': return this.subscriptionAfterOffline(ctx, request as $1.SubscriptionAfterOfflineReq);
       case 'UpsertUserSubscription': return this.upsertUserSubscription(ctx, request as $1.UpsertUserSubscriptionReq);
       case 'DeleteUserSubscription': return this.deleteUserSubscription(ctx, request as $1.DeleteUserSubscriptionReq);
       case 'ListSubscriptionSubscribers': return this.listSubscriptionSubscribers(ctx, request as $1.ListSubscriptionSubscribersReq);

@@ -2,10 +2,8 @@ use lazy_static::lazy_static;
 use rusqlite::{Connection};
 use std::sync::{Arc, Mutex, RwLock};
 use std::collections::HashMap;
-use std::net::TcpStream;
 use serde::{Deserialize, Serialize};
 use flutter_rust_bridge::{StreamSink};
-use native_tls::TlsStream;
 use std::sync::mpsc::{Sender};
 use elliptic_curve::ecdh::EphemeralSecret;
 use p256::NistP256;
@@ -52,8 +50,6 @@ pub struct Config {
     pub device_model: String,
     // osVersion 操作系统版本，选填，默认为空
     pub os_version: String,
-    // language 语言，选填，默认为中文。请查看pb.I18nLanguage
-    pub language: i32,
     // requestTimeout 请求超时时间，选填，默认为10秒
     pub request_timeout_millisecond: i32,
     // userToken 用户Token，选填，默认为空
@@ -121,7 +117,7 @@ lazy_static! {
 pub struct LongConnection {
     pub instance_id: String,
     pub connection_id: String,
-    pub private_key: EphemeralSecret<NistP256>,
+    pub private_key: Arc<EphemeralSecret<NistP256>>,
     pub public_key: Vec<u8>, // hex
     pub aes_key: Option<Vec<u8>>, // 只有不为空时才会加密 解密
 }

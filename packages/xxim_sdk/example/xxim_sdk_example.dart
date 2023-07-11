@@ -63,8 +63,7 @@ Future<void> main() async {
     platform: 0,
     deviceModel: 'Macos',
     osVersion: '10.15.7',
-    language: 0,
-    requestTimeoutMillisecond: 2000,
+    requestTimeoutMillisecond: 20000,
     dbDir: './db/',
     keepAliveSecond: 5,
     logLevel: 0,
@@ -82,26 +81,6 @@ Future<void> main() async {
   var streamReadyResult =
       ApiResult.fromString(await lib.waitStreamReady(instanceId: instanceId));
   print('streamReadyResult: ${streamReadyResult.toString()}');
-  /*
-  jsonEncode({
-      'host': '127.0.0.1',
-      'port': 34500,
-      'ssl': false,
-      'encoding': 'Json',
-      'app_id': 'appid',
-      'install_id': '',
-      'platform': 0,
-      'device_model': 'MacOS',
-      'os_version': '10.15.7',
-      'language': 0,
-      'request_timeout_millisecond': 1,
-      'user_token': '',
-      'custom_header': '',
-      'keep_alive_second': 30,
-      'log_level': 'Debug',
-      'db_dir': './db/',
-    }),
-   */
 
   if (false) {
     var unsetLoginInfoResult =
@@ -192,12 +171,25 @@ Future<void> main() async {
   }
 
   if (true) {
-    await lib.setLoginInfo(
-      instanceId: instanceId,
-      userId: 'dart1',
-      token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE',
-    );
+    while (true) {
+      var apiResponse = ApiResult.fromString(await lib.setLoginInfo(
+        instanceId: instanceId,
+        userId: 'dart1',
+        token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4NDM4MDM3OTYsImp0aSI6ImRhcnQxIn0.X8AmDQx5Ug6yNerkN0PofEajKIrFe1v48GT0Xq-58oE',
+      ));
+      if (apiResponse.code != 0) {
+        print('apiResponse: ${apiResponse.toString()}');
+        sleep(Duration(seconds: 1));
+      } else {
+        if (apiResponse.data != "true") {
+          print('apiResponse: ${apiResponse.toString()}');
+          sleep(Duration(seconds: 1));
+        } else {
+          break;
+        }
+      }
+    }
   }
 
   if (true) {

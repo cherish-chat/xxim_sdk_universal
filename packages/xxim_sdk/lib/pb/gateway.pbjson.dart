@@ -66,17 +66,18 @@ const GatewayWriteDataContent$json = const {
 
 /// Descriptor for `GatewayWriteDataContent`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayWriteDataContentDescriptor = $convert.base64Decode('ChdHYXRld2F5V3JpdGVEYXRhQ29udGVudBI0CghkYXRhVHlwZRgBIAEoDjIYLnBiLkdhdGV3YXlXcml0ZURhdGFUeXBlUghkYXRhVHlwZRI3CghyZXNwb25zZRgCIAEoCzIWLnBiLkdhdGV3YXlBcGlSZXNwb25zZUgAUghyZXNwb25zZYgBARIqCgdtZXNzYWdlGAMgASgLMgsucGIuTWVzc2FnZUgBUgdtZXNzYWdliAEBEicKBm5vdGljZRgEIAEoCzIKLnBiLk5vdGljZUgCUgZub3RpY2WIAQFCCwoJX3Jlc3BvbnNlQgoKCF9tZXNzYWdlQgkKB19ub3RpY2U=');
-@$core.Deprecated('Use wsConnectionDescriptor instead')
-const WsConnection$json = const {
-  '1': 'WsConnection',
+@$core.Deprecated('Use longConnectionDescriptor instead')
+const LongConnection$json = const {
+  '1': 'LongConnection',
   '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 3, '10': 'id'},
-    const {'1': 'header', '3': 2, '4': 1, '5': 11, '6': '.pb.RequestHeader', '10': 'header'},
+    const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.RequestHeader', '10': 'header'},
+    const {'1': 'podIp', '3': 3, '4': 1, '5': 9, '10': 'podIp'},
+    const {'1': 'connectTime', '3': 4, '4': 1, '5': 3, '10': 'connectTime'},
   ],
 };
 
-/// Descriptor for `WsConnection`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List wsConnectionDescriptor = $convert.base64Decode('CgxXc0Nvbm5lY3Rpb24SDgoCaWQYASABKANSAmlkEikKBmhlYWRlchgCIAEoCzIRLnBiLlJlcXVlc3RIZWFkZXJSBmhlYWRlcg==');
+/// Descriptor for `LongConnection`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List longConnectionDescriptor = $convert.base64Decode('Cg5Mb25nQ29ubmVjdGlvbhIpCgZoZWFkZXIYASABKAsyES5wYi5SZXF1ZXN0SGVhZGVyUgZoZWFkZXISFAoFcG9kSXAYAyABKAlSBXBvZElwEiAKC2Nvbm5lY3RUaW1lGAQgASgDUgtjb25uZWN0VGltZQ==');
 @$core.Deprecated('Use gatewayGetUserConnectionReqDescriptor instead')
 const GatewayGetUserConnectionReq$json = const {
   '1': 'GatewayGetUserConnectionReq',
@@ -93,12 +94,12 @@ const GatewayGetUserConnectionResp$json = const {
   '1': 'GatewayGetUserConnectionResp',
   '2': const [
     const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
-    const {'1': 'connections', '3': 2, '4': 3, '5': 11, '6': '.pb.WsConnection', '10': 'connections'},
+    const {'1': 'connections', '3': 2, '4': 3, '5': 11, '6': '.pb.LongConnection', '10': 'connections'},
   ],
 };
 
 /// Descriptor for `GatewayGetUserConnectionResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gatewayGetUserConnectionRespDescriptor = $convert.base64Decode('ChxHYXRld2F5R2V0VXNlckNvbm5lY3Rpb25SZXNwEioKBmhlYWRlchgBIAEoCzISLnBiLlJlc3BvbnNlSGVhZGVyUgZoZWFkZXISMgoLY29ubmVjdGlvbnMYAiADKAsyEC5wYi5Xc0Nvbm5lY3Rpb25SC2Nvbm5lY3Rpb25z');
+final $typed_data.Uint8List gatewayGetUserConnectionRespDescriptor = $convert.base64Decode('ChxHYXRld2F5R2V0VXNlckNvbm5lY3Rpb25SZXNwEioKBmhlYWRlchgBIAEoCzISLnBiLlJlc3BvbnNlSGVhZGVyUgZoZWFkZXISNAoLY29ubmVjdGlvbnMYAiADKAsyEi5wYi5Mb25nQ29ubmVjdGlvblILY29ubmVjdGlvbnM=');
 @$core.Deprecated('Use gatewayBatchGetUserConnectionReqDescriptor instead')
 const GatewayBatchGetUserConnectionReq$json = const {
   '1': 'GatewayBatchGetUserConnectionReq',
@@ -115,12 +116,12 @@ const GatewayBatchGetUserConnectionResp$json = const {
   '1': 'GatewayBatchGetUserConnectionResp',
   '2': const [
     const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
-    const {'1': 'connections', '3': 2, '4': 3, '5': 11, '6': '.pb.WsConnection', '10': 'connections'},
+    const {'1': 'connections', '3': 2, '4': 3, '5': 11, '6': '.pb.LongConnection', '10': 'connections'},
   ],
 };
 
 /// Descriptor for `GatewayBatchGetUserConnectionResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gatewayBatchGetUserConnectionRespDescriptor = $convert.base64Decode('CiFHYXRld2F5QmF0Y2hHZXRVc2VyQ29ubmVjdGlvblJlc3ASKgoGaGVhZGVyGAEgASgLMhIucGIuUmVzcG9uc2VIZWFkZXJSBmhlYWRlchIyCgtjb25uZWN0aW9ucxgCIAMoCzIQLnBiLldzQ29ubmVjdGlvblILY29ubmVjdGlvbnM=');
+final $typed_data.Uint8List gatewayBatchGetUserConnectionRespDescriptor = $convert.base64Decode('CiFHYXRld2F5QmF0Y2hHZXRVc2VyQ29ubmVjdGlvblJlc3ASKgoGaGVhZGVyGAEgASgLMhIucGIuUmVzcG9uc2VIZWFkZXJSBmhlYWRlchI0Cgtjb25uZWN0aW9ucxgCIAMoCzISLnBiLkxvbmdDb25uZWN0aW9uUgtjb25uZWN0aW9ucw==');
 @$core.Deprecated('Use gatewayGetConnectionFilterDescriptor instead')
 const GatewayGetConnectionFilter$json = const {
   '1': 'GatewayGetConnectionFilter',
@@ -147,12 +148,12 @@ const GatewayGetConnectionByFilterResp$json = const {
   '1': 'GatewayGetConnectionByFilterResp',
   '2': const [
     const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
-    const {'1': 'connections', '3': 2, '4': 3, '5': 11, '6': '.pb.WsConnection', '10': 'connections'},
+    const {'1': 'connections', '3': 2, '4': 3, '5': 11, '6': '.pb.LongConnection', '10': 'connections'},
   ],
 };
 
 /// Descriptor for `GatewayGetConnectionByFilterResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gatewayGetConnectionByFilterRespDescriptor = $convert.base64Decode('CiBHYXRld2F5R2V0Q29ubmVjdGlvbkJ5RmlsdGVyUmVzcBIqCgZoZWFkZXIYASABKAsyEi5wYi5SZXNwb25zZUhlYWRlclIGaGVhZGVyEjIKC2Nvbm5lY3Rpb25zGAIgAygLMhAucGIuV3NDb25uZWN0aW9uUgtjb25uZWN0aW9ucw==');
+final $typed_data.Uint8List gatewayGetConnectionByFilterRespDescriptor = $convert.base64Decode('CiBHYXRld2F5R2V0Q29ubmVjdGlvbkJ5RmlsdGVyUmVzcBIqCgZoZWFkZXIYASABKAsyEi5wYi5SZXNwb25zZUhlYWRlclIGaGVhZGVyEjQKC2Nvbm5lY3Rpb25zGAIgAygLMhIucGIuTG9uZ0Nvbm5lY3Rpb25SC2Nvbm5lY3Rpb25z');
 @$core.Deprecated('Use gatewayWriteDataToWsReqDescriptor instead')
 const GatewayWriteDataToWsReq$json = const {
   '1': 'GatewayWriteDataToWsReq',
@@ -170,12 +171,12 @@ const GatewayWriteDataToWsResp$json = const {
   '1': 'GatewayWriteDataToWsResp',
   '2': const [
     const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
-    const {'1': 'successConnections', '3': 2, '4': 3, '5': 11, '6': '.pb.WsConnection', '10': 'successConnections'},
+    const {'1': 'successConnections', '3': 2, '4': 3, '5': 11, '6': '.pb.LongConnection', '10': 'successConnections'},
   ],
 };
 
 /// Descriptor for `GatewayWriteDataToWsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gatewayWriteDataToWsRespDescriptor = $convert.base64Decode('ChhHYXRld2F5V3JpdGVEYXRhVG9Xc1Jlc3ASKgoGaGVhZGVyGAEgASgLMhIucGIuUmVzcG9uc2VIZWFkZXJSBmhlYWRlchJAChJzdWNjZXNzQ29ubmVjdGlvbnMYAiADKAsyEC5wYi5Xc0Nvbm5lY3Rpb25SEnN1Y2Nlc3NDb25uZWN0aW9ucw==');
+final $typed_data.Uint8List gatewayWriteDataToWsRespDescriptor = $convert.base64Decode('ChhHYXRld2F5V3JpdGVEYXRhVG9Xc1Jlc3ASKgoGaGVhZGVyGAEgASgLMhIucGIuUmVzcG9uc2VIZWFkZXJSBmhlYWRlchJCChJzdWNjZXNzQ29ubmVjdGlvbnMYAiADKAsyEi5wYi5Mb25nQ29ubmVjdGlvblISc3VjY2Vzc0Nvbm5lY3Rpb25z');
 @$core.Deprecated('Use gatewayWriteDataToWsWrapperReqDescriptor instead')
 const GatewayWriteDataToWsWrapperReq$json = const {
   '1': 'GatewayWriteDataToWsWrapperReq',
@@ -206,12 +207,12 @@ const GatewayKickWsResp$json = const {
   '1': 'GatewayKickWsResp',
   '2': const [
     const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
-    const {'1': 'successConnections', '3': 2, '4': 3, '5': 11, '6': '.pb.WsConnection', '10': 'successConnections'},
+    const {'1': 'successConnections', '3': 2, '4': 3, '5': 11, '6': '.pb.LongConnection', '10': 'successConnections'},
   ],
 };
 
 /// Descriptor for `GatewayKickWsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gatewayKickWsRespDescriptor = $convert.base64Decode('ChFHYXRld2F5S2lja1dzUmVzcBIqCgZoZWFkZXIYASABKAsyEi5wYi5SZXNwb25zZUhlYWRlclIGaGVhZGVyEkAKEnN1Y2Nlc3NDb25uZWN0aW9ucxgCIAMoCzIQLnBiLldzQ29ubmVjdGlvblISc3VjY2Vzc0Nvbm5lY3Rpb25z');
+final $typed_data.Uint8List gatewayKickWsRespDescriptor = $convert.base64Decode('ChFHYXRld2F5S2lja1dzUmVzcBIqCgZoZWFkZXIYASABKAsyEi5wYi5SZXNwb25zZUhlYWRlclIGaGVhZGVyEkIKEnN1Y2Nlc3NDb25uZWN0aW9ucxgCIAMoCzISLnBiLkxvbmdDb25uZWN0aW9uUhJzdWNjZXNzQ29ubmVjdGlvbnM=');
 @$core.Deprecated('Use gatewayKeepAliveReqDescriptor instead')
 const GatewayKeepAliveReq$json = const {
   '1': 'GatewayKeepAliveReq',
@@ -232,6 +233,51 @@ const GatewayKeepAliveResp$json = const {
 
 /// Descriptor for `GatewayKeepAliveResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayKeepAliveRespDescriptor = $convert.base64Decode('ChRHYXRld2F5S2VlcEFsaXZlUmVzcBIqCgZoZWFkZXIYASABKAsyEi5wYi5SZXNwb25zZUhlYWRlclIGaGVhZGVy');
+@$core.Deprecated('Use verifyConnectionReqDescriptor instead')
+const VerifyConnectionReq$json = const {
+  '1': 'VerifyConnectionReq',
+  '2': const [
+    const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.RequestHeader', '10': 'header'},
+    const {'1': 'publicKey', '3': 2, '4': 1, '5': 12, '10': 'publicKey'},
+  ],
+};
+
+/// Descriptor for `VerifyConnectionReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List verifyConnectionReqDescriptor = $convert.base64Decode('ChNWZXJpZnlDb25uZWN0aW9uUmVxEikKBmhlYWRlchgBIAEoCzIRLnBiLlJlcXVlc3RIZWFkZXJSBmhlYWRlchIcCglwdWJsaWNLZXkYAiABKAxSCXB1YmxpY0tleQ==');
+@$core.Deprecated('Use verifyConnectionRespDescriptor instead')
+const VerifyConnectionResp$json = const {
+  '1': 'VerifyConnectionResp',
+  '2': const [
+    const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
+    const {'1': 'publicKey', '3': 2, '4': 1, '5': 12, '10': 'publicKey'},
+  ],
+};
+
+/// Descriptor for `VerifyConnectionResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List verifyConnectionRespDescriptor = $convert.base64Decode('ChRWZXJpZnlDb25uZWN0aW9uUmVzcBIqCgZoZWFkZXIYASABKAsyEi5wYi5SZXNwb25zZUhlYWRlclIGaGVhZGVyEhwKCXB1YmxpY0tleRgCIAEoDFIJcHVibGljS2V5');
+@$core.Deprecated('Use authenticationConnectionReqDescriptor instead')
+const AuthenticationConnectionReq$json = const {
+  '1': 'AuthenticationConnectionReq',
+  '2': const [
+    const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.RequestHeader', '10': 'header'},
+    const {'1': 'userId', '3': 2, '4': 1, '5': 9, '10': 'userId'},
+    const {'1': 'token', '3': 3, '4': 1, '5': 9, '10': 'token'},
+  ],
+};
+
+/// Descriptor for `AuthenticationConnectionReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List authenticationConnectionReqDescriptor = $convert.base64Decode('ChtBdXRoZW50aWNhdGlvbkNvbm5lY3Rpb25SZXESKQoGaGVhZGVyGAEgASgLMhEucGIuUmVxdWVzdEhlYWRlclIGaGVhZGVyEhYKBnVzZXJJZBgCIAEoCVIGdXNlcklkEhQKBXRva2VuGAMgASgJUgV0b2tlbg==');
+@$core.Deprecated('Use authenticationConnectionRespDescriptor instead')
+const AuthenticationConnectionResp$json = const {
+  '1': 'AuthenticationConnectionResp',
+  '2': const [
+    const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.ResponseHeader', '10': 'header'},
+    const {'1': 'success', '3': 2, '4': 1, '5': 8, '10': 'success'},
+  ],
+};
+
+/// Descriptor for `AuthenticationConnectionResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List authenticationConnectionRespDescriptor = $convert.base64Decode('ChxBdXRoZW50aWNhdGlvbkNvbm5lY3Rpb25SZXNwEioKBmhlYWRlchgBIAEoCzISLnBiLlJlc3BvbnNlSGVhZGVyUgZoZWFkZXISGAoHc3VjY2VzcxgCIAEoCFIHc3VjY2Vzcw==');
 const $core.Map<$core.String, $core.dynamic> gatewayServiceBase$json = const {
   '1': 'gatewayService',
   '2': const [
@@ -242,6 +288,8 @@ const $core.Map<$core.String, $core.dynamic> gatewayServiceBase$json = const {
     const {'1': 'GatewayWriteDataToWsWrapper', '2': '.pb.GatewayWriteDataToWsWrapperReq', '3': '.pb.GatewayWriteDataToWsResp'},
     const {'1': 'GatewayKickWs', '2': '.pb.GatewayKickWsReq', '3': '.pb.GatewayKickWsResp'},
     const {'1': 'GatewayKeepAlive', '2': '.pb.GatewayKeepAliveReq', '3': '.pb.GatewayKeepAliveResp'},
+    const {'1': 'VerifyConnection', '2': '.pb.VerifyConnectionReq', '3': '.pb.VerifyConnectionResp'},
+    const {'1': 'AuthenticationConnection', '2': '.pb.AuthenticationConnectionReq', '3': '.pb.AuthenticationConnectionResp'},
   ],
 };
 
@@ -251,7 +299,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> gatewaySer
   '.pb.RequestHeader': $0.RequestHeader$json,
   '.pb.GatewayGetUserConnectionResp': GatewayGetUserConnectionResp$json,
   '.pb.ResponseHeader': $0.ResponseHeader$json,
-  '.pb.WsConnection': WsConnection$json,
+  '.pb.LongConnection': LongConnection$json,
   '.pb.GatewayBatchGetUserConnectionReq': GatewayBatchGetUserConnectionReq$json,
   '.pb.GatewayBatchGetUserConnectionResp': GatewayBatchGetUserConnectionResp$json,
   '.pb.GatewayGetConnectionByFilterReq': GatewayGetConnectionByFilterReq$json,
@@ -271,7 +319,11 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> gatewaySer
   '.pb.GatewayKickWsResp': GatewayKickWsResp$json,
   '.pb.GatewayKeepAliveReq': GatewayKeepAliveReq$json,
   '.pb.GatewayKeepAliveResp': GatewayKeepAliveResp$json,
+  '.pb.VerifyConnectionReq': VerifyConnectionReq$json,
+  '.pb.VerifyConnectionResp': VerifyConnectionResp$json,
+  '.pb.AuthenticationConnectionReq': AuthenticationConnectionReq$json,
+  '.pb.AuthenticationConnectionResp': AuthenticationConnectionResp$json,
 };
 
 /// Descriptor for `gatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
-final $typed_data.Uint8List gatewayServiceDescriptor = $convert.base64Decode('Cg5nYXRld2F5U2VydmljZRJdChhHYXRld2F5R2V0VXNlckNvbm5lY3Rpb24SHy5wYi5HYXRld2F5R2V0VXNlckNvbm5lY3Rpb25SZXEaIC5wYi5HYXRld2F5R2V0VXNlckNvbm5lY3Rpb25SZXNwEmwKHUdhdGV3YXlCYXRjaEdldFVzZXJDb25uZWN0aW9uEiQucGIuR2F0ZXdheUJhdGNoR2V0VXNlckNvbm5lY3Rpb25SZXEaJS5wYi5HYXRld2F5QmF0Y2hHZXRVc2VyQ29ubmVjdGlvblJlc3ASaQocR2F0ZXdheUdldENvbm5lY3Rpb25CeUZpbHRlchIjLnBiLkdhdGV3YXlHZXRDb25uZWN0aW9uQnlGaWx0ZXJSZXEaJC5wYi5HYXRld2F5R2V0Q29ubmVjdGlvbkJ5RmlsdGVyUmVzcBJRChRHYXRld2F5V3JpdGVEYXRhVG9XcxIbLnBiLkdhdGV3YXlXcml0ZURhdGFUb1dzUmVxGhwucGIuR2F0ZXdheVdyaXRlRGF0YVRvV3NSZXNwEl8KG0dhdGV3YXlXcml0ZURhdGFUb1dzV3JhcHBlchIiLnBiLkdhdGV3YXlXcml0ZURhdGFUb1dzV3JhcHBlclJlcRocLnBiLkdhdGV3YXlXcml0ZURhdGFUb1dzUmVzcBI8Cg1HYXRld2F5S2lja1dzEhQucGIuR2F0ZXdheUtpY2tXc1JlcRoVLnBiLkdhdGV3YXlLaWNrV3NSZXNwEkUKEEdhdGV3YXlLZWVwQWxpdmUSFy5wYi5HYXRld2F5S2VlcEFsaXZlUmVxGhgucGIuR2F0ZXdheUtlZXBBbGl2ZVJlc3A=');
+final $typed_data.Uint8List gatewayServiceDescriptor = $convert.base64Decode('Cg5nYXRld2F5U2VydmljZRJdChhHYXRld2F5R2V0VXNlckNvbm5lY3Rpb24SHy5wYi5HYXRld2F5R2V0VXNlckNvbm5lY3Rpb25SZXEaIC5wYi5HYXRld2F5R2V0VXNlckNvbm5lY3Rpb25SZXNwEmwKHUdhdGV3YXlCYXRjaEdldFVzZXJDb25uZWN0aW9uEiQucGIuR2F0ZXdheUJhdGNoR2V0VXNlckNvbm5lY3Rpb25SZXEaJS5wYi5HYXRld2F5QmF0Y2hHZXRVc2VyQ29ubmVjdGlvblJlc3ASaQocR2F0ZXdheUdldENvbm5lY3Rpb25CeUZpbHRlchIjLnBiLkdhdGV3YXlHZXRDb25uZWN0aW9uQnlGaWx0ZXJSZXEaJC5wYi5HYXRld2F5R2V0Q29ubmVjdGlvbkJ5RmlsdGVyUmVzcBJRChRHYXRld2F5V3JpdGVEYXRhVG9XcxIbLnBiLkdhdGV3YXlXcml0ZURhdGFUb1dzUmVxGhwucGIuR2F0ZXdheVdyaXRlRGF0YVRvV3NSZXNwEl8KG0dhdGV3YXlXcml0ZURhdGFUb1dzV3JhcHBlchIiLnBiLkdhdGV3YXlXcml0ZURhdGFUb1dzV3JhcHBlclJlcRocLnBiLkdhdGV3YXlXcml0ZURhdGFUb1dzUmVzcBI8Cg1HYXRld2F5S2lja1dzEhQucGIuR2F0ZXdheUtpY2tXc1JlcRoVLnBiLkdhdGV3YXlLaWNrV3NSZXNwEkUKEEdhdGV3YXlLZWVwQWxpdmUSFy5wYi5HYXRld2F5S2VlcEFsaXZlUmVxGhgucGIuR2F0ZXdheUtlZXBBbGl2ZVJlc3ASRQoQVmVyaWZ5Q29ubmVjdGlvbhIXLnBiLlZlcmlmeUNvbm5lY3Rpb25SZXEaGC5wYi5WZXJpZnlDb25uZWN0aW9uUmVzcBJdChhBdXRoZW50aWNhdGlvbkNvbm5lY3Rpb24SHy5wYi5BdXRoZW50aWNhdGlvbkNvbm5lY3Rpb25SZXEaIC5wYi5BdXRoZW50aWNhdGlvbkNvbm5lY3Rpb25SZXNw');

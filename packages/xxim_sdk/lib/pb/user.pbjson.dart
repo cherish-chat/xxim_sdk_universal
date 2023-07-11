@@ -520,11 +520,12 @@ const UserAfterOfflineReq$json = const {
   '1': 'UserAfterOfflineReq',
   '2': const [
     const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.RequestHeader', '10': 'header'},
+    const {'1': 'userId', '3': 2, '4': 1, '5': 9, '10': 'userId'},
   ],
 };
 
 /// Descriptor for `UserAfterOfflineReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List userAfterOfflineReqDescriptor = $convert.base64Decode('ChNVc2VyQWZ0ZXJPZmZsaW5lUmVxEikKBmhlYWRlchgBIAEoCzIRLnBiLlJlcXVlc3RIZWFkZXJSBmhlYWRlcg==');
+final $typed_data.Uint8List userAfterOfflineReqDescriptor = $convert.base64Decode('ChNVc2VyQWZ0ZXJPZmZsaW5lUmVxEikKBmhlYWRlchgBIAEoCzIRLnBiLlJlcXVlc3RIZWFkZXJSBmhlYWRlchIWCgZ1c2VySWQYAiABKAlSBnVzZXJJZA==');
 @$core.Deprecated('Use userAfterOfflineRespDescriptor instead')
 const UserAfterOfflineResp$json = const {
   '1': 'UserAfterOfflineResp',
@@ -540,11 +541,13 @@ const UserBeforeConnectReq$json = const {
   '1': 'UserBeforeConnectReq',
   '2': const [
     const {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.pb.RequestHeader', '10': 'header'},
+    const {'1': 'userId', '3': 2, '4': 1, '5': 9, '10': 'userId'},
+    const {'1': 'token', '3': 3, '4': 1, '5': 9, '10': 'token'},
   ],
 };
 
 /// Descriptor for `UserBeforeConnectReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List userBeforeConnectReqDescriptor = $convert.base64Decode('ChRVc2VyQmVmb3JlQ29ubmVjdFJlcRIpCgZoZWFkZXIYASABKAsyES5wYi5SZXF1ZXN0SGVhZGVyUgZoZWFkZXI=');
+final $typed_data.Uint8List userBeforeConnectReqDescriptor = $convert.base64Decode('ChRVc2VyQmVmb3JlQ29ubmVjdFJlcRIpCgZoZWFkZXIYASABKAsyES5wYi5SZXF1ZXN0SGVhZGVyUgZoZWFkZXISFgoGdXNlcklkGAIgASgJUgZ1c2VySWQSFAoFdG9rZW4YAyABKAlSBXRva2Vu');
 @$core.Deprecated('Use userBeforeConnectRespDescriptor instead')
 const UserBeforeConnectResp$json = const {
   '1': 'UserBeforeConnectResp',
